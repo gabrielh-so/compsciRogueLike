@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<SplashScreen>
+
+  <Image>
+    <Path>SplashScreen\placeholder</Path>
+    <Position>
+      <X>0</X>
+      <Y>0</Y>
+    </Position>
+    <IsActive>true</IsActive>
+    <Effects></Effects>
+    <ScrollEffect>
+      <TargetPosition>
+        <X>100</X>
+        <Y>100</Y>
+      </TargetPosition>
+      <InterpolationAmount>0.001</InterpolationAmount>
+      <Loop>true</Loop>
+    </ScrollEffect>
+    <FadeEffect>
+      <FadeSpeed>1</FadeSpeed>
+      <IsActive>true</IsActive>
+    </FadeEffect>
+    <ZoomEffect>
+      <ZoomX>true</ZoomX>
+      <ZoomY>true</ZoomY>
+      <ZoomSpeed>0.1</ZoomSpeed>
+      <Loop>false</Loop>
+    </ZoomEffect>
+    <Text>Hello world</Text>
+    <Alpha>1</Alpha>
+    <Scale>
+      <X>1.0</X>
+      <Y>1.0</Y>
+    </Scale>
+  </Image>
+
+</SplashScreen>
