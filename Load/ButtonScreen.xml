@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ButtonScreen>
+  
+  <myButton>
+    
+    <Container>
+      <X>100</X>
+      <Y>100</Y>
+    </Container>
+    
+    <StandardImage>
+      <Path>ButtonScreen/Blue_Button_Standard</Path>
+      <Position>
+        <X>100</X>
+        <Y>100</Y>
+      </Position>
+      <IsActive>true</IsActive>
+    </StandardImage>
+
+    <PressedImage>
+      <Path>ButtonScreen/Blue_Button_Pressed</Path>
+      <Position>
+        <X>100</X>
+        <Y>100</Y>
+      </Position>
+      <IsActive>true</IsActive>
+    </PressedImage>
+
+    <HoverImage>
+      <Path>ButtonScreen/Blue_Button_Hover</Path>
+      <Position>
+        <X>100</X>
+        <Y>100</Y>
+      </Position>
+      <IsActive>true</IsActive>
+    </HoverImage>
+    
+    
+  </myButton>
+  
+</ButtonScreen>

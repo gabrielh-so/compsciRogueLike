@@ -40,7 +40,7 @@ namespace MajorProject
 
             if ((totalUpTime > timeToShow || InputManager.Instance.KeyDown(Keys.Enter)) && !ScreenManager.Instance.IsTransitioning)
             {
-                ScreenManager.Instance.ChangeScreens("SplashScreen");
+                ScreenManager.Instance.ChangeScreens("SliderScreen");
             }
         }
 

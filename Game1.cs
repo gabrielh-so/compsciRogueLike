@@ -30,6 +30,8 @@ namespace MajorProject
         {
             // TODO: Add your initialization logic here
 
+            this.IsMouseVisible = true;
+
             base.Initialize();
         }
 
@@ -69,6 +71,7 @@ namespace MajorProject
 
             // TODO: Add your update logic here
 
+            InputManager.Instance.Update();
             ScreenManager.Instance.Update(gameTime);
 
             base.Update(gameTime);

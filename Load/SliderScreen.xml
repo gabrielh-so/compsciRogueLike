@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SliderScreen>
+
+  <mySlider>
+
+    <sliderPosition>0.5</sliderPosition>
+
+    <Position>
+      <X>100</X>
+      <Y>100</Y>
+    </Position>
+
+    <baseImage>
+      <Path>SliderScreen/Grey_Horizontal_SlideBar</Path>
+      <IsActive>true</IsActive>
+    </baseImage>
+
+    <sliderImage>
+      <Path>SliderScreen/Green_Down_Slider</Path>
+      <IsActive>true</IsActive>
+    </sliderImage>
+
+
+  </mySlider>
+
+</SliderScreen>

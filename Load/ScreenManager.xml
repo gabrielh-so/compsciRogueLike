@@ -4,7 +4,7 @@
     <Path>ScreenManager\FadeImage</Path>
     <Effects>FadeEffect</Effects>
     <FadeEffect>
-      <FadeSpeed>1</FadeSpeed>
+      <FadeSpeed>20</FadeSpeed>
     </FadeEffect>
     <Scale>
       <X>1920</X>
