@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MajorProject
@@ -22,7 +22,6 @@ namespace MajorProject
         public Rectangle SliderContainer;
 
         bool wasClicked;
-        float texWidth;
 
         public Slider()
         {
@@ -50,23 +49,12 @@ namespace MajorProject
 
         public override void LoadContent()
         {
-
-            sliderImage.Position = Position;
-            baseImage.Position = Position;
-
-            baseImage.LoadContent();
             sliderImage.LoadContent();
-            texWidth = baseImage.Texture.Width/2;
-
-            MainContainer.Width = baseImage.Texture.Width;
-            MainContainer.Height = baseImage.Texture.Height;
-            sliderImage.Position.Y -= sliderImage.Texture.Height;
-            SliderContainer.Width = sliderImage.Texture.Width;
-            SliderContainer.Height = sliderImage.Texture.Height;
-            sliderImage.Position.X += (float)(sliderPosition-0.5) * baseImage.Texture.Width + texWidth;
-            SliderContainer.Location += sliderImage.Position.ToPoint();
-            MainContainer.Location += baseImage.Position.ToPoint();
-            bool b = true;
+            baseImage.LoadContent();
+            baseImage.Position = Position;
+            MainContainer = new Rectangle(Position.ToPoint(), baseImage.Texture.Bounds.Size);
+            SliderContainer.Size = new Point(sliderImage.Texture.Width, sliderImage.Texture.Height);
+            SetSliderPosition(sliderPosition);
         }
 
         public override void UnloadContent()
@@ -75,7 +63,7 @@ namespace MajorProject
             sliderImage.UnloadContent();
         }
 
-        public virtual void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             baseImage.Update(gameTime);
             sliderImage.Update(gameTime);
@@ -91,6 +79,12 @@ namespace MajorProject
                 }
             }
 
+            if (InputManager.Instance.KeyPressed(Keys.F))
+                SetSliderPosition(0.5f);
+            if (InputManager.Instance.KeyPressed(Keys.D))
+                SetSliderPosition(0.25f);
+            if (InputManager.Instance.KeyPressed(Keys.G))
+                SetSliderPosition(0.75f);
 
             if (InputManager.Instance.MouseReleased())
             {
@@ -99,9 +93,8 @@ namespace MajorProject
             if (wasClicked && InputManager.Instance.MouseMoved())
             {
                 Point mousePos = InputManager.Instance.GetMousePosition();
-                sliderImage.Position = new Vector2((float)Math.Min(baseImage.Texture.Width + Position.X, Math.Max(Position.X - sliderImage.Texture.Width / 2, mousePos.X-sliderImage.Texture.Width/2)), sliderImage.Position.Y);
-                sliderPosition = map(sliderImage.Position.X + sliderImage.Texture.Width / 2, Position.X, baseImage.Texture.Width + Position.X, 0, 1);
-                SliderContainer.X = (int)sliderImage.Position.X;
+                float halfTexture = sliderImage.Texture.Width / 2;
+                SetSliderPosition(map(mousePos.X - halfTexture, Position.X - halfTexture, Position.X + baseImage.Texture.Width - halfTexture, 0, 1));
             }
             if (sliderPosition == 0)
             {
@@ -111,6 +104,17 @@ namespace MajorProject
             {
                 bool u = true;
             }
+        }
+
+        public void SetSliderPosition(float amount)
+        {
+            amount = Math.Max(0, Math.Min(1, amount));
+            sliderImage.Position = Position;
+            sliderImage.Position.X -= sliderImage.Texture.Width / 2; // move so that the cursor is on the start of the line instead of the edge being at the start
+            sliderImage.Position.Y -= sliderImage.Texture.Height; // move so that cursor points on line instead of below ___^___ or something
+            sliderImage.Position.X += baseImage.Texture.Width * amount;
+            SliderContainer.Location = sliderImage.Position.ToPoint();
+            sliderPosition = amount;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
