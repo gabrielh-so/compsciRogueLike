@@ -22,6 +22,10 @@ namespace MajorProject
             }
         }
 
+        public float SoundVolume;
+        public float MusicVolume;
+        public float MasterVolume;
+
 
 
         public AudioManager()

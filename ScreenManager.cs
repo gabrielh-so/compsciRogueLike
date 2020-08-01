@@ -15,7 +15,7 @@ namespace MajorProject
     {
         private static ScreenManager instance;
         [XmlIgnore]
-        public Vector2 Dimensions { private set; get; }
+        public Vector2 Dimensions { set; get; }
         [XmlIgnore]
         public ContentManager Content { private set; get; }
         XmlManager<Screen> xmlGameScreenManager;
@@ -82,14 +82,12 @@ namespace MajorProject
             }
         }
 
-        public ScreenManager()
+        ScreenManager()
         {
-            Dimensions = new Vector2(640, 480);
             currentScreen = new SplashScreen();
             xmlGameScreenManager = new XmlManager<Screen>();
             xmlGameScreenManager.type = currentScreen.Type;
             currentScreen = xmlGameScreenManager.Load("Load/SplashScreen.xml");
-            bool b = false;
         }
 
         public void LoadContent(ContentManager Content)

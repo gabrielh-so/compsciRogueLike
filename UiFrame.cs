@@ -14,7 +14,7 @@ namespace MajorProject
         Rectangle Container;
         public bool IsActive;
         public bool IsDisplayed;
-        List<UiElement> uiElements;
+        public List<UiElement> uiElements;
 
         public UiFrame()
         {
@@ -23,10 +23,9 @@ namespace MajorProject
 
         public void LoadContent()
         {
+
             foreach (UiElement uie in uiElements)
-            {
                 uie.LoadContent();
-            }
         }
 
         public void UnloadContent()
@@ -48,7 +47,7 @@ namespace MajorProject
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (IsActive)
+            if (IsDisplayed)
                 foreach (UiElement uie in uiElements)
                 {
                     uie.Draw(spriteBatch);

@@ -11,6 +11,8 @@ namespace MajorProject
     {
         public float FadeSpeed;
         public bool Increase;
+        public bool Loop;
+        public float StartingOpacity;
 
         public FadeEffect()
         {
@@ -21,6 +23,7 @@ namespace MajorProject
         public override void LoadContent(ref Image Image)
         {
             base.LoadContent(ref Image);
+            image.Alpha = StartingOpacity;
         }
 
         public override void UnloadContent()
@@ -31,7 +34,7 @@ namespace MajorProject
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (image.IsActive)
+            if (image.IsActive && IsActive)
             {
                 if (!Increase)
                     image.Alpha -= FadeSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -42,11 +45,13 @@ namespace MajorProject
                 {
                     Increase = true;
                     image.Alpha = 0.0f;
+                    if (!Loop) IsActive = false;
                 }
                 else if (image.Alpha > 1.0f)
                 {
                     Increase = false;
                     image.Alpha = 1.0f;
+                    if (!Loop) IsActive = false;
                 }
             }
             else

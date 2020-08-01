@@ -14,7 +14,7 @@ namespace MajorProject
     public class SplashScreen : Screen
     {
         public Image Image;
-        double timeToShow = 5000;
+        double timeToShow = 0;
         double totalUpTime;
 
         public override void LoadContent()
@@ -40,7 +40,7 @@ namespace MajorProject
 
             if ((totalUpTime > timeToShow || InputManager.Instance.KeyDown(Keys.Enter)) && !ScreenManager.Instance.IsTransitioning)
             {
-                ScreenManager.Instance.ChangeScreens("SliderScreen");
+                ScreenManager.Instance.ChangeScreens("MainMenuScreen");
             }
         }
 

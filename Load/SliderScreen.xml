@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <SliderScreen>
 
+  <myImage>
+    <Position>
+      <X>300</X>
+      <Y>300</Y>
+    </Position>
+    <Text>something or other</Text>
+    <FontName>Fonts/coders_crux</FontName>
+  </myImage>
+
+  <myOtherImage>
+    <Path>SliderScreen/Green_Down_Slider</Path>
+    <IsActive>true</IsActive>
+    <Position>
+      <X>500</X>
+      <Y>500</Y>
+    </Position>
+  </myOtherImage>
+  
   <mySlider>
 
     <sliderPosition>0.5</sliderPosition>

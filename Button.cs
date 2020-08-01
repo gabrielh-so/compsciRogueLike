@@ -13,7 +13,7 @@ namespace MajorProject
 {
     public class Button : UiElement
     {
-
+        
         public Image StandardImage;
         public Image PressedImage;
         public Image HoverImage;
@@ -31,7 +31,7 @@ namespace MajorProject
             return Container.Contains(InputManager.Instance.GetMousePosition());
         }
 
-        public virtual void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (mouseIsHovering())
             {
@@ -46,7 +46,7 @@ namespace MajorProject
                 {
                     if (wasClicked)
                     {
-                        OnActivate();
+                        OnActivate?.Invoke(this);
                         wasClicked = false;
                         wasHovered = false;
                     }
@@ -54,7 +54,7 @@ namespace MajorProject
                 if (!wasHovered)
                 {
                     ActiveImage = HoverImage;
-                        
+                    OnHover?.Invoke(this);
                 }
                 wasHovered = true;
             } else
@@ -64,6 +64,7 @@ namespace MajorProject
                     ActiveImage = StandardImage;
                     wasHovered = false;
                     wasClicked = false;
+                    OnStopHover?.Invoke(this);
                 }
             }
         }
@@ -84,10 +85,16 @@ namespace MajorProject
             HoverImage.LoadContent();
             PressedImage.LoadContent();
 
+            StandardImage.Position = Container.Location.ToVector2();
+            HoverImage.Position = Container.Location.ToVector2();
+            PressedImage.Position = Container.Location.ToVector2();
+
             PressedImage.Position.Y += 5;
 
             Container.Width = StandardImage.Texture.Width;
             Container.Height = StandardImage.Texture.Height;
+
+            Position = StandardImage.Position;
         }
 
         public override void UnloadContent()

@@ -12,6 +12,22 @@ namespace MajorProject
     {
         KeyboardState currentKeyState, prevKeyState;
         MouseState currentMouseState, prevMouseState;
+        public bool QuitSignaled;
+
+        public enum ActionType
+        {
+            walk_up,
+            walk_right,
+            walk_down,
+            walk_left,
+            shoot,
+            pick_up,
+            open_inventory,
+            use_potion
+            // aiming using mouse and selecting weapons using the number keys is unchangable
+        }
+
+        Dictionary<ActionType, Keys> ActionKeyDict;
 
         private static InputManager instance;
 
@@ -26,6 +42,11 @@ namespace MajorProject
             }
         }
 
+        public InputManager()
+        {
+            ActionKeyDict = PlayerPreferences.Instance.ActionKeyDict;
+        }
+
         public void Update()
         {
             prevKeyState = currentKeyState;
@@ -35,6 +56,17 @@ namespace MajorProject
                 currentKeyState = Keyboard.GetState();
                 currentMouseState = Mouse.GetState();
             }
+        }
+
+        public List<Keys> GetChangedKeys()
+        {
+            List<Keys> changedKeys = new List<Keys>();
+            Keys[] pressedKeys = currentKeyState.GetPressedKeys();
+            foreach (Keys k in pressedKeys)
+            {
+                if (prevKeyState.IsKeyUp(k)) changedKeys.Add(k);
+            }
+            return changedKeys;
         }
 
         public Point GetMousePosition()

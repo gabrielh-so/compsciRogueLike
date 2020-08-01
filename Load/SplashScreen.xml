@@ -19,8 +19,11 @@
       <Loop>true</Loop>
     </ScrollEffect>
     <FadeEffect>
-      <FadeSpeed>1</FadeSpeed>
+      <Increase>true</Increase>
+      <FadeSpeed>0.2</FadeSpeed>
       <IsActive>true</IsActive>
+      <Loop>false</Loop>
+      <StartingOpacity>0</StartingOpacity>
     </FadeEffect>
     <ZoomEffect>
       <ZoomX>true</ZoomX>

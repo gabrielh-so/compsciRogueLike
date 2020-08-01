@@ -17,6 +17,11 @@ namespace MajorProject
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
+
+            graphics.PreferredBackBufferWidth = 1200;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }
 
@@ -31,6 +36,9 @@ namespace MajorProject
             // TODO: Add your initialization logic here
 
             this.IsMouseVisible = true;
+
+            ScreenManager.Instance.Dimensions = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+
 
             base.Initialize();
         }
@@ -73,6 +81,12 @@ namespace MajorProject
 
             InputManager.Instance.Update();
             ScreenManager.Instance.Update(gameTime);
+            if (InputManager.Instance.QuitSignaled)
+            {
+                PlayerPreferences.SavePreferences();
+
+                Exit();
+            }
 
             base.Update(gameTime);
         }
@@ -83,7 +97,7 @@ namespace MajorProject
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
 

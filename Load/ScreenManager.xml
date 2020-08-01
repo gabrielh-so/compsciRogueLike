@@ -5,6 +5,7 @@
     <Effects>FadeEffect</Effects>
     <FadeEffect>
       <FadeSpeed>20</FadeSpeed>
+      <Loop>true</Loop>
     </FadeEffect>
     <Scale>
       <X>1920</X>

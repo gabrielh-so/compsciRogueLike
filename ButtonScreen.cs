@@ -40,7 +40,7 @@ namespace MajorProject
             myButton.Draw(spriteBatch);
         }
 
-        void LoadMenu()
+        void LoadMenu(UiElement triggerElement)
         {
             ScreenManager.Instance.ChangeScreens("SplashScreen");
         }

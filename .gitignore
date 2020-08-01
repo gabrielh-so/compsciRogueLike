@@ -1,0 +1,12 @@
+*.csproj
+bin
+obj
+Properties
+app.manifest
+x64
+x86
+*.dylib
+*.dll
+*.config
+*.pdb
+*.exe

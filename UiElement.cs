@@ -14,10 +14,15 @@ namespace MajorProject
 {
     public abstract class UiElement
     {
+
+        public Vector2 Position;
+        public string Description;
+
         public UiElement()
         {
 
         }
+
         public virtual void LoadContent()
         {
 
@@ -38,8 +43,20 @@ namespace MajorProject
             
         }
 
-        public delegate void onActivate();
+        public delegate void onActivate(UiElement triggeredObject);
         [XmlIgnore]
         public onActivate OnActivate;
+
+        public delegate void onActivateF(UiElement triggeredObject, float value);
+        [XmlIgnore]
+        public onActivateF OnActivateF;
+
+        public delegate void onHover(UiElement triggeredObject);
+        [XmlIgnore]
+        public onHover OnHover;
+
+        public delegate void onStopHover(UiElement triggeredObject);
+        [XmlIgnore]
+        public onHover OnStopHover;
     }
 }

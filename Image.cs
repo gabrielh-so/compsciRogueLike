@@ -84,11 +84,29 @@ namespace MajorProject
 
             font = content.Load<SpriteFont>(FontName);
 
+            
+
+            RenderTexture();
+            
+
+            SetEffect<FadeEffect>(ref FadeEffect);
+
+            if (Effects != String.Empty)
+            {
+                string[] split = Effects.Split(':');
+                foreach (string item in split)
+                    ActivateEffect(item);
+            }
+        }
+
+        public void RenderTexture()
+        {
             Vector2 dimensions = Vector2.Zero;
 
             if (Texture != null)
-                dimensions.X += Texture.Width;
-            dimensions.X += font.MeasureString(Text).X;
+                dimensions.X = Math.Max(Texture.Width, font.MeasureString(Text).X);
+            else
+                dimensions.X += font.MeasureString(Text).X;
 
             if (Texture != null)
                 dimensions.Y = Math.Max(Texture.Height, font.MeasureString(Text).Y);
@@ -97,7 +115,6 @@ namespace MajorProject
 
             if (SourceRect == Rectangle.Empty)
                 SourceRect = new Rectangle(0, 0, (int)dimensions.X, (int)dimensions.Y);
-
 
             renderTarget = new RenderTarget2D(ScreenManager.Instance.GraphicsDevice,
                 (int)dimensions.X, (int)dimensions.Y);
@@ -115,15 +132,6 @@ namespace MajorProject
 
             ScreenManager.Instance.GraphicsDevice.SetRenderTarget(null); // reset rendertarget to default
 
-
-            SetEffect<FadeEffect>(ref FadeEffect);
-
-            if (Effects != String.Empty)
-            {
-                string[] split = Effects.Split(':');
-                foreach (string item in split)
-                    ActivateEffect(item);
-            }
         }
 
         public void UnloadContent()
@@ -131,6 +139,7 @@ namespace MajorProject
             content.Unload();
             content.Dispose();
             Texture.Dispose();
+            effectList.Clear();
             renderTarget.Dispose();
             foreach (var effect in effectList)
                 DeactivateEffect(effect.Key);

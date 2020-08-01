@@ -12,7 +12,6 @@ namespace MajorProject
 {
     public class Slider : UiElement
     {
-        public Vector2 Position;
         public Image baseImage;
         public Image sliderImage;
 
@@ -54,7 +53,7 @@ namespace MajorProject
             baseImage.Position = Position;
             MainContainer = new Rectangle(Position.ToPoint(), baseImage.Texture.Bounds.Size);
             SliderContainer.Size = new Point(sliderImage.Texture.Width, sliderImage.Texture.Height);
-            SetSliderPosition(sliderPosition);
+            SetSliderPosition(sliderPosition, true);
         }
 
         public override void UnloadContent()
@@ -79,13 +78,6 @@ namespace MajorProject
                 }
             }
 
-            if (InputManager.Instance.KeyPressed(Keys.F))
-                SetSliderPosition(0.5f);
-            if (InputManager.Instance.KeyPressed(Keys.D))
-                SetSliderPosition(0.25f);
-            if (InputManager.Instance.KeyPressed(Keys.G))
-                SetSliderPosition(0.75f);
-
             if (InputManager.Instance.MouseReleased())
             {
                 wasClicked = false;
@@ -96,6 +88,7 @@ namespace MajorProject
                 float halfTexture = sliderImage.Texture.Width / 2;
                 SetSliderPosition(map(mousePos.X - halfTexture, Position.X - halfTexture, Position.X + baseImage.Texture.Width - halfTexture, 0, 1));
             }
+            /*
             if (sliderPosition == 0)
             {
                 bool u = true;
@@ -104,17 +97,26 @@ namespace MajorProject
             {
                 bool u = true;
             }
+            */
         }
 
         public void SetSliderPosition(float amount)
         {
             amount = Math.Max(0, Math.Min(1, amount));
+            if (amount == sliderPosition) return;
             sliderImage.Position = Position;
             sliderImage.Position.X -= sliderImage.Texture.Width / 2; // move so that the cursor is on the start of the line instead of the edge being at the start
             sliderImage.Position.Y -= sliderImage.Texture.Height; // move so that cursor points on line instead of below ___^___ or something
-            sliderImage.Position.X += baseImage.Texture.Width * amount;
-            SliderContainer.Location = sliderImage.Position.ToPoint();
-            sliderPosition = amount;
+            sliderImage.Position.X += baseImage.Texture.Width * amount; // move the cursor along the line by the specified amount
+            SliderContainer.Location = sliderImage.Position.ToPoint(); // move the hitbox along with it
+            sliderPosition = amount; // update the stated amount
+            OnActivateF(this, amount);
+        }
+        public void SetSliderPosition(float amount, bool setup)
+        {
+            if (setup) sliderPosition -= 1.5f;
+            SetSliderPosition(amount);
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)
