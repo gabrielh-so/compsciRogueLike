@@ -6,7 +6,7 @@
   </TitleImage>
   
   <TitleLabel>
-    <Text>this is the text</Text>
+    <Text>this is the where the game name will go</Text>
     <Position>
       <X>400</X>
       <Y>50</Y>

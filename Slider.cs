@@ -100,8 +100,9 @@ namespace MajorProject
             */
         }
 
-        public void SetSliderPosition(float amount)
+        public void SetSliderPosition(float amount, bool setup)
         {
+            if (setup) sliderPosition -= 1.5f;
             amount = Math.Max(0, Math.Min(1, amount));
             if (amount == sliderPosition) return;
             sliderImage.Position = Position;
@@ -110,13 +111,13 @@ namespace MajorProject
             sliderImage.Position.X += baseImage.Texture.Width * amount; // move the cursor along the line by the specified amount
             SliderContainer.Location = sliderImage.Position.ToPoint(); // move the hitbox along with it
             sliderPosition = amount; // update the stated amount
-            OnActivateF(this, amount);
+            if (!setup)
+                OnActivateF(this, amount);
         }
-        public void SetSliderPosition(float amount, bool setup)
-        {
-            if (setup) sliderPosition -= 1.5f;
-            SetSliderPosition(amount);
 
+        public void SetSliderPosition(float amount)
+        {
+            SetSliderPosition(amount, false);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

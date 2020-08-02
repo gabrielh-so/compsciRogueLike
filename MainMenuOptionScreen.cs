@@ -55,6 +55,10 @@ namespace MajorProject
             MusicVolumeSlider.LoadContent();
             MasterVolumeSlider.LoadContent();
 
+            SoundVolumeSlider.SetSliderPosition(AudioManager.Instance.SoundVolume, true);
+            MusicVolumeSlider.SetSliderPosition(AudioManager.Instance.MusicVolume, true);
+            MasterVolumeSlider.SetSliderPosition(AudioManager.Instance.MasterVolume, true);
+
             //optionDescriptor.Text = defaultDescriptionText;
             walk_upLabel.LoadContent();
             walk_rightLabel.LoadContent();
@@ -65,11 +69,6 @@ namespace MajorProject
             use_potionLabel.LoadContent();
 
             optionDescriptor.LoadContent();
-
-
-            SoundVolumeSlider.SetSliderPosition(PlayerPreferences.Instance.SoundVolume);
-            MusicVolumeSlider.SetSliderPosition(PlayerPreferences.Instance.MusicVolume);
-            MasterVolumeSlider.SetSliderPosition(PlayerPreferences.Instance.MasterVolume);
 
             walk_upToggle.LoadContent();
             walk_upToggle.toggleAction = InputManager.ActionType.walk_up;
@@ -214,6 +213,16 @@ namespace MajorProject
         void ResetKeysToDefault(UiElement triggeredObject)
         {
             PlayerPreferences.Instance.SetDefaultKeys();
+
+            
+            walk_upToggle.UpdateLabelText();
+            walk_rightToggle.UpdateLabelText();
+            walk_downToggle.UpdateLabelText();
+            walk_leftToggle.UpdateLabelText();
+            pick_upToggle.UpdateLabelText();
+            open_inventoryToggle.UpdateLabelText();
+            use_potionToggle.UpdateLabelText();
+            
         }
 
         void ResetVolumeToDefault(UiElement triggeredObject)

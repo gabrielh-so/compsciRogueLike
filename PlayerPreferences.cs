@@ -82,9 +82,7 @@ namespace MajorProject
                 instance.SetDefaultKeys();
                 instance.SetDefaultVolume();
             }
-            AudioManager.Instance.SoundVolume = instance.SoundVolume;
-            AudioManager.Instance.MusicVolume = instance.MusicVolume;
-            AudioManager.Instance.MasterVolume = instance.MasterVolume;
+            AudioManager.Instance.UpdateSoundPreferences();
         }
 
         public static void SavePreferences()
@@ -103,7 +101,7 @@ namespace MajorProject
 
         public void SetDefaultKeys()
         {
-            instance.ActionKeyDict = ActionKeyDictDefault;
+            instance.ActionKeyDict = new Dictionary<InputManager.ActionType, Keys>(ActionKeyDictDefault);
         }
         public void SetDefaultVolume()
         {

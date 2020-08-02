@@ -19,8 +19,12 @@ namespace MajorProject
             graphics = new GraphicsDeviceManager(this);
 
 
+            graphics.PreferredBackBufferWidth = 1980;
+            graphics.PreferredBackBufferHeight = 1090;
+            /*
             graphics.PreferredBackBufferWidth = 1200;
             graphics.PreferredBackBufferHeight = 720;
+            */
             graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }

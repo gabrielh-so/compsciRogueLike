@@ -16,7 +16,12 @@ namespace MajorProject
             get
             {
                 if (instance == null)
+                {
                     instance = new AudioManager();
+                    instance.SoundVolume = PlayerPreferences.Instance.SoundVolume;
+                    instance.MusicVolume = PlayerPreferences.Instance.MusicVolume;
+                    instance.MasterVolume = PlayerPreferences.Instance.MasterVolume;
+                }
 
                 return instance;
             }
@@ -26,7 +31,12 @@ namespace MajorProject
         public float MusicVolume;
         public float MasterVolume;
 
-
+        public void UpdateSoundPreferences()
+        {
+            instance.SoundVolume = PlayerPreferences.Instance.SoundVolume;
+            instance.MusicVolume = PlayerPreferences.Instance.MusicVolume;
+            instance.MasterVolume = PlayerPreferences.Instance.MasterVolume;
+        }
 
         public AudioManager()
         {

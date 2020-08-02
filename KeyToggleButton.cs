@@ -32,14 +32,19 @@ namespace MajorProject
 
         public void LoadLabel()
         {
-            Keys currentKey = PlayerPreferences.Instance.ActionKeyDict[toggleAction];
             //StandardImage.Text = currentKey.ToString();
             //HoverImage.Text = currentKey.ToString();
 
             ButtonLabel = new Label();
             ButtonLabel.Position = Position;
-            ButtonLabel.Text = currentKey.ToString();
+            UpdateLabelText();
             ButtonLabel.LoadContent();
+        }
+
+        public void UpdateLabelText()
+        {
+            Keys currentKey = PlayerPreferences.Instance.ActionKeyDict[toggleAction];
+            ButtonLabel.Text = currentKey.ToString();
         }
 
         public override void Update(GameTime gameTime)
