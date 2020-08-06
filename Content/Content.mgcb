@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Audio/Sound/UI/Button/FocusSound.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/UI/Button/FocusSound.ogg
+
 #begin ButtonScreen/Blue_Button_Hover.png
 /importer:TextureImporter
 /processor:TextureProcessor

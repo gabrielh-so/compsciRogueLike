@@ -19,8 +19,8 @@ namespace MajorProject
             graphics = new GraphicsDeviceManager(this);
 
 
-            graphics.PreferredBackBufferWidth = 1980;
-            graphics.PreferredBackBufferHeight = 1090;
+            graphics.PreferredBackBufferWidth = 1200;
+            graphics.PreferredBackBufferHeight = 720;
             /*
             graphics.PreferredBackBufferWidth = 1200;
             graphics.PreferredBackBufferHeight = 720;
@@ -84,13 +84,14 @@ namespace MajorProject
             // TODO: Add your update logic here
 
             InputManager.Instance.Update();
-            ScreenManager.Instance.Update(gameTime);
             if (InputManager.Instance.QuitSignaled)
             {
                 PlayerPreferences.SavePreferences();
 
                 Exit();
             }
+            AudioManager.Instance.Update();
+            ScreenManager.Instance.Update(gameTime);
 
             base.Update(gameTime);
         }

@@ -14,7 +14,7 @@ namespace MajorProject
     public class SplashScreen : Screen
     {
         public Image Image;
-        double timeToShow = 0;
+        double timeToShow = 7500;
         double totalUpTime;
 
         public override void LoadContent()

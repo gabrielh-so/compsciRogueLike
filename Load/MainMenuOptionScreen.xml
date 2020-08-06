@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <MainMenuOptionScreen>
-  
+
   <optionDescriptor>
     <Position>
       <X>750</X>
@@ -9,55 +9,62 @@
     <Text>Hover over an option for a description</Text>
   </optionDescriptor>
 
-  <walk_upLabel>
-    <Position>
-      <X>100</X>
-      <Y>100</Y>
-    </Position>
-    <Text>Walk Up</Text>
-  </walk_upLabel>
-  <walk_rightLabel>
-    <Position>
-      <X>100</X>
-      <Y>150</Y>
-    </Position>
-    <Text>Walk Right</Text>
-  </walk_rightLabel>
-  <walk_downLabel>
-    <Position>
-      <X>100</X>
-      <Y>200</Y>
-    </Position>
-    <Text>Walk Down</Text>
-  </walk_downLabel>
-  <walk_leftLabel>
-    <Position>
-      <X>100</X>
-      <Y>250</Y>
-    </Position>
-    <Text>Walk Left</Text>
-  </walk_leftLabel>
-  <pick_upLabel>
-    <Position>
-      <X>100</X>
-      <Y>300</Y>
-    </Position>
-    <Text>Pick Up</Text>
-  </pick_upLabel>
-  <open_inventoryLabel>
-    <Position>
-      <X>100</X>
-      <Y>350</Y>
-    </Position>
-    <Text>Open Inventory</Text>
-  </open_inventoryLabel>
-  <use_potionLabel>
-    <Position>
-      <X>100</X>
-      <Y>400</Y>
-    </Position>
-    <Text>UsePotion</Text>
-  </use_potionLabel>
+  <LabelList>
+  
+
+    <Label>
+      <Position>
+        <X>100</X>
+        <Y>100</Y>
+      </Position>
+      <Text>Walk Up</Text>
+    </Label>
+    <Label>
+      <Position>
+        <X>100</X>
+        <Y>150</Y>
+      </Position>
+      <Text>Walk Right</Text>
+    </Label>
+    <Label>
+      <Position>
+        <X>100</X>
+        <Y>200</Y>
+      </Position>
+      <Text>Walk Down</Text>
+    </Label>
+    <Label>
+      <Position>
+        <X>100</X>
+        <Y>250</Y>
+      </Position>
+      <Text>Walk Left</Text>
+    </Label>
+    <Label>
+      <Position>
+        <X>100</X>
+        <Y>300</Y>
+      </Position>
+      <Text>Pick Up</Text>
+    </Label>
+    <Label>
+      <Position>
+        <X>100</X>
+        <Y>350</Y>
+      </Position>
+      <Text>Open Inventory</Text>
+    </Label>
+    <Label>
+      <Position>
+        <X>100</X>
+        <Y>400</Y>
+      </Position>
+      <Text>UsePotion</Text>
+    </Label>
+  
+  </LabelList>
+  
+  
 
   <BackButton>
 
@@ -116,306 +123,322 @@
 
 
 
-
-
-
-  <walk_upToggle>
-
-    <Container>
-      <X>400</X>
-      <Y>100</Y>
-    </Container>
-
-    <toggleAction>walk_up</toggleAction>
-
-    <Description>Sets key that makes the character walk up</Description>
-
-    <StandardImage>
-      <Path>ButtonScreen/Blue_Button_Standard</Path>
-      <IsActive>true</IsActive>
-    </StandardImage>
-
-    <PressedImage>
-      <Path>ButtonScreen/Blue_Button_Pressed</Path>
-      <IsActive>true</IsActive>
-    </PressedImage>
-
-    <HoverImage>
-      <Path>ButtonScreen/Blue_Button_Hover</Path>
-      <IsActive>true</IsActive>
-    </HoverImage>
-
-  </walk_upToggle>
-
-
-
-
-
-
-
-
-
-
-
-
-  <walk_rightToggle>
-
-    <Container>
-      <X>400</X>
-      <Y>150</Y>
-    </Container>
-    
-    <toggleAction>walk_right</toggleAction>
-
-    <Description>Sets key that makes the character walk right</Description>
-    
-    <StandardImage>
-      <Path>ButtonScreen/Blue_Button_Standard</Path>
-      <IsActive>true</IsActive>
-    </StandardImage>
-
-    <PressedImage>
-      <Path>ButtonScreen/Blue_Button_Pressed</Path>
-      <IsActive>true</IsActive>
-    </PressedImage>
-
-    <HoverImage>
-      <Path>ButtonScreen/Blue_Button_Hover</Path>
-      <IsActive>true</IsActive>
-    </HoverImage>
-
-  </walk_rightToggle>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <walk_downToggle>
-
-    <Container>
-      <X>400</X>
-      <Y>200</Y>
-    </Container>
-    
-    <toggleAction>walk_down</toggleAction>
-
-    <Description>Sets key that makes the character walk down</Description>
-    
-    <StandardImage>
-      <Path>ButtonScreen/Blue_Button_Standard</Path>
-      <IsActive>true</IsActive>
-    </StandardImage>
-
-    <PressedImage>
-      <Path>ButtonScreen/Blue_Button_Pressed</Path>
-      <IsActive>true</IsActive>
-    </PressedImage>
-
-    <HoverImage>
-      <Path>ButtonScreen/Blue_Button_Hover</Path>
-      <IsActive>true</IsActive>
-    </HoverImage>
-
-  </walk_downToggle>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <walk_leftToggle>
-
-    <Container>
-      <X>400</X>
-      <Y>250</Y>
-    </Container>
-    
-    <toggleAction>walk_left</toggleAction>
-
-    <Description>Sets key that makes the character walk left</Description>
-    
-    <StandardImage>
-      <Path>ButtonScreen/Blue_Button_Standard</Path>
-      <IsActive>true</IsActive>
-    </StandardImage>
-
-    <PressedImage>
-      <Path>ButtonScreen/Blue_Button_Pressed</Path>
-      <IsActive>true</IsActive>
-    </PressedImage>
-
-    <HoverImage>
-      <Path>ButtonScreen/Blue_Button_Hover</Path>
-      <IsActive>true</IsActive>
-    </HoverImage>
-
-  </walk_leftToggle>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <pick_upToggle>
-
-    <Container>
-      <X>400</X>
-      <Y>300</Y>
-    </Container>
-    
-    <toggleAction>pick_up</toggleAction>
-
-    <Description>Sets key that makes the character picj up items</Description>
-    
-    <StandardImage>
-      <Path>ButtonScreen/Blue_Button_Standard</Path>
-      <IsActive>true</IsActive>
-    </StandardImage>
-
-    <PressedImage>
-      <Path>ButtonScreen/Blue_Button_Pressed</Path>
-      <IsActive>true</IsActive>
-    </PressedImage>
-
-    <HoverImage>
-      <Path>ButtonScreen/Blue_Button_Hover</Path>
-      <IsActive>true</IsActive>
-    </HoverImage>
-
-  </pick_upToggle>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <open_inventoryToggle>
-
-    <Container>
-      <X>400</X>
-      <Y>350</Y>
-    </Container>
-    
-    <toggleAction>open_inventory</toggleAction>
-
-    <Description>Sets key that makes the character open thier inventory</Description>
-    
-    <StandardImage>
-      <Path>ButtonScreen/Blue_Button_Standard</Path>
-      <IsActive>true</IsActive>
-    </StandardImage>
-
-    <PressedImage>
-      <Path>ButtonScreen/Blue_Button_Pressed</Path>
-      <IsActive>true</IsActive>
-    </PressedImage>
-
-    <HoverImage>
-      <Path>ButtonScreen/Blue_Button_Hover</Path>
-      <IsActive>true</IsActive>
-    </HoverImage>
-
-  </open_inventoryToggle>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <use_potionToggle>
-
-    <Container>
-      <X>400</X>
-      <Y>400</Y>
-    </Container>
-
-    <toggleAction>use_potion</toggleAction>
-
-    <Description>Sets key that makes the character use the selected potion</Description>
-    
-    <StandardImage>
-      <Path>ButtonScreen/Blue_Button_Standard</Path>
-      <IsActive>true</IsActive>
-    </StandardImage>
-
-    <PressedImage>
-      <Path>ButtonScreen/Blue_Button_Pressed</Path>
-      <IsActive>true</IsActive>
-    </PressedImage>
-
-    <HoverImage>
-      <Path>ButtonScreen/Blue_Button_Hover</Path>
-      <IsActive>true</IsActive>
-    </HoverImage>
-
-  </use_potionToggle>
   
+  <ToggleButtonList>
+
+    <KeyToggleButton>
+
+      <Container>
+        <X>400</X>
+        <Y>100</Y>
+      </Container>
+
+      <toggleAction>walk_up</toggleAction>
+      <Name>WalkUpToggle</Name>
+
+      <Description>Sets key that makes the character walk up</Description>
+
+      <StandardImage>
+        <Path>ButtonScreen/Blue_Button_Standard</Path>
+        <IsActive>true</IsActive>
+      </StandardImage>
+
+      <PressedImage>
+        <Path>ButtonScreen/Blue_Button_Pressed</Path>
+        <IsActive>true</IsActive>
+      </PressedImage>
+
+      <HoverImage>
+        <Path>ButtonScreen/Blue_Button_Hover</Path>
+        <IsActive>true</IsActive>
+      </HoverImage>
+
+    </KeyToggleButton>
+
+
+
+
+
+
+
+
+
+
+
+
+    <KeyToggleButton>
+
+      <Container>
+        <X>400</X>
+        <Y>150</Y>
+      </Container>
+
+      <toggleAction>walk_right</toggleAction>
+      <Name>WalkRightToggle</Name>
+
+      <Description>Sets key that makes the character walk right</Description>
+
+      <StandardImage>
+        <Path>ButtonScreen/Blue_Button_Standard</Path>
+        <IsActive>true</IsActive>
+      </StandardImage>
+
+      <PressedImage>
+        <Path>ButtonScreen/Blue_Button_Pressed</Path>
+        <IsActive>true</IsActive>
+      </PressedImage>
+
+      <HoverImage>
+        <Path>ButtonScreen/Blue_Button_Hover</Path>
+        <IsActive>true</IsActive>
+      </HoverImage>
+
+    </KeyToggleButton>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <KeyToggleButton>
+
+      <Container>
+        <X>400</X>
+        <Y>200</Y>
+      </Container>
+
+      <toggleAction>walk_down</toggleAction>
+      <Name>WalkDownToggle</Name>
+
+      <Description>Sets key that makes the character walk down</Description>
+
+      <StandardImage>
+        <Path>ButtonScreen/Blue_Button_Standard</Path>
+        <IsActive>true</IsActive>
+      </StandardImage>
+
+      <PressedImage>
+        <Path>ButtonScreen/Blue_Button_Pressed</Path>
+        <IsActive>true</IsActive>
+      </PressedImage>
+
+      <HoverImage>
+        <Path>ButtonScreen/Blue_Button_Hover</Path>
+        <IsActive>true</IsActive>
+      </HoverImage>
+
+    </KeyToggleButton>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <KeyToggleButton>
+
+      <Container>
+        <X>400</X>
+        <Y>250</Y>
+      </Container>
+
+      <toggleAction>walk_left</toggleAction>
+      <Name>WalkLeftToggle</Name>
+
+      <Description>Sets key that makes the character walk left</Description>
+
+      <StandardImage>
+        <Path>ButtonScreen/Blue_Button_Standard</Path>
+        <IsActive>true</IsActive>
+      </StandardImage>
+
+      <PressedImage>
+        <Path>ButtonScreen/Blue_Button_Pressed</Path>
+        <IsActive>true</IsActive>
+      </PressedImage>
+
+      <HoverImage>
+        <Path>ButtonScreen/Blue_Button_Hover</Path>
+        <IsActive>true</IsActive>
+      </HoverImage>
+
+    </KeyToggleButton>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <KeyToggleButton>
+
+      <Container>
+        <X>400</X>
+        <Y>300</Y>
+      </Container>
+
+      <toggleAction>pick_up</toggleAction>
+      <Name>PickUpToggle</Name>
+
+      <Description>Sets key that makes the character picj up items</Description>
+
+      <StandardImage>
+        <Path>ButtonScreen/Blue_Button_Standard</Path>
+        <IsActive>true</IsActive>
+      </StandardImage>
+
+      <PressedImage>
+        <Path>ButtonScreen/Blue_Button_Pressed</Path>
+        <IsActive>true</IsActive>
+      </PressedImage>
+
+      <HoverImage>
+        <Path>ButtonScreen/Blue_Button_Hover</Path>
+        <IsActive>true</IsActive>
+      </HoverImage>
+
+    </KeyToggleButton>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <KeyToggleButton>
+
+      <Container>
+        <X>400</X>
+        <Y>350</Y>
+      </Container>
+
+      <toggleAction>open_inventory</toggleAction>
+      <Name>OpenInventoryToggle</Name>
+
+      <Description>Sets key that makes the character open thier inventory</Description>
+
+      <StandardImage>
+        <Path>ButtonScreen/Blue_Button_Standard</Path>
+        <IsActive>true</IsActive>
+      </StandardImage>
+
+      <PressedImage>
+        <Path>ButtonScreen/Blue_Button_Pressed</Path>
+        <IsActive>true</IsActive>
+      </PressedImage>
+
+      <HoverImage>
+        <Path>ButtonScreen/Blue_Button_Hover</Path>
+        <IsActive>true</IsActive>
+      </HoverImage>
+
+    </KeyToggleButton>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <KeyToggleButton>
+
+      <Container>
+        <X>400</X>
+        <Y>400</Y>
+      </Container>
+
+      <toggleAction>use_potion</toggleAction>
+      <Name>UsePotionToggle</Name>
+
+      <Description>Sets key that makes the character use the selected potion</Description>
+
+      <StandardImage>
+        <Path>ButtonScreen/Blue_Button_Standard</Path>
+        <IsActive>true</IsActive>
+      </StandardImage>
+
+      <PressedImage>
+        <Path>ButtonScreen/Blue_Button_Pressed</Path>
+        <IsActive>true</IsActive>
+      </PressedImage>
+
+      <HoverImage>
+        <Path>ButtonScreen/Blue_Button_Hover</Path>
+        <IsActive>true</IsActive>
+      </HoverImage>
+
+    </KeyToggleButton>
+    
+  
+
+
+
+
+
+
+</ToggleButtonList>
+
 
   <SoundVolumeSlider>
 
@@ -425,7 +448,7 @@
     </Position>
 
     <Description>Sets the relative volume of sound effects</Description>
-    
+
     <baseImage>
       <Path>SliderScreen/Grey_Horizontal_SlideBar</Path>
       <IsActive>true</IsActive>
@@ -448,7 +471,7 @@
     </Position>
 
     <Description>Sets the relative volume of in game music</Description>
-    
+
     <baseImage>
       <Path>SliderScreen/Grey_Horizontal_SlideBar</Path>
       <IsActive>true</IsActive>
@@ -471,7 +494,7 @@
     </Position>
 
     <Description>Sets the absolute volume of all audio</Description>
-    
+
     <baseImage>
       <Path>SliderScreen/Grey_Horizontal_SlideBar</Path>
       <IsActive>true</IsActive>
@@ -484,9 +507,9 @@
 
 
   </MasterVolumeSlider>
-  
-  
-  
-  
+
+
+
+
 
 </MainMenuOptionScreen>

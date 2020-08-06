@@ -109,6 +109,5 @@ namespace MajorProject
         {
             if (ActiveImage != null) ActiveImage.Draw(spriteBatch);
         }
-
     }
 }

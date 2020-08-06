@@ -82,7 +82,6 @@ namespace MajorProject
                 instance.SetDefaultKeys();
                 instance.SetDefaultVolume();
             }
-            AudioManager.Instance.UpdateSoundPreferences();
         }
 
         public static void SavePreferences()

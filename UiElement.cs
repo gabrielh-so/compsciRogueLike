@@ -17,7 +17,7 @@ namespace MajorProject
 
         public Vector2 Position;
         public string Description;
-
+        public string Name;
         public UiElement()
         {
 
