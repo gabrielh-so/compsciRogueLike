@@ -13,8 +13,8 @@ namespace MajorProject
     public class KeyToggleButton : Button
     {
         public InputManager.ActionType toggleAction;
-        bool isListening;
-
+        public bool isListening;
+        public Image ListeningImage;
 
         public Label ButtonLabel;
 
@@ -49,6 +49,8 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
+            if (InputManager.Instance.KeyPressed(Keys.Escape)) StopListening();
+
             if (isListening)
             {
                 List<Keys> inputKeys;
@@ -63,17 +65,19 @@ namespace MajorProject
 
                         ButtonLabel.Text = inputKeys[0].ToString();
 
-                        //unload and reload image to display new character - should probably be a lable or something
+                        //unload and reload image to display new character - should probably be a label or something
                         /*
                         StandardImage.RenderTexture();
                         HoverImage.RenderTexture();
                         PressedImage.RenderTexture();
                         ActiveImage = HoverImage;
                         */
+                        StopListening();
                     }
-                    isListening = false;
                 }
-                if (InputManager.Instance.MouseMoved()) isListening = false;
+
+                //if (InputManager.Instance.MouseMoved()) isListening = false;
+
             }
 
             base.Update(gameTime);
@@ -89,6 +93,11 @@ namespace MajorProject
         {
             base.Draw(spriteBatch);
             ButtonLabel.Draw(spriteBatch);
+        }
+
+        void StopListening()
+        {
+            isListening = false;
         }
 
         void StartListening(UiElement triggerObject)

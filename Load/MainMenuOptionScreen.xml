@@ -63,8 +63,21 @@
     </Label>
   
   </LabelList>
-  
-  
+
+  <KeyInputAlert>
+    <Position>
+      <X>600</X>
+      <Y>360</Y>
+    </Position>
+    <Path>ButtonScreen/Red_Button_Pressed</Path>
+    <IsActive>true</IsActive>
+  </KeyInputAlert>
+  <KeyInputAlertText>
+    <Position>
+      <X>150</X>
+      <Y>375</Y>
+    </Position>
+  </KeyInputAlertText>
 
   <BackButton>
 

@@ -27,6 +27,16 @@ namespace MajorProject
             { InputManager.ActionType.use_potion, Keys.E }
         };
 
+        public enum difficultyLevel
+        {
+            easy,
+            normal,
+            hard,
+            insane
+        }
+
+        public difficultyLevel difficulty;
+
         public float SoundVolume;
         public float MusicVolume;
         public float MasterVolume;

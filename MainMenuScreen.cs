@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using static MajorProject.PlayerPreferences; // no longhand reference to difficulty enum
+
 namespace MajorProject
 {
     public class MainMenuScreen : Screen
@@ -19,9 +21,10 @@ namespace MajorProject
         public Button ContinueGameButton;
         public Button OptionsButton;
         public Button DifficultyButton;
+        public Label DifficultyLabel;
         public Button QuitButton;
 
-
+        difficultyLevel difficulty;
 
         public MainMenuScreen()
         {
@@ -43,6 +46,12 @@ namespace MajorProject
             OptionsButton.LoadContent();
             DifficultyButton.LoadContent();
             QuitButton.LoadContent();
+
+            difficulty = Instance.difficulty;
+            DifficultyLabel = new Label();
+            DifficultyLabel.Text = difficulty.ToString();
+            DifficultyLabel.Position = new Vector2(DifficultyButton.Position.X, DifficultyButton.Position.Y + 25);
+            DifficultyLabel.LoadContent();
         }
 
         public override void UnloadContent()
@@ -54,6 +63,8 @@ namespace MajorProject
             OptionsButton.UnloadContent();
             DifficultyButton.UnloadContent();
             QuitButton.UnloadContent();
+
+            DifficultyLabel.UnloadContent();
         }
 
         public override void Update(GameTime gameTime)
@@ -75,6 +86,7 @@ namespace MajorProject
             QuitButton.Draw(spriteBatch);
 
             TitleLabel.Draw(spriteBatch);
+            DifficultyLabel.Draw(spriteBatch);
         }
 
         void NewGame(UiElement triggerElement)
@@ -94,7 +106,10 @@ namespace MajorProject
 
         void ChangeDifficulty(UiElement triggerElement)
         {
-            ScreenManager.Instance.ChangeScreens("MainMenuScreen");
+            difficulty = (difficultyLevel)((((int)difficulty)+1)%4);
+            DifficultyLabel.Text = difficulty.ToString();
+
+            Instance.difficulty = difficulty;
         }
 
         void Quit(UiElement triggerElement)

@@ -14,6 +14,9 @@ namespace MajorProject
         MouseState currentMouseState, prevMouseState;
         public bool QuitSignaled;
 
+        bool ChangedKeysCalculated;
+        List<Keys> changedKeys;
+
         public enum ActionType
         {
             walk_up,
@@ -45,10 +48,12 @@ namespace MajorProject
         public InputManager()
         {
             ActionKeyDict = PlayerPreferences.Instance.ActionKeyDict;
+            changedKeys = new List<Keys>();
         }
 
         public void Update()
         {
+            ChangedKeysCalculated = false;
             prevKeyState = currentKeyState;
             prevMouseState = currentMouseState;
             if (!ScreenManager.Instance.IsTransitioning)
@@ -60,13 +65,21 @@ namespace MajorProject
 
         public List<Keys> GetChangedKeys()
         {
-            List<Keys> changedKeys = new List<Keys>();
+            if (ChangedKeysCalculated) return changedKeys;
+            changedKeys = new List<Keys>();
             Keys[] pressedKeys = currentKeyState.GetPressedKeys();
             foreach (Keys k in pressedKeys)
             {
                 if (prevKeyState.IsKeyUp(k)) changedKeys.Add(k);
             }
+            ChangedKeysCalculated = true;
             return changedKeys;
+        }
+
+        public int GetChangedKeysCount()
+        {
+            if (ChangedKeysCalculated) return changedKeys.Count;
+            return GetChangedKeys().Count;
         }
 
         public Point GetMousePosition()

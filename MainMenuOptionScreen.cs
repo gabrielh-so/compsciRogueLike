@@ -14,6 +14,11 @@ namespace MajorProject
 {
     public class MainMenuOptionScreen : Screen
     {
+        bool ButtonIsListening;
+
+        public Image KeyInputAlert;
+        public Label KeyInputAlertText;
+
         public Slider SoundVolumeSlider;
         public Slider MusicVolumeSlider;
         public Slider MasterVolumeSlider;
@@ -50,6 +55,7 @@ namespace MajorProject
         */
 
         const string defaultDescriptionText = "Hover over an option for a description";
+        const string AlertText = "Press any available key to reassign value. Press ESC to cancel.";
 
         public override void LoadContent()
         {
@@ -78,6 +84,11 @@ namespace MajorProject
             optionDescriptor.Text = defaultDescriptionText;
             optionDescriptor.LoadContent();
 
+            KeyInputAlert.LoadContent();
+            KeyInputAlert.Scale = new Vector2(ScreenManager.Instance.GraphicsDevice.Viewport.Width/KeyInputAlert.Texture.Width,1);
+            KeyInputAlertText.Text = AlertText;
+            KeyInputAlertText.LoadContent();
+
             foreach (Label l in LabelList)
             {
                 l.LoadContent();
@@ -96,6 +107,8 @@ namespace MajorProject
         {
             content.Unload();
             content.Dispose();
+
+            KeyInputAlert.UnloadContent();
 
             SoundVolumeSlider.UnloadContent();
             MusicVolumeSlider.UnloadContent();
@@ -125,13 +138,23 @@ namespace MajorProject
             MusicVolumeSlider.Update(gameTime);
             MasterVolumeSlider.Update(gameTime);
 
+            ButtonIsListening = false;
             foreach (KeyToggleButton b in ToggleButtonList)
             {
+                if (b.isListening)
+                {
+                    ButtonIsListening = true;
+                }
                 b.Update(gameTime);
             }
 
             BackButton.Update(gameTime);
             ResetButton.Update(gameTime);
+
+            if (ButtonIsListening)
+            {
+                KeyInputAlert.Update(gameTime);
+            }
 
             base.Update(gameTime);
         }
@@ -156,6 +179,12 @@ namespace MajorProject
 
             BackButton.Draw(spriteBatch);
             ResetButton.Draw(spriteBatch);
+
+            if (ButtonIsListening)
+            {
+                KeyInputAlert.Draw(spriteBatch);
+                KeyInputAlertText.Draw(spriteBatch);
+            }
         }
 
         void ApplyToggleButtonDelegates(KeyToggleButton b)
