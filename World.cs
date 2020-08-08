@@ -4,45 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.Xna.Framework;
+
 namespace MajorProject
 {
-    public class Vector2
-    {
-        public int X, Y;
-        public Vector2() { }
-        public Vector2(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public static Vector2 left = new Vector2(-1, 0);
-        public static Vector2 right = new Vector2(1, 0);
-        public static Vector2 up = new Vector2(0, -1);
-        public static Vector2 down = new Vector2(0, 1);
-
-        public static Vector2 operator +(Vector2 a, Vector2 b)
-        {
-            return new Vector2(a.X + b.X, a.Y + b.Y);
-        }
-        public static Vector2 operator -(Vector2 a, Vector2 b)
-        {
-            return new Vector2(a.X - b.X, a.Y - b.Y);
-        }
-        public static Vector2 operator /(Vector2 a, Vector2 b)
-        {
-            return new Vector2(a.X / b.X, a.Y / b.Y);
-        }
-        public static Vector2 operator *(Vector2 a, Vector2 b)
-        {
-            return new Vector2(a.X * b.X, a.Y * b.Y);
-        }
-
-        public static Vector2 operator *(Vector2 a, int b)
-        {
-            return new Vector2(a.X * b, a.Y * b);
-        }
-    }
 
     public class World
     {
@@ -117,10 +82,10 @@ namespace MajorProject
         public World()
         {
             DirectionVector2Map = new Dictionary<directions, Vector2>();
-            DirectionVector2Map.Add(directions.up, Vector2.up);
-            DirectionVector2Map.Add(directions.right, Vector2.right);
-            DirectionVector2Map.Add(directions.down, Vector2.down);
-            DirectionVector2Map.Add(directions.left, Vector2.left);
+            DirectionVector2Map.Add(directions.up, new Vector2(0, -1));
+            DirectionVector2Map.Add(directions.right, new Vector2(1, 0));
+            DirectionVector2Map.Add(directions.down, new Vector2(0, 1));
+            DirectionVector2Map.Add(directions.left, new Vector2(-1, 0));
         }
 
         public int ToCellIndex(int cell)
@@ -132,7 +97,7 @@ namespace MajorProject
         {
             // randomly select entry point
             Vector2 entry = new Vector2(rand.Next(0, level_cell_width), rand.Next(0, level_cell_height));
-            while (generation_VisitedLayer[entry.Y, entry.X] != 0) // find unvisited
+            while (generation_VisitedLayer[(int)entry.Y, (int)entry.X] != 0) // find unvisited
             {
                 entry = new Vector2(rand.Next(0, level_cell_width), rand.Next(0, level_cell_height));
             }
@@ -157,7 +122,7 @@ namespace MajorProject
         void AdvanceMaze(Vector2 cellPosition)
         {
 
-            generation_VisitedLayer[cellPosition.Y, cellPosition.X] = 2; // visited by corridor
+            generation_VisitedLayer[(int)cellPosition.Y, (int)cellPosition.X] = 2; // visited by corridor
             int x = 0, y = 0;
 
             bool isEnd = true;
@@ -165,24 +130,24 @@ namespace MajorProject
             {
                 int possibleDirectionCount = 0;
                 List<Vector2> possibleDirections = new List<Vector2>();
-                if (cellPosition.X > 0) if (generation_VisitedLayer[cellPosition.Y, cellPosition.X - 1] == 0)
+                if (cellPosition.X > 0) if (generation_VisitedLayer[(int)cellPosition.Y, (int)cellPosition.X - 1] == 0)
                     {
-                        possibleDirections.Add(Vector2.left);
+                        possibleDirections.Add(DirectionVector2Map[directions.left]);
                         possibleDirectionCount++;
                     }
-                if (cellPosition.X < level_cell_width - 1) if (generation_VisitedLayer[cellPosition.Y, cellPosition.X + 1] == 0)
+                if (cellPosition.X < level_cell_width - 1) if (generation_VisitedLayer[(int)cellPosition.Y, (int)cellPosition.X + 1] == 0)
                     {
-                        possibleDirections.Add(Vector2.right);
+                        possibleDirections.Add(DirectionVector2Map[directions.right]);
                         possibleDirectionCount++;
                     }
-                if (cellPosition.Y > 0) if (generation_VisitedLayer[cellPosition.Y - 1, cellPosition.X] == 0)
+                if (cellPosition.Y > 0) if (generation_VisitedLayer[(int)cellPosition.Y - 1, (int)cellPosition.X] == 0)
                     {
-                        possibleDirections.Add(Vector2.up);
+                        possibleDirections.Add(DirectionVector2Map[directions.up]);
                         possibleDirectionCount++;
                     }
-                if (cellPosition.Y < level_cell_height - 1) if (generation_VisitedLayer[cellPosition.Y + 1, cellPosition.X] == 0)
+                if (cellPosition.Y < level_cell_height - 1) if (generation_VisitedLayer[(int)cellPosition.Y + 1, (int)cellPosition.X] == 0)
                     {
-                        possibleDirections.Add(Vector2.down);
+                        possibleDirections.Add(DirectionVector2Map[directions.down]);
                         possibleDirectionCount++;
                     }
                 if (possibleDirectionCount == 0 && isEnd)
@@ -196,7 +161,7 @@ namespace MajorProject
                 //DisplayWorld();
                 //DisplayVisited();
                 int index = (int)(rand.NextDouble() * possibleDirectionCount);
-                Map[ToCellIndex(cellPosition.Y) + possibleDirections[index].Y, ToCellIndex(cellPosition.X) + possibleDirections[index].X] = 1;
+                Map[ToCellIndex((int)cellPosition.Y) + (int)possibleDirections[index].Y, ToCellIndex((int)cellPosition.X) + (int)possibleDirections[index].X] = 1;
 
                 //DisplayWorld();
                 //Console.ReadLine();
@@ -225,15 +190,15 @@ namespace MajorProject
                 while (!placed)
                 {
                     //DisplayVisited();
-                    dimensions = new Vector2(rand.Next(room_min_cell.X, room_max_cell.Y), rand.Next(room_min_cell.X, room_max_cell.Y));
-                    position = new Vector2(rand.Next(0, level_cell_width - dimensions.X), rand.Next(0, level_cell_height - dimensions.Y));
+                    dimensions = new Vector2(rand.Next((int)room_min_cell.X, (int)room_max_cell.Y), rand.Next((int)room_min_cell.X, (int)room_max_cell.Y));
+                    position = new Vector2(rand.Next(0, level_cell_width - (int)dimensions.X), rand.Next(0, level_cell_height - (int)dimensions.Y));
                     bool intersectsRoom = false;
 
                     for (int j = 0; j < dimensions.Y; j++)
                     {
                         for (int k = 0; k < dimensions.X; k++)
                         {
-                            if (generation_VisitedLayer[j + position.Y, k + position.X] == 1) intersectsRoom = true;
+                            if (generation_VisitedLayer[j + (int)position.Y, k + (int)position.X] == 1) intersectsRoom = true;
                             if (intersectsRoom) break; // break from loop, so you don't iterate more than you have to
                         }
                         if (intersectsRoom) break;
@@ -253,7 +218,7 @@ namespace MajorProject
                         {
                             for (int k = 0; k < dimensions.X; k++)
                             {
-                                generation_VisitedLayer[position.Y + j, position.X + k] = 1;
+                                generation_VisitedLayer[(int)position.Y + j, (int)position.X + k] = 1;
                             }
                         }
                     }
@@ -265,7 +230,7 @@ namespace MajorProject
                 else
                 {
                     // break walls in the map
-                    Vector2 indexPosition = new Vector2(ToCellIndex(position.X), ToCellIndex(position.Y));
+                    Vector2 indexPosition = new Vector2(ToCellIndex((int)position.X), ToCellIndex((int)position.Y));
                     Vector2 indexDimensions = new Vector2(dimensions.X * 2 - 1, dimensions.Y * 2 - 1);
                     generation_RoomIndexPositions.Add(indexPosition);
                     generation_RoomIndexDimensions.Add(indexDimensions);
@@ -273,7 +238,7 @@ namespace MajorProject
                     {
                         for (int k = 0; k < indexDimensions.X; k++)
                         {
-                            Map[j + indexPosition.Y, k + indexPosition.X] = 1;
+                            Map[j + (int)indexPosition.Y, k + (int)indexPosition.X] = 1;
                         }
                     }
 
@@ -369,7 +334,7 @@ namespace MajorProject
                         while (!spaceAvailable)
                         {
                             // select random distance along wall
-                            int DistanceAlongWall = rand.Next(0, ((wallNumber % 2 == 0) ? generation_RoomIndexDimensions[roomNumber].X : generation_RoomIndexDimensions[roomNumber].Y) - 1); // -1 since you don't want to place a door in the far corner
+                            int DistanceAlongWall = rand.Next(0, ((wallNumber % 2 == 0) ? (int)generation_RoomIndexDimensions[roomNumber].X : (int)generation_RoomIndexDimensions[roomNumber].Y) - 1); // -1 since you don't want to place a door in the far corner
 
                             // check that space perpendicular to wall isn't a wall, else reselect
 
@@ -380,11 +345,11 @@ namespace MajorProject
                             DoorPosition = cornerIndexPosition + DirectionVector2Map[DirectionArray[(wallNumber + 1) % 4]] * DistanceAlongWall;
                             if (wallNumber == 0 || wallNumber == 3) DoorPosition += DirectionVector;
 
-                            spaceAvailable = Map[DoorPosition.Y + DirectionVector.Y, DoorPosition.X + DirectionVector.X] != 2;
+                            spaceAvailable = Map[(int)DoorPosition.Y + (int)DirectionVector.Y, (int)DoorPosition.X + (int)DirectionVector.X] != 2;
                         }
 
                         // break space in wall
-                        Map[DoorPosition.Y, DoorPosition.X] = 3;
+                        Map[(int)DoorPosition.Y, (int)DoorPosition.X] = 3;
 
                         // mark position in door array
                         generation_DoorPositions.Add(new Vector2((DoorPosition.X - 1) / 2, (DoorPosition.Y - 1) / 2));
@@ -402,6 +367,11 @@ namespace MajorProject
         {
             rand = new Random(seed);
             GenerateWorld();
+            DirectionVector2Map = new Dictionary<directions, Vector2>();
+            DirectionVector2Map.Add(directions.up, new Vector2(0, -1));
+            DirectionVector2Map.Add(directions.right, new Vector2(1, 0));
+            DirectionVector2Map.Add(directions.down, new Vector2(0, 1));
+            DirectionVector2Map.Add(directions.left, new Vector2(-1, 0));
         }
 
         public void DisplayWorld()

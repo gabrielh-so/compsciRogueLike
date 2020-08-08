@@ -138,15 +138,16 @@ namespace MajorProject
             MusicVolumeSlider.Update(gameTime);
             MasterVolumeSlider.Update(gameTime);
 
-            ButtonIsListening = false;
+            bool bListening = false;
             foreach (KeyToggleButton b in ToggleButtonList)
             {
                 if (b.isListening)
                 {
-                    ButtonIsListening = true;
+                    bListening = true;
                 }
                 b.Update(gameTime);
             }
+            ButtonIsListening = bListening;
 
             BackButton.Update(gameTime);
             ResetButton.Update(gameTime);
