@@ -19,7 +19,7 @@ namespace MajorProject
         [XmlIgnore]
         public ContentManager Content { private set; get; }
         XmlManager<Screen> xmlGameScreenManager;
-
+            
         Screen currentScreen, newScreen;
         [XmlIgnore]
         public GraphicsDevice GraphicsDevice;
@@ -45,6 +45,7 @@ namespace MajorProject
             {
                 if (instance == null)
                 {
+                    // no instance of screen manager has been created yet - get instance from xml file
                     XmlManager<ScreenManager> xml = new XmlManager<ScreenManager>();
                     instance = xml.Load("Load/ScreenManager.xml");
                 }

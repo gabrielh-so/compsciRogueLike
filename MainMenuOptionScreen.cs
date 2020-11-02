@@ -19,6 +19,11 @@ namespace MajorProject
         public Image KeyInputAlert;
         public Label KeyInputAlertText;
 
+
+        public Label SoundVolumeLabel;
+        public Label MusicVolumeLabel;
+        public Label MasterVolumeLabel;
+
         public Slider SoundVolumeSlider;
         public Slider MusicVolumeSlider;
         public Slider MasterVolumeSlider;
@@ -69,6 +74,10 @@ namespace MajorProject
             ResetButton.LoadContent();
             ResetButton.OnActivate = new UiElement.onActivate(ResetKeysToDefault);
 
+            SoundVolumeLabel.LoadContent();
+            MusicVolumeLabel.LoadContent();
+            MasterVolumeLabel.LoadContent();
+
             SoundVolumeSlider.OnActivateF = new UiElement.onActivateF(ChangeSoundVolume);
             MusicVolumeSlider.OnActivateF = new UiElement.onActivateF(ChangeMusicVolume);
             MasterVolumeSlider.OnActivateF = new UiElement.onActivateF(ChangeMasterVolume);
@@ -109,6 +118,10 @@ namespace MajorProject
             content.Dispose();
 
             KeyInputAlert.UnloadContent();
+
+            SoundVolumeLabel.UnloadContent();
+            MusicVolumeLabel.UnloadContent();
+            MasterVolumeLabel.UnloadContent();
 
             SoundVolumeSlider.UnloadContent();
             MusicVolumeSlider.UnloadContent();
@@ -162,6 +175,12 @@ namespace MajorProject
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+
+            SoundVolumeLabel.Draw(spriteBatch);
+            MusicVolumeLabel.Draw(spriteBatch);
+            MasterVolumeLabel.Draw(spriteBatch);
+
+
             SoundVolumeSlider.Draw(spriteBatch);
             MusicVolumeSlider.Draw(spriteBatch);
             MasterVolumeSlider.Draw(spriteBatch);

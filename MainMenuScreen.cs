@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using static MajorProject.PlayerPreferences; // no longhand reference to difficulty enum
+using static MajorProject.PlayerPreferences; // no longhand reference to difficulty enum needed
 
 namespace MajorProject
 {
@@ -91,7 +91,7 @@ namespace MajorProject
 
         void NewGame(UiElement triggerElement)
         {
-            ScreenManager.Instance.ChangeScreens("SplashScreen");
+            ScreenManager.Instance.ChangeScreens("GameScreen");
         }
 
         void ContinueGame(UiElement triggerElement)

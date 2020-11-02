@@ -452,6 +452,13 @@
 
 </ToggleButtonList>
 
+  <SoundVolumeLabel>
+    <Position>
+      <X>800</X>
+      <Y>50</Y>
+    </Position>
+    <Text>Sound Volume</Text>
+  </SoundVolumeLabel>
 
   <SoundVolumeSlider>
 
@@ -475,6 +482,13 @@
 
   </SoundVolumeSlider>
 
+  <MusicVolumeLabel>
+    <Position>
+      <X>800</X>
+      <Y>150</Y>
+    </Position>
+    <Text>Music Volume</Text>
+  </MusicVolumeLabel>
 
   <MusicVolumeSlider>
 
@@ -498,6 +512,13 @@
 
   </MusicVolumeSlider>
 
+  <MasterVolumeLabel>
+    <Position>
+      <X>800</X>
+      <Y>250</Y>
+    </Position>
+    <Text>Master Volume</Text>
+  </MasterVolumeLabel>
 
   <MasterVolumeSlider>
 

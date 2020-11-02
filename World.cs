@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MajorProject
 {
@@ -12,6 +14,30 @@ namespace MajorProject
     public class World
     {
         Random rand;
+        Texture2D WorldImageTexture;
+
+
+        /// <summary>
+        /// values for setting the size of standard tiles
+        /// display debug - 50 * 50 px, 1200px display = 24 tiles lengthways, 14 tiles downwards
+        /// </summary>
+
+        const int tilePixelWidth = 50;
+        const int tilePixelHeight = 50;
+
+        ContentManager content;
+
+        string EnvironmentTexturePath = "InGameTextures/test textures/environment textures/";
+
+        string[] TextureFileNames = new string[6] {
+            "",
+            "Ground_Texture",
+            "Wall_Texture",
+            "Door_Texture",
+            "Entrance_Texture",
+            "Exit_Texture"
+        };
+
 
         enum directions
         {
@@ -81,6 +107,9 @@ namespace MajorProject
 
         public World()
         {
+            content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
+
+
             DirectionVector2Map = new Dictionary<directions, Vector2>();
             DirectionVector2Map.Add(directions.up, new Vector2(0, -1));
             DirectionVector2Map.Add(directions.right, new Vector2(1, 0));
@@ -366,12 +395,12 @@ namespace MajorProject
         public void GenerateWorld(int seed)
         {
             rand = new Random(seed);
-            GenerateWorld();
             DirectionVector2Map = new Dictionary<directions, Vector2>();
             DirectionVector2Map.Add(directions.up, new Vector2(0, -1));
             DirectionVector2Map.Add(directions.right, new Vector2(1, 0));
             DirectionVector2Map.Add(directions.down, new Vector2(0, 1));
             DirectionVector2Map.Add(directions.left, new Vector2(-1, 0));
+            GenerateWorld();
         }
 
         public void DisplayWorld()
@@ -398,5 +427,80 @@ namespace MajorProject
             }
             Console.WriteLine();
         }
+
+        public void RenderTexture()
+        {
+            Vector2 dimensions = Vector2.Zero;
+
+
+
+            // put textures in a dictionary to be easily called upon to be displayed
+
+            Dictionary<int, Texture2D> CellTextureMap = new Dictionary<int, Texture2D>();
+
+            for (int i = 1; i < 6; i++)
+            {
+                CellTextureMap.Add(i, content.Load<Texture2D>(EnvironmentTexturePath + TextureFileNames[i]));
+            }
+
+
+
+
+
+
+            dimensions.X = tilePixelWidth * width;
+
+            dimensions.Y = tilePixelHeight * height;
+
+            RenderTarget2D renderTarget = new RenderTarget2D(ScreenManager.Instance.GraphicsDevice,
+                (int)dimensions.X, (int)dimensions.Y);
+            ScreenManager.Instance.GraphicsDevice.SetRenderTarget(renderTarget);
+            ScreenManager.Instance.GraphicsDevice.Clear(Color.Transparent);
+            ScreenManager.Instance.SpriteBatch.Begin();
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int originPointX = tilePixelWidth * x;
+                    int originPointY = tilePixelHeight * y;
+                    Vector2 OriginPoint = new Vector2(tilePixelWidth * x, tilePixelHeight * y);
+
+                    if (Map[y, x] > 0) // can't draw nothing
+                        ScreenManager.Instance.SpriteBatch.Draw(CellTextureMap[Map[y, x]], OriginPoint);
+
+                }
+            }
+
+            ScreenManager.Instance.SpriteBatch.End();
+
+
+            WorldImageTexture = renderTarget;
+
+
+            ScreenManager.Instance.GraphicsDevice.SetRenderTarget(null); // reset rendertarget to default - main display rendertarget
+
+            //renderTarget.Dispose();
+
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(WorldImageTexture, destinationRectangle: new Rectangle(0, 0, 1200, 700));
+        }
+
+        public void UnloadContent()
+        {
+            WorldImageTexture.Dispose();
+            content.Dispose();
+        }
+
+
+
+
+
+
+
+
     }
 }
