@@ -34,8 +34,8 @@ namespace MajorProject
         public float MasterVolume;
 
         float prevSoundVolume;
-        public float prevMusicVolume;
-        public float prevMasterVolume;
+        float prevMusicVolume;
+        float prevMasterVolume;
 
         public void UpdateSoundPreferences()
         {
@@ -46,11 +46,16 @@ namespace MajorProject
 
         public void Update()
         {
-            string[] str = SoundInstances.Keys.ToArray<string>();
+            string[] str = SoundInstances.Keys.ToArray();
+
+            // remove expired / stopped sound instances
             foreach (string s in str)
             {
                 if (SoundInstances[s].State == SoundState.Stopped)
                 {
+                    // WE SHOULD DISPOSE - THE OBJECTS CREATE SOUND INSTANCES THAT ARE PASSED ONTO THIS CLASS AND ARE SUBSEQUENTLY OUT OF THEIR SCOPE
+                    // THEREFORE IF THEY ARE NOT DISPOSED HERE, THE MEMORY IS NOT FREED
+
                     SoundInstances[s].Dispose();
                     SoundInstances.Remove(s);
                 }

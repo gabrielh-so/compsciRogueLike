@@ -13,6 +13,10 @@ namespace MajorProject
 {
     public class ScreenManager
     {
+        [XmlIgnore]
+        Screen oldScreen;
+
+
         private static ScreenManager instance;
         [XmlIgnore]
         public Vector2 Dimensions { set; get; }
@@ -54,13 +58,43 @@ namespace MajorProject
             }
         }
 
-        public void ChangeScreens(string screenName)
+        void SetTransitionValues()
         {
-            newScreen = (Screen)Activator.CreateInstance(Type.GetType("MajorProject." + screenName));
             Image.IsActive = true;
             Image.FadeEffect.Increase = true;
             Image.Alpha = 0.0f;
             IsTransitioning = true;
+        }
+
+        public void ChangeScreens(string screenName)
+        {
+            newScreen = (Screen)Activator.CreateInstance(Type.GetType("MajorProject." + screenName));
+            SetTransitionValues();
+        }
+
+        public void ChangeScreens(string screenName, bool useOldScreen, bool retainCurrentScreen)
+        {
+            if (retainCurrentScreen)
+            {
+                Screen temp = oldScreen;
+                oldScreen = currentScreen;
+                if (useOldScreen) currentScreen = temp;
+                else
+                {
+                    temp.UnloadContent();
+                    ChangeScreens(screenName);
+                    return;
+                }
+                SetTransitionValues();
+                return;
+            }
+            if (useOldScreen)
+            {
+                currentScreen = oldScreen;
+                SetTransitionValues();
+                return;
+            }
+            ChangeScreens(screenName);
 
         }
 

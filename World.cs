@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +13,9 @@ namespace MajorProject
 
     public class World
     {
+        [XmlIgnore]
         Random rand;
+        [XmlIgnore]
         Texture2D WorldImageTexture;
 
 
@@ -22,12 +24,17 @@ namespace MajorProject
         /// display debug - 50 * 50 px, 1200px display = 24 tiles lengthways, 14 tiles downwards
         /// </summary>
 
-        const int tilePixelWidth = 50;
-        const int tilePixelHeight = 50;
+        public const int tilePixelWidth = 50;
+        public const int tilePixelHeight = 50;
 
+        /*
+        [XmlIgnore]
         ContentManager content;
+        */
 
-        string EnvironmentTexturePath = "InGameTextures/test textures/environment textures/";
+        EnvironmentResourcePack Resources;
+
+        public Vector2 entry;
 
         string[] TextureFileNames = new string[6] {
             "",
@@ -107,7 +114,6 @@ namespace MajorProject
 
         public World()
         {
-            content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
 
 
             DirectionVector2Map = new Dictionary<directions, Vector2>();
@@ -125,7 +131,7 @@ namespace MajorProject
         void GenerateCorridors()
         {
             // randomly select entry point
-            Vector2 entry = new Vector2(rand.Next(0, level_cell_width), rand.Next(0, level_cell_height));
+            entry = new Vector2(rand.Next(0, level_cell_width), rand.Next(0, level_cell_height));
             while (generation_VisitedLayer[(int)entry.Y, (int)entry.X] != 0) // find unvisited
             {
                 entry = new Vector2(rand.Next(0, level_cell_width), rand.Next(0, level_cell_height));
@@ -428,6 +434,11 @@ namespace MajorProject
             Console.WriteLine();
         }
 
+        public void LoadContent(ref EnvironmentResourcePack resources)
+        {
+            Resources = resources;
+        }
+
         public void RenderTexture()
         {
             Vector2 dimensions = Vector2.Zero;
@@ -435,15 +446,6 @@ namespace MajorProject
 
 
             // put textures in a dictionary to be easily called upon to be displayed
-
-            Dictionary<int, Texture2D> CellTextureMap = new Dictionary<int, Texture2D>();
-
-            for (int i = 1; i < 6; i++)
-            {
-                CellTextureMap.Add(i, content.Load<Texture2D>(EnvironmentTexturePath + TextureFileNames[i]));
-            }
-
-
 
 
 
@@ -467,7 +469,7 @@ namespace MajorProject
                     Vector2 OriginPoint = new Vector2(tilePixelWidth * x, tilePixelHeight * y);
 
                     if (Map[y, x] > 0) // can't draw nothing
-                        ScreenManager.Instance.SpriteBatch.Draw(CellTextureMap[Map[y, x]], OriginPoint);
+                        ScreenManager.Instance.SpriteBatch.Draw(Resources.TexturePack[TextureFileNames[Map[y, x]]], OriginPoint);
 
                 }
             }
@@ -486,13 +488,14 @@ namespace MajorProject
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(WorldImageTexture, destinationRectangle: new Rectangle(0, 0, 1200, 700));
+            spriteBatch.Draw(WorldImageTexture, destinationRectangle: new Rectangle(0, 0, tilePixelWidth * width, tilePixelHeight * height));
         }
 
         public void UnloadContent()
         {
             WorldImageTexture.Dispose();
-            content.Dispose();
+
+            Resources = null;
         }
 
 

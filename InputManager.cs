@@ -30,7 +30,7 @@ namespace MajorProject
             // aiming using mouse and selecting weapons using the number keys is unchangable
         }
 
-        Dictionary<ActionType, Keys> ActionKeyDict;
+        public Dictionary<ActionType, Keys> ActionKeyDict;
 
         private static InputManager instance;
 
@@ -62,6 +62,19 @@ namespace MajorProject
                 currentMouseState = Mouse.GetState();
             }
         }
+
+        public bool ActionKeyDown(ActionType action)
+        {
+            return KeyDown(ActionKeyDict[action]);
+        }
+
+        public bool ActionKeyPressed(ActionType action)
+        {
+            return KeyPressed(ActionKeyDict[action]);
+        }
+
+
+
 
         public List<Keys> GetChangedKeys()
         {

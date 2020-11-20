@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GameScreen>
+
+  <PlayerResources>
+  
+    <BaseAudioPath>Audio/Sound/Game/Character/Player/</BaseAudioPath>
+    <BaseTexturePath>Texture/Game/Character/Player/</BaseTexturePath>
+
+    <TextureNameAndPath>
+      
+      <string>Player_Forward</string>
+      <string>Player_Forward</string>
+      
+    </TextureNameAndPath>
+
+  </PlayerResources>
+
+  <EnvironmentResources>
+  
+    <BaseAudioPath>Audio/Sound/Game/Environment/</BaseAudioPath>
+    <BaseTexturePath>Texture/Game/Environment/</BaseTexturePath>
+
+    <TextureNameAndPath>
+
+      <string>Ground_Texture</string>
+      <string>Ground_Texture</string>
+      
+      <string>Wall_Texture</string>
+      <string>Wall_Texture</string>
+      
+      <string>Door_Texture</string>
+      <string>Door_Texture</string>
+      
+      <string>Entrance_Texture</string>
+      <string>Entrance_Texture</string>
+      
+      <string>Exit_Texture</string>
+      <string>Exit_Texture</string>
+
+    </TextureNameAndPath>
+    
+  
+  </EnvironmentResources>
+
+  <GoblinResources>
+  
+    <BaseAudioPath>Audio/Sound/Game/Character/Goblin/</BaseAudioPath>
+    <BaseTexturePath>Texture/Game/Character/Goblin/</BaseTexturePath>
+  
+  
+  
+  </GoblinResources>
+  
+
+</GameScreen>

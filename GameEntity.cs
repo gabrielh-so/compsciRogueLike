@@ -12,33 +12,39 @@ namespace MajorProject
     public abstract class GameEntity
     {
 
-        public double positionX;
-        public double positionY;
+        public Vector2 position;
+        public Vector2 velocity;
 
-        
+        public Rectangle BoundingBox;
+        public Point SpriteSize;
 
+        // reference to a resource pack // all textures/sounds can be accessed from here
+        public ResourcePack Resources;
 
 
         public GameEntity()
         {
-
+            position = new Vector2();
+            velocity = new Vector2();
         }
 
-        public virtual void LoadContent()
+        // content within the pack is already loaded, so just assign
+        public virtual void LoadContent(ref ResourcePack resources)
         {
-
+            Resources = resources;
         }
 
         public virtual void UnloadContent()
         {
-
+            // unlink resources thingy
+            Resources = null;
         }
 
         public abstract void Update(GameTime gameTime); // all game entities must have an update loop of some sort - otherwise they're probably pointless
 
-        public virtual void Draw()
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
-
+            
         }
 
 
