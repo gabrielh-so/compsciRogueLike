@@ -17,6 +17,8 @@ namespace MajorProject
 
         public bool alive;
 
+        public int[,] Map;
+
         public virtual void TakeDamage(int damage)
         {
             // all damage should be routed through damage functions, in case environment / difficulty modifiers affect the value

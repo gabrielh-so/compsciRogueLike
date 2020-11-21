@@ -69,6 +69,8 @@ namespace MajorProject
             GameWorld.LoadContent(ref EnvironmentResources);
             GameWorld.GenerateWorld();
             GameWorld.RenderTexture();
+
+            AudioManager.Instance.PlaySoundInstance(EnvironmentResources.AudioPack["Music"].CreateInstance(), "Music", true);
         }
 
         public void RegenerateWorld()
@@ -76,17 +78,21 @@ namespace MajorProject
             GameWorld.UnloadContent();
             EnvironmentResources.UnloadContent();
 
-            EnvironmentResources.LoadContent(LevelNames[LevelIndex]);
+            ConstructWorld();
+        }
 
-            GameWorld.LoadContent(ref EnvironmentResources);
-            GameWorld.GenerateWorld();
-            GameWorld.RenderTexture();
+        public void SetPlayerToEntrance()
+        {
+            Player.position.X = (GameWorld.entryIndex.X + 0.5f) * World.tilePixelWidth;
+            Player.position.Y = (GameWorld.entryIndex.Y + 0.5f) * World.tilePixelHeight;
         }
 
         public void LoadPlayer()
         {
             PlayerResources.LoadContent();
             Player.LoadContent(ref PlayerResources);
+            Player.Map = GameWorld.Map;
+            SetPlayerToEntrance();
         }
 
         public override void LoadContent()
@@ -111,17 +117,19 @@ namespace MajorProject
         {
 
 
-            // quick exit line for *really bad* screwups
             if (InputManager.Instance.KeyPressed(Keys.Escape))
-                InputManager.Instance.QuitSignaled = true;
+            {
+                ScreenManager.Instance.ChangeScreens("GameMenuScreen", true);
+            }
 
 
             if (InputManager.Instance.KeyPressed(Keys.R))
             {
+                LevelIndex++;
+                LevelIndex %= LevelNames.Length;
+                AudioManager.Instance.StopSoundInstance("Music", true);
                 RegenerateWorld();
-
-                Player.position.X = (GameWorld.entry.X * 2 + 1) * World.tilePixelWidth;
-                Player.position.Y = (GameWorld.entry.Y * 2 + 1) * World.tilePixelHeight;
+                SetPlayerToEntrance();
             }
 
             // update each entity

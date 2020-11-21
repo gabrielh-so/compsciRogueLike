@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace MajorProject
 {
@@ -17,10 +18,14 @@ namespace MajorProject
         double timeToShow = 7500;
         double totalUpTime;
 
+        SoundEffect Music;
+
         public override void LoadContent()
         {
             base.LoadContent();
             totalUpTime = 0;
+
+            AudioManager.Instance.PlayMusic("Audio/Sound/UI/Music/Music");
 
             Image.LoadContent();
         }

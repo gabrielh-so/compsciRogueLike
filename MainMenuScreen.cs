@@ -33,6 +33,8 @@ namespace MajorProject
 
         public override void LoadContent()
         {
+            AudioManager.Instance.PlayMusic("Audio/Sound/UI/Music/Music");
+
             NewGameButton.OnActivate = new UiElement.onActivate(NewGame);
             ContinueGameButton.OnActivate = new UiElement.onActivate(ContinueGame);
             OptionsButton.OnActivate = new UiElement.onActivate(OpenOptions);

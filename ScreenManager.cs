@@ -16,6 +16,12 @@ namespace MajorProject
         [XmlIgnore]
         Screen oldScreen;
 
+        // if any future employer is reading this please don't think i usually code like this. It's just it's 2:25AM and I just want to get this done
+        bool LoadingToPreserve = false;
+        bool ScreenPreserved = false;
+        bool LoadingFromPreserve = false;
+        bool CurrentScreenWasPreserved = false;
+
 
         private static ScreenManager instance;
         [XmlIgnore]
@@ -70,45 +76,64 @@ namespace MajorProject
         {
             newScreen = (Screen)Activator.CreateInstance(Type.GetType("MajorProject." + screenName));
             SetTransitionValues();
+            CurrentScreenWasPreserved = false;
         }
 
-        public void ChangeScreens(string screenName, bool useOldScreen, bool retainCurrentScreen)
+        public void ChangeScreens(string screenName, bool preserveScreen)
         {
-            if (retainCurrentScreen)
+            if (preserveScreen)
             {
-                Screen temp = oldScreen;
+                if (!CurrentScreenWasPreserved) if (oldScreen != null) oldScreen.UnloadContent();
                 oldScreen = currentScreen;
-                if (useOldScreen) currentScreen = temp;
-                else
-                {
-                    temp.UnloadContent();
-                    ChangeScreens(screenName);
-                    return;
-                }
-                SetTransitionValues();
-                return;
+                LoadingToPreserve = true;
             }
-            if (useOldScreen)
-            {
-                currentScreen = oldScreen;
-                SetTransitionValues();
-                return;
-            }
-            ChangeScreens(screenName);
-
+            newScreen = (Screen)Activator.CreateInstance(Type.GetType("MajorProject." + screenName));
+            SetTransitionValues();
+            CurrentScreenWasPreserved = false;
         }
+
+        public void LoadPreservedScreen()
+        {
+            if (oldScreen == null) return;
+            LoadingFromPreserve = true;
+            newScreen = oldScreen;
+            SetTransitionValues();
+        }
+
+        public void UnloadPreservedScreen()
+        {
+            if (ScreenPreserved) return;
+            oldScreen.UnloadContent();
+            oldScreen = null;
+        }
+
+
 
         void Transition(GameTime gameTime)
         {
             Image.Update(gameTime);
             if (Image.Alpha >= 1.0f)
             {
-                currentScreen.UnloadContent();
+                if (!LoadingToPreserve)
+                    currentScreen.UnloadContent();
+                else
+                    ScreenPreserved = true;
+
                 currentScreen = newScreen;
                 xmlGameScreenManager.type = currentScreen.Type;
-                if (File.Exists(currentScreen.XmlPath))
+                if (File.Exists(currentScreen.XmlPath) && !LoadingFromPreserve)
                     currentScreen = xmlGameScreenManager.Load(currentScreen.XmlPath);
-                currentScreen.LoadContent();
+
+                if (!LoadingFromPreserve) currentScreen.LoadContent();
+                else
+                {
+                    CurrentScreenWasPreserved = true;
+                    ScreenPreserved = false;
+                }
+                
+                LoadingFromPreserve = false;
+
+                LoadingToPreserve = false;
             }
             else if (Image.Alpha <= 0.0f)
             {

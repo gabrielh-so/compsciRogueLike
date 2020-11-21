@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
 
 namespace MajorProject
@@ -13,8 +14,16 @@ namespace MajorProject
 
         private static AudioManager instance;
 
+        ContentManager content;
+
         Dictionary<string, SoundEffectInstance> SoundInstances;
-        Dictionary<string, SoundEffectInstance> MusicInstances;
+
+        //Dictionary<string, SoundEffectInstance> MusicInstances;
+
+        SoundEffect MusicData;
+        string MusicFileName = "";
+        SoundEffectInstance MusicInstance;
+        bool MusicSet = false;
 
         public static AudioManager Instance
         {
@@ -23,6 +32,8 @@ namespace MajorProject
                 if (instance == null)
                 {
                     instance = new AudioManager();
+                    instance.content = new ContentManager(
+                           ScreenManager.Instance.Content.ServiceProvider, "Content");
                 }
 
                 return instance;
@@ -42,6 +53,16 @@ namespace MajorProject
             SoundVolume = PlayerPreferences.Instance.SoundVolume;
             MusicVolume = PlayerPreferences.Instance.MusicVolume;
             MasterVolume = PlayerPreferences.Instance.MasterVolume;
+        }
+
+        public void UpdateVolumeValues()
+        {
+            SoundEffect.MasterVolume = MasterVolume;
+            MusicInstance.Volume = MusicVolume;
+            foreach (string s in SoundInstances.Keys)
+            {
+                SoundInstances[s].Volume = SoundVolume;
+            }
         }
 
         public void Update()
@@ -66,13 +87,11 @@ namespace MajorProject
                 SoundEffect.MasterVolume = MasterVolume;
             }
 
-            if (prevMusicVolume != MusicVolume)
-            {
-                foreach (string s in SoundInstances.Keys)
+            if (MusicSet)
+                if (prevMusicVolume != MusicVolume)
                 {
-                    SoundInstances[s].Volume = SoundVolume;
+                    MusicInstance.Volume = MusicVolume;
                 }
-            }
             if (prevSoundVolume != SoundVolume)
             {
                 foreach (string s in SoundInstances.Keys)
@@ -90,20 +109,77 @@ namespace MajorProject
         {
             UpdateSoundPreferences();
             SoundInstances = new Dictionary<string, SoundEffectInstance>();
-            MusicInstances = new Dictionary<string, SoundEffectInstance>();
+            //MusicInstances = new Dictionary<string, SoundEffectInstance>();
         }
+
+        public bool StopSoundInstance(string InstanceName, bool isMusic)
+        {
+            if (isMusic)
+            {
+                MusicInstance.Stop();
+                MusicInstance.Dispose();
+
+                MusicSet = false;
+
+                return true;
+            }
+
+            
+
+            return true;
+        }
+
+        public bool PlayMusic(string FileName)
+        {
+            if (MusicFileName == FileName) return true;
+            if (MusicInstance != null)
+            {
+                MusicInstance.Stop();
+                MusicInstance.Dispose();
+            }
+            if (MusicData != null) MusicData.Dispose();
+            MusicFileName = FileName;
+            MusicData = content.Load<SoundEffect>(FileName);
+            MusicInstance = MusicData.CreateInstance();
+            MusicInstance.IsLooped = true;
+            MusicInstance.Play();
+            MusicSet = true;
+
+            UpdateVolumeValues();
+
+            return true;
+        }
+
 
         public bool PlaySoundInstance(SoundEffectInstance soundEffectInstance, string instanceName, bool isMusic)
         {
 
             if (isMusic)
             {
+                /*
                 if (MusicInstances.ContainsKey(instanceName)) return false;
                 soundEffectInstance.Volume = MusicVolume;
                 soundEffectInstance.IsLooped = true;
                 
                 MusicInstances.Add(instanceName, soundEffectInstance);
                 MusicInstances[instanceName].Play();
+                */
+
+                if (MusicSet)
+                {
+                    MusicInstance.Stop();
+                    MusicInstance.Dispose();
+                }
+                MusicInstance = soundEffectInstance;
+                MusicInstance.IsLooped = true;
+                MusicInstance.Play();
+
+                MusicSet = true;
+
+                if (MusicData != null) MusicData.Dispose();
+                MusicFileName = "";
+
+                UpdateVolumeValues();
 
                 return true;
             }
@@ -112,6 +188,9 @@ namespace MajorProject
 
             SoundInstances.Add(instanceName, soundEffectInstance);
             SoundInstances[instanceName].Play();
+
+            UpdateVolumeValues();
+
             return true;
         }
 

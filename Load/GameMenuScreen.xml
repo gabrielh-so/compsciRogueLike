@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<GameMenuScreen>
+
+  <TitleImage>
+    
+  </TitleImage>
+  
+  <TitleLabel>
+    <Text>Game is Paused</Text>
+    <Position>
+      <X>400</X>
+      <Y>50</Y>
+    </Position>
+  </TitleLabel>
+
+  <ReturnToMenuButton>
+
+    <Container>
+      <X>505</X>
+      <Y>100</Y>
+    </Container>
+
+    <StandardImage>
+      <Path>ButtonScreen/Blue_Button_Standard</Path>
+      <IsActive>true</IsActive>
+      <Text>Return To Menu</Text>
+    </StandardImage>
+
+    <PressedImage>
+      <Path>ButtonScreen/Blue_Button_Pressed</Path>
+      <IsActive>true</IsActive>
+      <Text>Return To Menu</Text>
+    </PressedImage>
+
+    <HoverImage>
+      <Path>ButtonScreen/Blue_Button_Hover</Path>
+      <IsActive>true</IsActive>
+      <Text>Return To Menu</Text>
+    </HoverImage>
+    
+  </ReturnToMenuButton>
+
+  <SaveGameButton>
+
+    <Container>
+      <X>505</X>
+      <Y>200</Y>
+    </Container>
+
+    <StandardImage>
+      <Path>ButtonScreen/Blue_Button_Standard</Path>
+      <IsActive>true</IsActive>
+      <Text>Save Game</Text>
+    </StandardImage>
+
+    <PressedImage>
+      <Path>ButtonScreen/Blue_Button_Pressed</Path>
+      <IsActive>true</IsActive>
+      <Text>Save Game</Text>
+    </PressedImage>
+
+    <HoverImage>
+      <Path>ButtonScreen/Blue_Button_Hover</Path>
+      <IsActive>true</IsActive>
+      <Text>Save Game</Text>
+    </HoverImage>
+
+  </SaveGameButton>
+
+  <OptionsButton>
+
+    <Container>
+      <X>505</X>
+      <Y>300</Y>
+    </Container>
+
+    <StandardImage>
+      <Path>ButtonScreen/Blue_Button_Standard</Path>
+      <IsActive>true</IsActive>
+      <Text>Options</Text>
+    </StandardImage>
+
+    <PressedImage>
+      <Path>ButtonScreen/Blue_Button_Pressed</Path>
+      <IsActive>true</IsActive>
+      <Text>Options</Text>
+    </PressedImage>
+
+    <HoverImage>
+      <Path>ButtonScreen/Blue_Button_Hover</Path>
+      <IsActive>true</IsActive>
+      <Text>Options</Text>
+    </HoverImage>
+
+  </OptionsButton>
+
+  <DifficultyButton>
+
+    <Container>
+      <X>505</X>
+      <Y>400</Y>
+    </Container>
+
+    <StandardImage>
+      <Path>ButtonScreen/Blue_Button_Standard</Path>
+      <IsActive>true</IsActive>
+      <Text>Change Difficulty</Text>
+    </StandardImage>
+
+    <PressedImage>
+      <Path>ButtonScreen/Blue_Button_Pressed</Path>
+      <IsActive>true</IsActive>
+      <Text>Change Difficulty</Text>
+    </PressedImage>
+
+    <HoverImage>
+      <Path>ButtonScreen/Blue_Button_Hover</Path>
+      <IsActive>true</IsActive>
+      <Text>Change Difficulty</Text>
+    </HoverImage>
+
+  </DifficultyButton>
+
+  <BackToGameButton>
+
+    <Container>
+      <X>505</X>
+      <Y>500</Y>
+    </Container>
+
+    <StandardImage>
+      <Path>ButtonScreen/Blue_Button_Standard</Path>
+      <IsActive>true</IsActive>
+      <Text>Return To Game</Text>
+    </StandardImage>
+
+    <PressedImage>
+      <Path>ButtonScreen/Blue_Button_Pressed</Path>
+      <IsActive>true</IsActive>
+      <Text>Return To Game</Text>
+    </PressedImage>
+
+    <HoverImage>
+      <Path>ButtonScreen/Blue_Button_Hover</Path>
+      <IsActive>true</IsActive>
+      <Text>Return To Game</Text>
+    </HoverImage>
+
+  </BackToGameButton>
+  
+</GameMenuScreen>

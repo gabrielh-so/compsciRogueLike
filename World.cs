@@ -35,6 +35,7 @@ namespace MajorProject
         EnvironmentResourcePack Resources;
 
         public Vector2 entry;
+        public Vector2 entryIndex;
 
         string[] TextureFileNames = new string[6] {
             "",
@@ -136,6 +137,10 @@ namespace MajorProject
             {
                 entry = new Vector2(rand.Next(0, level_cell_width), rand.Next(0, level_cell_height));
             }
+
+            entryIndex = (entry * 2) + new Vector2(1, 1);
+
+            Map[(int)entryIndex.Y, (int)entryIndex.X] = (int)cellType.entrance;
 
             CorridorEndings = new List<Vector2>();
 
@@ -468,7 +473,11 @@ namespace MajorProject
                     int originPointY = tilePixelHeight * y;
                     Vector2 OriginPoint = new Vector2(tilePixelWidth * x, tilePixelHeight * y);
 
-                    if (Map[y, x] > 0) // can't draw nothing
+                    if (x == entryIndex.X && y == entryIndex.Y)
+                    {
+                        ScreenManager.Instance.SpriteBatch.Draw(Resources.TexturePack[TextureFileNames[Map[y, x]]], OriginPoint);
+                    }
+                    else if (Map[y, x] > 0) // can't draw nothing
                         ScreenManager.Instance.SpriteBatch.Draw(Resources.TexturePack[TextureFileNames[Map[y, x]]], OriginPoint);
 
                 }

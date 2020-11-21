@@ -38,7 +38,7 @@ namespace MajorProject
             if (InputManager.Instance.ActionKeyDown(ActionType.walk_left))
             {
                 velocity.X -= 1;
-                //jrecordValues(position.X.ToString(), position.Y.ToString());
+                //recordValues(position.X.ToString(), position.Y.ToString());
             }
             if (InputManager.Instance.ActionKeyDown(ActionType.walk_down))
             {
@@ -51,18 +51,19 @@ namespace MajorProject
                 //recordValues(playerlocation.X.ToString(), playerlocation.Y.ToString());
             }
 
-            // normalise velocity, apply scalar values and add to position
+            // normalise velocity, apply scalar values and add to position // normalise returns NaN if magnitude is 0
             if ((velocity.X * velocity.X + velocity.Y * velocity.Y) > 0)
             {
                 velocity.Normalize();
                 velocity *= (float)(speed * (gameTime.ElapsedGameTime.TotalSeconds));
                 position += velocity;
             }
-                
-
 
             // update boxes
             BoundingBox.Location = position.ToPoint();
+
+
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)

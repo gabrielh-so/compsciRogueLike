@@ -8,5 +8,8 @@ namespace MajorProject
 {
     class GameEnemy : Character
     {
+
+
+
     }
 }

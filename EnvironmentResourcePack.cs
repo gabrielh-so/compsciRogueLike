@@ -24,9 +24,9 @@ namespace MajorProject
             {
                 TexturePack.Add(TextureNameAndPath[i], content.Load<Texture2D>(BaseTexturePath + EnvironmentName + "/" + TextureNameAndPath[i + 1]));
             }
-            for (int i = 0; i < AudioPack.Count - 1; i += 2)
+            for (int i = 0; i < AudioNameAndPath.Count - 1; i += 2)
             {
-                AudioPack.Add(TextureNameAndPath[i], content.Load<SoundEffect>(BaseAudioPath + EnvironmentName + "/" + AudioNameAndPath[i + 1]));
+                AudioPack.Add(AudioNameAndPath[i], content.Load<SoundEffect>(BaseAudioPath + EnvironmentName + "/" + AudioNameAndPath[i + 1]));
             }
         }
     }

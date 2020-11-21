@@ -38,6 +38,13 @@
       <string>Exit_Texture</string>
 
     </TextureNameAndPath>
+
+    <AudioNameAndPath>
+
+      <string>Music</string>
+      <string>Music</string>
+
+    </AudioNameAndPath>
     
   
   </EnvironmentResources>
