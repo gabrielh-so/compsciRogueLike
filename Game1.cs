@@ -25,7 +25,7 @@ namespace MajorProject
             graphics.PreferredBackBufferWidth = 1200;
             graphics.PreferredBackBufferHeight = 720;
             */
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }
 

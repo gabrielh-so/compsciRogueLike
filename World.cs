@@ -19,6 +19,9 @@ namespace MajorProject
         Texture2D WorldImageTexture;
 
 
+        public List<GameScreen.RoomType> roomTypes;
+
+
         /// <summary>
         /// values for setting the size of standard tiles
         /// display debug - 50 * 50 px, 1200px display = 24 tiles lengthways, 14 tiles downwards
@@ -84,8 +87,8 @@ namespace MajorProject
         List<Vector2> generation_RoomPositions;
         List<Vector2> generation_RoomDimensions;
 
-        List<Vector2> generation_RoomIndexPositions;
-        List<Vector2> generation_RoomIndexDimensions;
+        public List<Vector2> generation_RoomIndexPositions;
+        public List<Vector2> generation_RoomIndexDimensions;
 
         List<Vector2> generation_DoorPositions;
 

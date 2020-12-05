@@ -6,10 +6,31 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    class GameEnemy : Character
+    public class GameEnemy : GameCharacter
     {
+        GameCharacter target;
 
 
+        public void SetTarget(GameCharacter target)
+        {
+
+        }
+        public void RemoveTarget(GameCharacter target)
+        {
+
+        }
+
+        public GameEnemy()
+        {
+
+        }
+
+        public override void UnloadContent()
+        {
+            base.UnloadContent();
+
+            target = null;
+        }
 
     }
 }

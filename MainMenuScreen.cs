@@ -93,12 +93,14 @@ namespace MajorProject
 
         void NewGame(UiElement triggerElement)
         {
+            PlayerPreferences.Instance.LoadSavedGame = false;
             ScreenManager.Instance.ChangeScreens("GameScreen");
         }
 
         void ContinueGame(UiElement triggerElement)
         {
-            ScreenManager.Instance.ChangeScreens("MainMenuScreen");
+            PlayerPreferences.Instance.LoadSavedGame = true;
+            ScreenManager.Instance.ChangeScreens("GameScreen");
         }
 
         void OpenOptions(UiElement triggerElement)

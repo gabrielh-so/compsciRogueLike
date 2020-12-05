@@ -134,8 +134,7 @@ namespace MajorProject
             if (MusicFileName == FileName) return true;
             if (MusicInstance != null)
             {
-                MusicInstance.Stop();
-                MusicInstance.Dispose();
+                content.Unload();
             }
             if (MusicData != null) MusicData.Dispose();
             MusicFileName = FileName;

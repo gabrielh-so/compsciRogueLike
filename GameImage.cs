@@ -32,9 +32,27 @@ namespace MajorProject
 
         public bool centered;
 
+        public int textureIndex;
+
+        public Point position;
+        public Point SpriteSize;
+
+
+        void MoveOrigin(Point newPosition)
+        {
+            position = newPosition;
+        }
+
+        public void RestartAnimation()
+        {
+            textureIndex = 0;
+            frameTime = 0;
+        }
+
+
         public GameImage()
         {
-
+            position = new Point();
         }
 
         public virtual void LoadContent(ref ResourcePack resources, string[] texturenames)
@@ -43,7 +61,7 @@ namespace MajorProject
             if (texturenames.Length > 1)
             {
                 animated = true;
-                frameLength = 100;
+                frameLength = 0.2;
                 frameTime = 0;
             }
             else staticImage = true;
@@ -66,12 +84,26 @@ namespace MajorProject
                 frameTime += gameTime.ElapsedGameTime.TotalSeconds;
                 if (frameTime > frameLength)
                 {
-
+                    textureIndex = (textureIndex + 1) % textureNames.Length;
+                    frameTime -= frameLength;
                 }
             }
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
+            if (staticImage) textureIndex = 0;
+            Point origin = new Point();
+            if (centered)
+            {
+                origin = position;
+            }
+            else
+            {
+                origin.X = position.X - SpriteSize.X / 2;
+                origin.Y = position.Y - SpriteSize.Y / 2;
+            }
+
+            spriteBatch.Draw(Resources.TexturePack[textureNames[textureIndex]], destinationRectangle: new Rectangle(origin, SpriteSize));
 
         }
     }

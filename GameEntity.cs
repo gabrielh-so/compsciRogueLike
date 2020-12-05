@@ -11,6 +11,7 @@ namespace MajorProject
 {
     public abstract class GameEntity
     {
+        public Type type;
 
         public Vector2 position;
         public Vector2 velocity;
@@ -26,6 +27,14 @@ namespace MajorProject
         {
             position = new Vector2();
             velocity = new Vector2();
+
+            
+        }
+
+        public void SetPosition(float x, float y)
+        {
+            position.X = x;
+            position.Y = y;
         }
 
         // content within the pack is already loaded, so just assign

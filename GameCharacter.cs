@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    public class Character : GameEntity
+    public abstract class GameCharacter : GameEntity
     {
         // this is a character
 
@@ -18,6 +18,9 @@ namespace MajorProject
         public bool alive;
 
         public int[,] Map;
+
+        public int projectileDamage;
+        public int meleeDamage;
 
         public virtual void TakeDamage(int damage)
         {
@@ -36,6 +39,8 @@ namespace MajorProject
             {
                 alive = false;
             }
+
+            BoundingBox.Location = position.ToPoint();
 
         }
         void OnDeath()

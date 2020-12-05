@@ -96,7 +96,9 @@ namespace MajorProject
 
         void SaveGame(UiElement triggerElement)
         {
-            
+            GameScreen gs = (GameScreen)ScreenManager.Instance.oldScreen; // the only way to access this menu is if oldscreen contains a game screen
+
+            gs.SaveGame();
         }
 
         void OpenOptions(UiElement triggerElement)

@@ -50,13 +50,64 @@
   </EnvironmentResources>
 
   <GoblinResources>
-  
+
     <BaseAudioPath>Audio/Sound/Game/Character/Goblin/</BaseAudioPath>
     <BaseTexturePath>Texture/Game/Character/Goblin/</BaseTexturePath>
-  
-  
-  
+
+    <TextureNameAndPath>
+      
+    <string>Goblin1</string>
+    <string>Goblin1</string>
+
+    <string>Goblin2</string>
+    <string>Goblin2</string>
+
+    <string>Goblin3</string>
+    <string>Goblin3</string>
+    
+    </TextureNameAndPath>
+
   </GoblinResources>
+
+  <SlimeResources>
+
+    <BaseAudioPath>Audio/Sound/Game/Character/Slime/</BaseAudioPath>
+    <BaseTexturePath>Texture/Game/Character/Slime/</BaseTexturePath>
+
+    <TextureNameAndPath>
+    
+    <string>Slime1</string>
+    <string>Slime1</string>
+
+    <string>Slime2</string>
+    <string>Slime2</string>
+
+    <string>Slime3</string>
+    <string>Slime3</string>
+      
+    </TextureNameAndPath>
+
+  </SlimeResources>
+
+  <FlyerResources>
+
+    <BaseAudioPath>Audio/Sound/Game/Character/Flyer/</BaseAudioPath>
+    <BaseTexturePath>Texture/Game/Character/Flyer/</BaseTexturePath>
+
+    <TextureNameAndPath>
+      
+    <string>Flyer1</string>
+    <string>Flyer1</string>
+
+    <string>Flyer2</string>
+    <string>Flyer2</string>
+
+    <string>Flyer3</string>
+    <string>Flyer3</string>
+      
+    </TextureNameAndPath>
+
+  </FlyerResources>
   
 
 </GameScreen>

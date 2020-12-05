@@ -14,7 +14,7 @@ namespace MajorProject
     public class ScreenManager
     {
         [XmlIgnore]
-        Screen oldScreen;
+        public Screen oldScreen;
 
         // if any future employer is reading this please don't think i usually code like this. It's just it's 2:25AM and I just want to get this done
         bool LoadingToPreserve = false;
@@ -121,8 +121,9 @@ namespace MajorProject
 
                 currentScreen = newScreen;
                 xmlGameScreenManager.type = currentScreen.Type;
-                if (File.Exists(currentScreen.XmlPath) && !LoadingFromPreserve)
-                    currentScreen = xmlGameScreenManager.Load(currentScreen.XmlPath);
+                if (!LoadingFromPreserve)
+                    if (File.Exists(currentScreen.XmlPath))
+                        currentScreen = xmlGameScreenManager.Load(currentScreen.XmlPath);
 
                 if (!LoadingFromPreserve) currentScreen.LoadContent();
                 else

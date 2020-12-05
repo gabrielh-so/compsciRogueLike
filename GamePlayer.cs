@@ -17,7 +17,7 @@ using static MajorProject.InputManager;
 
 namespace MajorProject
 {
-    class GamePlayer : Character
+    class GamePlayer : GameCharacter
     {
         public override void LoadContent(ref ResourcePack resources)
         {

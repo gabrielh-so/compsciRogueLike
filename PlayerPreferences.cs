@@ -15,6 +15,8 @@ namespace MajorProject
     [Serializable]
     public class PlayerPreferences
     {
+        public bool LoadSavedGame;
+
         public Dictionary<InputManager.ActionType, Keys> ActionKeyDict;
         private static Dictionary<InputManager.ActionType, Keys> ActionKeyDictDefault = new Dictionary<InputManager.ActionType, Keys>()
         {
