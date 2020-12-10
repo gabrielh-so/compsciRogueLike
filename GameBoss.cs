@@ -12,6 +12,7 @@ namespace MajorProject
         public GameBoss()
         {
 
+            //flyerImage = new GameImage();
             type = GetType();
         }
 

@@ -28,7 +28,7 @@ namespace MajorProject
 
         public GameFlyer()
         {
-
+            flyerImage = new GameImage();
             type = GetType();
         }
 
@@ -37,6 +37,10 @@ namespace MajorProject
             base.LoadContent(ref resources);
 
             flyerImage.LoadContent(ref Resources, walkAnimation);
+            flyerImage.animated = true;
+            flyerImage.centered = true;
+            flyerImage.SpriteSize = new Point(25, 25);
+            bool b = true;
         }
 
         public override void Update(GameTime gameTime)

@@ -125,6 +125,8 @@ namespace MajorProject
             DirectionVector2Map.Add(directions.right, new Vector2(1, 0));
             DirectionVector2Map.Add(directions.down, new Vector2(0, 1));
             DirectionVector2Map.Add(directions.left, new Vector2(-1, 0));
+
+            roomTypes = new List<GameScreen.RoomType>();
         }
 
         public int ToCellIndex(int cell)

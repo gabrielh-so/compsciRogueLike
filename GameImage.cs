@@ -57,7 +57,8 @@ namespace MajorProject
 
         public virtual void LoadContent(ref ResourcePack resources, string[] texturenames)
         {
-            texturenames.CopyTo(textureNames, 0);
+            Resources = resources;
+            textureNames = texturenames;
             if (texturenames.Length > 1)
             {
                 animated = true;
@@ -95,12 +96,12 @@ namespace MajorProject
             Point origin = new Point();
             if (centered)
             {
-                origin = position;
+                origin.X = position.X - SpriteSize.X / 2;
+                origin.Y = position.Y - SpriteSize.Y / 2;
             }
             else
             {
-                origin.X = position.X - SpriteSize.X / 2;
-                origin.Y = position.Y - SpriteSize.Y / 2;
+                origin = position;
             }
 
             spriteBatch.Draw(Resources.TexturePack[textureNames[textureIndex]], destinationRectangle: new Rectangle(origin, SpriteSize));

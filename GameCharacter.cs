@@ -10,6 +10,9 @@ namespace MajorProject
     public abstract class GameCharacter : GameEntity
     {
         // this is a character
+        // (yeah thanks gab)
+
+        public int currentRoom = -1;
 
         public int health;
 

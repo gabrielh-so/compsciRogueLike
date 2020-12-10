@@ -29,6 +29,7 @@ namespace MajorProject
         public GameSlime()
         {
 
+            slimeImage = new GameImage();
             type = GetType();
         }
 
@@ -37,6 +38,9 @@ namespace MajorProject
             base.LoadContent(ref resources);
 
             slimeImage.LoadContent(ref Resources, walkAnimation);
+            slimeImage.animated = true;
+            slimeImage.centered = true;
+            slimeImage.SpriteSize = new Point(25, 25);
         }
 
         public override void Update(GameTime gameTime)

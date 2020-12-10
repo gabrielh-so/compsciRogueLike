@@ -108,6 +108,45 @@
     </TextureNameAndPath>
 
   </FlyerResources>
+
+
+
+
+
+
+
+  <HUDResources>
+
+    <BaseAudioPath>Audio/Sound/Game/HUD/</BaseAudioPath>
+    <BaseTexturePath>Texture/Game/HUD/</BaseTexturePath>
+
+    <TextureNameAndPath>
+
+      <string>HUDTexture</string>
+      <string>HUDTexture</string>
+
+    </TextureNameAndPath>
+
+    <AudioNameAndPath>
+
+      <!--
+      
+      <string></string>
+      <string></string>
+      
+      -->
+
+    </AudioNameAndPath>
+
+
+  </HUDResources> 
+  
+  
+  
+  
+  
+  
+  
   
 
 </GameScreen>

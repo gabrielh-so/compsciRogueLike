@@ -19,11 +19,27 @@ namespace MajorProject
 {
     class GamePlayer : GameCharacter
     {
+
+        GameImage playerImage;
+
+        public GamePlayer()
+        {
+            playerImage = new GameImage();
+        }
+
+        string[] walkAnimation =
+        {
+            "Player_Forward"
+        };
+
         public override void LoadContent(ref ResourcePack resources)
         {
-            SpriteSize = new Point(25, 25);
-            
             base.LoadContent(ref resources);
+
+            playerImage.LoadContent(ref Resources, walkAnimation);
+            playerImage.animated = false;
+            playerImage.centered = true;
+            playerImage.SpriteSize = new Point(25, 25);
         }
 
         public override void Update(GameTime gameTime)
@@ -63,12 +79,12 @@ namespace MajorProject
             BoundingBox.Location = position.ToPoint();
 
 
-
+            playerImage.position = position.ToPoint();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture: Resources.TexturePack["Player_Forward"], destinationRectangle: new Rectangle(position.ToPoint(), SpriteSize) );
+            playerImage.Draw(spriteBatch);
         }
 
 

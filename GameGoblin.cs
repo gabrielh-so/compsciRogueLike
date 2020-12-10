@@ -27,6 +27,8 @@ namespace MajorProject
 
         public GameGoblin()
         {
+
+            goblinImage = new GameImage();
             type = GetType();
         }
 
@@ -35,6 +37,10 @@ namespace MajorProject
             base.LoadContent(ref resources);
 
             goblinImage.LoadContent(ref Resources, walkAnimation);
+
+            goblinImage.animated = true;
+            goblinImage.centered = true;
+            goblinImage.SpriteSize = new Point(25, 25);
         }
 
         public override void Update(GameTime gameTime)

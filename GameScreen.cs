@@ -18,6 +18,8 @@ namespace MajorProject
 
     public class GameScreen : Screen
     {
+        bool displayRoom = true;
+
         Random rand;
 
         string saveFileName = "SaveFile.bin";
@@ -62,6 +64,8 @@ namespace MajorProject
         public ResourcePack BossResources;
         public ResourcePack GoblinResources;
 
+        public ResourcePack HUDResources;
+
         public EnvironmentResourcePack EnvironmentResources;
 
         public GameScreen()
@@ -74,8 +78,8 @@ namespace MajorProject
 
             GameWorld.room_count = 8;
 
-            GameWorld.level_cell_width = 14;
-            GameWorld.level_cell_height = 14;
+            GameWorld.level_cell_width = 25;
+            GameWorld.level_cell_height = 25;
 
 
             GameWorld.room_min_cell = new Vector2(4, 4);
@@ -84,6 +88,8 @@ namespace MajorProject
             Player = new GamePlayer();
 
             Enemies = new List<List<GameEnemy>>();
+
+            
 
             cameraTransformationMatrix = Matrix.Identity;
         }
@@ -116,7 +122,6 @@ namespace MajorProject
 
         public void LoadPlayer()
         {
-            PlayerResources.LoadContent();
             Player.LoadContent(ref PlayerResources);
             Player.Map = GameWorld.Map;
             SetPlayerToEntrance();
@@ -162,9 +167,9 @@ namespace MajorProject
 
 
 
-                            e.SetPosition(RoomPosition.X + World.tilePixelWidth * j, RoomPosition.Y + rand.Next(0, (int)(World.tilePixelHeight * GameWorld.generation_RoomIndexDimensions[i].Y)));
+                            e.SetPosition(RoomPosition.X * World.tilePixelWidth + World.tilePixelWidth * j, RoomPosition.Y * World.tilePixelWidth + rand.Next(0, (int)(World.tilePixelHeight * GameWorld.generation_RoomIndexDimensions[i].Y)));
 
-
+                            e.currentRoom = i;
 
                             e.alive = true;
                             e.BoundingBox = new Rectangle();
@@ -182,6 +187,15 @@ namespace MajorProject
             }
         }
 
+        void LoadCharacterResources()
+        {
+            PlayerResources.LoadContent();
+            GoblinResources.LoadContent();
+            FlyerResources.LoadContent();
+            SlimeResources.LoadContent();
+            //BossResources.LoadContent();
+        }
+
         public void AssignRooms()
         {
 
@@ -189,7 +203,7 @@ namespace MajorProject
 
             //// level 1 - 1 shop - 4 combat - 2 loot - 1 boss
             ///
-            ////just assigning this for all levels when programming - tuning can wait
+            ////just assigning this for all levels when programming - tuning by level can wait until it works
             ///
 
             GameWorld.roomTypes.Add(RoomType.Boss);
@@ -217,6 +231,8 @@ namespace MajorProject
             }
 
             ConstructWorld();
+
+            LoadCharacterResources();
 
             LoadPlayer();
 
@@ -269,6 +285,15 @@ namespace MajorProject
 
             Player.Update(gameTime);
 
+            for (int i = 0; i < GameWorld.room_count; i++)
+            {
+                for (int j = 0; j < Enemies[i].Count; j++)
+                {
+                    Enemies[i][j].Update(gameTime);
+                }
+            }
+
+
             // compare the player only to enemies it currently shares a room with
 
             // find out which room is the player in, if any
@@ -277,17 +302,50 @@ namespace MajorProject
             for (int i = 0; i < GameWorld.room_count; i++)
             {
                 // check x and y coordinates
-                if (Player.position.X < GameWorld.generation_RoomIndexPositions[i].X * tileWidth || Player.position.X > (GameWorld.generation_RoomIndexPositions[i].X + GameWorld.generation_RoomIndexDimensions[i].X) * tileWidth) break;
-                if (Player.position.Y < GameWorld.generation_RoomIndexPositions[i].Y * tileWidth || Player.position.Y > (GameWorld.generation_RoomIndexPositions[i].Y + GameWorld.generation_RoomIndexDimensions[i].Y) * tileWidth) break;
+                if (Player.position.X < GameWorld.generation_RoomIndexPositions[i].X * tileWidth || Player.position.X > (GameWorld.generation_RoomIndexPositions[i].X + GameWorld.generation_RoomIndexDimensions[i].X) * tileWidth) continue;
+                if (Player.position.Y < GameWorld.generation_RoomIndexPositions[i].Y * tileWidth || Player.position.Y > (GameWorld.generation_RoomIndexPositions[i].Y + GameWorld.generation_RoomIndexDimensions[i].Y) * tileWidth) continue;
 
+                playerRoomIndex = i;
 
             }
-            if (playerRoomIndex > -1) // player is in a room, compare with enemies in that room
+            
+            // checks that player has not moved to/from rooms
+            if (Player.currentRoom != playerRoomIndex)
             {
+                if (Player.currentRoom > -1)
+                {
+                    // player has left a room - remove the player target from all enemies in the room
+                    foreach (GameEnemy e in Enemies[Player.currentRoom])
+                    {
+                        e.RemoveTarget();
+                    }
 
+                }
+                if (playerRoomIndex > -1)
+                {
+                    // player has entered a(nother) room - set the player as the target for all enemies in the room
+
+                    foreach (GameEnemy e in Enemies[playerRoomIndex])
+                    {
+                        e.SetTarget(Player);
+                    }
+                    displayRoom = false;
+                }
+                else
+                    displayRoom = true;
+
+
+                Player.currentRoom = playerRoomIndex;
             }
 
             // regardless, compare with all non-enemy entities
+
+
+
+
+
+
+
 
 
             // detect collisions between entities and trigger oncollide functions
@@ -331,7 +389,7 @@ namespace MajorProject
 
             // ... draw sprites here ...
 
-            GameWorld.Draw(spriteBatch);
+            if (displayRoom) GameWorld.Draw(spriteBatch);
 
 
             Player.Draw(spriteBatch);
