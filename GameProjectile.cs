@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,10 @@ namespace MajorProject
 {
     public class GameProjectile : GameEntity
     {
+        double speed;
 
-        Vector2 direction;
-
-        double velocity;
-
-        double lifeSpan;
+        public double totalLifeSpan;
+        public double currentLifeSpan;
 
         GameImage image;
 
@@ -29,16 +28,24 @@ namespace MajorProject
         }
 
         public DamageType damageType;
+        public Type target;
+        public int radius;
+        public int damage;
 
         public GameProjectile()
         {
+            totalLifeSpan = 2;
+            currentLifeSpan = 0;
             SpriteSize = new Point(25, 25);
             image.centered = true;
+            radius = 12;
         }
 
         public override void Update(GameTime gameTime)
         {
             image.Update(gameTime);
+
+            currentLifeSpan += gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         public override void LoadContent(ref ResourcePack resources)
@@ -46,7 +53,7 @@ namespace MajorProject
             base.LoadContent(ref resources);
 
             string[] textureNames = new string[3];
-            for (int i = 0; i < 3; i++)
+            for (int i = 1; i < 4; i++)
             {
                 textureNames[i] = damageType.ToString() + i.ToString();
             }
@@ -59,6 +66,11 @@ namespace MajorProject
             image.UnloadContent();
 
             base.UnloadContent();
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            image.Draw(spriteBatch);
         }
 
 

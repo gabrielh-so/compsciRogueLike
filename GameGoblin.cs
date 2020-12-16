@@ -47,6 +47,22 @@ namespace MajorProject
         {
             base.Update(gameTime);
 
+
+            // goblins keep their distance from the player and fire slingshots
+
+
+            if (target != null)
+            {
+
+            }
+
+
+
+
+
+
+
+
             goblinImage.position = position.ToPoint();
             goblinImage.Update(gameTime);
         }

@@ -18,7 +18,6 @@ namespace MajorProject
 
     public class GameScreen : Screen
     {
-        bool displayRoom = true;
 
         Random rand;
 
@@ -53,6 +52,8 @@ namespace MajorProject
         World GameWorld;
 
         GamePlayer Player;
+
+        public HUD headsUpDisplay;
 
         List<List<GameEnemy>> Enemies;
         List<GameProjectile> EnemyProjectiles;
@@ -89,7 +90,8 @@ namespace MajorProject
 
             Enemies = new List<List<GameEnemy>>();
 
-            
+            PlayerProjectiles = new List<GameProjectile>();
+            EnemyProjectiles = new List<GameProjectile>();
 
             cameraTransformationMatrix = Matrix.Identity;
         }
@@ -120,8 +122,22 @@ namespace MajorProject
             Player.position.Y = (GameWorld.entryIndex.Y + 0.5f) * World.tilePixelHeight;
         }
 
+
+        public void AddProjectile(GameProjectile p)
+        {
+            if (p.target == Player.GetType())
+            {
+                EnemyProjectiles.Add(p);
+            }
+            else
+                PlayerProjectiles.Add(p);
+        }
+
+
+
         public void LoadPlayer()
         {
+            Player.tileWidth = World.tilePixelWidth;
             Player.LoadContent(ref PlayerResources);
             Player.Map = GameWorld.Map;
             SetPlayerToEntrance();
@@ -165,7 +181,9 @@ namespace MajorProject
                                     break;
                             }
 
+                            e.Map = GameWorld.Map;
 
+                            e.tileWidth = World.tilePixelWidth;
 
                             e.SetPosition(RoomPosition.X * World.tilePixelWidth + World.tilePixelWidth * j, RoomPosition.Y * World.tilePixelWidth + rand.Next(0, (int)(World.tilePixelHeight * GameWorld.generation_RoomIndexDimensions[i].Y)));
 
@@ -223,6 +241,14 @@ namespace MajorProject
 
         }
 
+        public void LoadHUD()
+        {
+            headsUpDisplay = new HUD();
+            HUDResources.LoadContent();
+            headsUpDisplay.LoadContent(HUDResources);
+            headsUpDisplay.SetPlayer(Player);
+        }
+
         public override void LoadContent()
         {
             if (PlayerPreferences.Instance.LoadSavedGame)
@@ -236,6 +262,8 @@ namespace MajorProject
 
             LoadPlayer();
 
+            LoadHUD();
+
             AssignRooms();
 
             LoadRoomContents();
@@ -245,6 +273,9 @@ namespace MajorProject
 
         public override void UnloadContent()
         {
+            headsUpDisplay.UnSetPlayer();
+            headsUpDisplay.UnloadContent();
+
             Player.UnloadContent();
 
             GameWorld.UnloadContent();
@@ -283,13 +314,30 @@ namespace MajorProject
 
             // update each entity
 
-            Player.Update(gameTime);
+            if (Player.alive)
+                Player.Update(gameTime);
 
             for (int i = 0; i < GameWorld.room_count; i++)
             {
                 for (int j = 0; j < Enemies[i].Count; j++)
                 {
                     Enemies[i][j].Update(gameTime);
+                }
+            }
+            for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
+            {
+                EnemyProjectiles[i].Update(gameTime);
+                // check they aren't too old
+                if (EnemyProjectiles[i].currentLifeSpan >= EnemyProjectiles[i].totalLifeSpan)
+                {
+                    EnemyProjectiles[i].UnloadContent();
+                    EnemyProjectiles.RemoveAt(i);
+                }
+                // check they haven't hit wall
+                if (GameWorld.Map[(int)EnemyProjectiles[i].position.Y / World.tilePixelWidth, (int)EnemyProjectiles[i].position.X / World.tilePixelWidth] != (int)World.cellType.empty)
+                {
+                    EnemyProjectiles[i].UnloadContent();
+                    EnemyProjectiles.RemoveAt(i);
                 }
             }
 
@@ -329,10 +377,7 @@ namespace MajorProject
                     {
                         e.SetTarget(Player);
                     }
-                    displayRoom = false;
                 }
-                else
-                    displayRoom = true;
 
 
                 Player.currentRoom = playerRoomIndex;
@@ -340,10 +385,40 @@ namespace MajorProject
 
             // regardless, compare with all non-enemy entities
 
+            // go backwards through projectile array
+            for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
+            {
+                // temporary variables to set edges for testing
+                float testX = EnemyProjectiles[i].position.X;
+                float testY = EnemyProjectiles[i].position.Y;
+
+                // which edge is closest?
+                if (EnemyProjectiles[i].position.X < Player.BoundingBox.X) testX = Player.BoundingBox.X;      // test left edge
+                else if (EnemyProjectiles[i].position.X > Player.BoundingBox.X + Player.BoundingBox.Width) testX = Player.BoundingBox.X + Player.BoundingBox.Width;   // right edge
+                if (EnemyProjectiles[i].position.Y < Player.BoundingBox.Y) testY = Player.BoundingBox.Y;      // top edge
+                else if (EnemyProjectiles[i].position.Y > Player.BoundingBox.Y + Player.BoundingBox.Height) testY = Player.BoundingBox.Y + Player.BoundingBox.Height;   // bottom edge
+
+                // get distance from closest edges
+                double distX = EnemyProjectiles[i].position.X - testX;
+                double distY = EnemyProjectiles[i].position.Y - testY;
+                double distance = Math.Sqrt((distX * distX) + (distY * distY));
+
+                // collision if the distance is less than the radius
+                if (distance <= EnemyProjectiles[i].radius)
+                {
+                    // give projectile to player for damage
+                    Player.ProjectileCollision(EnemyProjectiles[i]);
+
+                    //destroy the projectile
+                    EnemyProjectiles[i].UnloadContent();
+                    EnemyProjectiles.RemoveAt(i);
+                }
+            }
 
 
 
 
+            headsUpDisplay.Update(gameTime);
 
 
 
@@ -389,7 +464,7 @@ namespace MajorProject
 
             // ... draw sprites here ...
 
-            if (displayRoom) GameWorld.Draw(spriteBatch);
+            GameWorld.Draw(spriteBatch);
 
 
             Player.Draw(spriteBatch);
@@ -411,6 +486,8 @@ namespace MajorProject
 
 
             // probably draw ui elements here
+
+            headsUpDisplay.Draw(spriteBatch);
 
         }
 

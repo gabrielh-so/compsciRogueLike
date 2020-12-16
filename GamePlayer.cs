@@ -17,8 +17,9 @@ using static MajorProject.InputManager;
 
 namespace MajorProject
 {
-    class GamePlayer : GameCharacter
+    public class GamePlayer : GameCharacter
     {
+        GameInventory inventory;
 
         GameImage playerImage;
 
@@ -32,6 +33,11 @@ namespace MajorProject
             "Player_Forward"
         };
 
+        public override void ProjectileCollision(GameProjectile p)
+        {
+            TakeDamage(p.damage);
+        }
+
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
@@ -44,7 +50,11 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
             velocity = Vector2.Zero;
+
+            Vector2 newPosition = position;
 
             if (InputManager.Instance.ActionKeyDown(ActionType.walk_right))
             {
@@ -72,14 +82,47 @@ namespace MajorProject
             {
                 velocity.Normalize();
                 velocity *= (float)(speed * (gameTime.ElapsedGameTime.TotalSeconds));
-                position += velocity;
+                newPosition += velocity;
             }
 
-            // update boxes
-            BoundingBox.Location = position.ToPoint();
+            // check that there's no collision with a wall
+
+            if (Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] != (int)World.cellType.wall)
+            {
+                position = newPosition;
+
+                // update boxes
+                BoundingBox.Location = position.ToPoint();
 
 
-            playerImage.position = position.ToPoint();
+                playerImage.position = position.ToPoint();
+            }
+            else
+            {
+                // issue - colliding with walls stops *all* movement, so take out colliding velocity
+                if ((int)newPosition.Y / tileWidth != (int)position.Y / tileWidth) velocity.Y = 0; //colides with something above or below, so remove vertical component of velocity
+                else velocity.X = 0;
+                newPosition = position + velocity;
+                if (Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] != (int)World.cellType.wall)
+                {
+                    position = newPosition;
+
+                    // update boxes
+                    BoundingBox.Location = position.ToPoint();
+
+
+                    playerImage.position = position.ToPoint();
+                }
+            }
+
+            Random rand = new Random();
+
+            if (rand.NextDouble() < 0.01)
+            {
+                TakeDamage(5);
+            }
+
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)

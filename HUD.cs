@@ -18,30 +18,94 @@ namespace MajorProject
 
         // located at the bottom of the screen - covers 1/(4-5)th of it
 
+        // it will also display a mini-map of the level!
+
+
+        GameImage minimap;
+
 
         GamePlayer player;
 
+        ResourcePack HUDResources;
+
+
+        GameImage mainBar;
+        GameImage healthBar;
+
+
+        int maxHealthBarSize = 300;
+
+
         public HUD()
         {
-
+            mainBar = new GameImage();
+            healthBar = new GameImage();
         }
 
 
 
 
-        void SetPlayer(GamePlayer p)
+        public void SetPlayer(GamePlayer p)
         {
             player = p;
         }
 
-        void UnSetPlayer()
+        public void UnSetPlayer()
         {
             player = null;
         }
 
-        public void Update()
+        public void GenerateMiniMap(int[,] map)
+        {
+            // assigns the minimap texture a new value based on what the map details are
+        }
+
+        public void Update(GameTime gameTime)
         {
 
+            // roight so you 'ave a gander at the ol' playah, yeah?
+            // then you get wot he has, and then put it on the screen
+
+            // update the displayed inventory
+
+            // update the
+
+            // player handles dropping stuff
+
+
+            // for now, just display the main bar and the player's health
+
+            // find the ratio of current player health to max health
+            double healthRatio = (double)player.health / player.maxHealth;
+
+            healthBar.SpriteSize.X = (int)(healthRatio * maxHealthBarSize);
+
+
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            mainBar.Draw(spriteBatch);
+            healthBar.Draw(spriteBatch);
+        }
+
+        public void UnloadContent()
+        {
+            HUDResources = null;
+        }
+
+        public void LoadContent(ResourcePack resources)
+        {
+            HUDResources = resources;
+
+            mainBar.position = new Point(50, 550);
+            mainBar.SpriteSize = new Point(1100, 100);
+
+            healthBar.position = new Point(100, 575);
+            healthBar.SpriteSize = new Point(300, 50);
+
+            mainBar.LoadContent(ref HUDResources, new string[1]{ "HUDTexture" });
+            healthBar.LoadContent(ref HUDResources, new string[1] { "HealthBarTexture" });
         }
 
 

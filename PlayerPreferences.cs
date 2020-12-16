@@ -113,6 +113,7 @@ namespace MajorProject
         public void SetDefaultKeys()
         {
             instance.ActionKeyDict = new Dictionary<InputManager.ActionType, Keys>(ActionKeyDictDefault);
+            InputManager.Instance.UpdateKeyDictionary();
         }
         public void SetDefaultVolume()
         {

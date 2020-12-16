@@ -9,7 +9,7 @@ namespace MajorProject
 {
     public class GameEnemy : GameCharacter
     {
-        GameCharacter target;
+        public GameCharacter target;
 
         public int speed = 100;
 
@@ -31,6 +31,8 @@ namespace MajorProject
         {
             base.Update(gameTime);
 
+            /*
+
             if (target != null)
             {
 
@@ -41,6 +43,8 @@ namespace MajorProject
                 velocity = directionVector * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             else velocity = Vector2.Zero;
+
+            */
 
 
             position += velocity;

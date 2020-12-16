@@ -125,6 +125,9 @@
       <string>HUDTexture</string>
       <string>HUDTexture</string>
 
+      <string>HealthBarTexture</string>
+      <string>HealthBarTexture</string>
+
     </TextureNameAndPath>
 
     <AudioNameAndPath>

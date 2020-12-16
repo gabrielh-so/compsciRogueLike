@@ -64,7 +64,7 @@ namespace MajorProject
 
         int roomPlacementAttempts = 20; // try to place a room randomly 20 times before using a systematic search (otherwise could be O(n!) )
 
-        enum cellType
+        public enum cellType
         {
             empty,    // 0
             floor,    // 1

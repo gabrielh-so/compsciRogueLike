@@ -11,8 +11,6 @@ namespace MajorProject
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
-        Texture2D image;
         
         public Game1()
         {

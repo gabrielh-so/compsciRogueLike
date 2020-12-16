@@ -47,8 +47,13 @@ namespace MajorProject
 
         public InputManager()
         {
-            ActionKeyDict = PlayerPreferences.Instance.ActionKeyDict;
+            UpdateKeyDictionary();
             changedKeys = new List<Keys>();
+        }
+
+        public void UpdateKeyDictionary()
+        {
+            ActionKeyDict = PlayerPreferences.Instance.ActionKeyDict;
         }
 
         public void Update()

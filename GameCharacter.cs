@@ -12,15 +12,26 @@ namespace MajorProject
         // this is a character
         // (yeah thanks gab)
 
+        public GameCharacter()
+        {
+            maxHealth = 100;
+            alive = true;
+            health = maxHealth;
+        }
+
         public int currentRoom = -1;
 
+        public int maxHealth;
         public int health;
 
         public int speed = 250;
 
+        public int radius; // radius of a circle hitbox! can be used with circles or
+
         public bool alive;
 
         public int[,] Map;
+        public int tileWidth;
 
         public int projectileDamage;
         public int meleeDamage;
@@ -32,7 +43,10 @@ namespace MajorProject
             health -= damage;
         }
 
-
+        public virtual void ProjectileCollision(GameProjectile p)
+        {
+            
+        }
 
 
         public override void Update(GameTime gameTime)
@@ -46,6 +60,13 @@ namespace MajorProject
             BoundingBox.Location = position.ToPoint();
 
         }
+
+
+        public void onCollision(GameEntity e)
+        {
+
+        }
+
         void OnDeath()
         {
 
