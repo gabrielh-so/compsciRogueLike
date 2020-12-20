@@ -12,8 +12,13 @@ namespace MajorProject
         // this is a character
         // (yeah thanks gab)
 
+
+
+        public List<GameProjectile> projectiles;
+
         public GameCharacter()
         {
+            projectiles = new List<GameProjectile>();
             maxHealth = 100;
             alive = true;
             health = maxHealth;
@@ -24,7 +29,7 @@ namespace MajorProject
         public int maxHealth;
         public int health;
 
-        public int speed = 250;
+        public double speed = 250;
 
         public int radius; // radius of a circle hitbox! can be used with circles or
 
@@ -51,6 +56,15 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
+            for (int i = projectiles.Count - 1; i > -1; i--)
+            {
+                projectiles[i].Update(gameTime);
+                if (projectiles[i].removeable)
+                {
+                    projectiles[i].UnloadContent();
+                    projectiles.RemoveAt(i);
+                }
+            }
 
             if (health <= 0)
             {

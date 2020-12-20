@@ -30,6 +30,7 @@ namespace MajorProject
         {
             flyerImage = new GameImage();
             type = GetType();
+            speed = 2;
         }
 
         public override void LoadContent(ref ResourcePack resources)

@@ -13,6 +13,8 @@ namespace MajorProject
     {
         public Type type;
 
+        public bool removeable;
+
         public Vector2 position;
         public Vector2 velocity;
 

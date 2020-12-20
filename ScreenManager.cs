@@ -30,7 +30,7 @@ namespace MajorProject
         public ContentManager Content { private set; get; }
         XmlManager<Screen> xmlGameScreenManager;
             
-        Screen currentScreen, newScreen;
+        public Screen currentScreen, newScreen;
         [XmlIgnore]
         public GraphicsDevice GraphicsDevice;
         [XmlIgnore]

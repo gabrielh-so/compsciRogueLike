@@ -15,6 +15,14 @@ namespace MajorProject
         GameImage goblinAttackImage;
 
 
+
+
+        double maxFireInterval = 2;
+        double currentFireInterval = 0;
+
+
+
+
         string[] walkAnimation =
         {
             "Goblin1",
@@ -27,6 +35,7 @@ namespace MajorProject
 
         public GameGoblin()
         {
+
 
             goblinImage = new GameImage();
             type = GetType();
@@ -53,7 +62,31 @@ namespace MajorProject
 
             if (target != null)
             {
+                currentFireInterval += gameTime.ElapsedGameTime.TotalSeconds;
+                if (currentFireInterval >= maxFireInterval)
+                {
+                    GameProjectile p = new GameProjectile();
+                    p.position = new Vector2(position.X, position.Y);
+                    p.target = typeof(GamePlayer);
+                    p.totalLifeSpan = 3;
+                    p.SetVelocity(target.position - position);
+                    p.speed = 2;
+                    p.damageType = GameProjectile.DamageType.Fire;
+                    p.damage = 5;
 
+                    p.BoundingBox.Location = position.ToPoint();
+                    p.BoundingBox.Size = new Point(25, 25);
+
+                    projectiles.Add(p);
+
+                    // now *that's* punk
+                    ((GameScreen)ScreenManager.Instance.currentScreen).AddProjectile(p);
+
+
+                    currentFireInterval = 0;
+
+
+                }
             }
 
 

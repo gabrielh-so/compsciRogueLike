@@ -31,6 +31,7 @@ namespace MajorProject
 
             slimeImage = new GameImage();
             type = GetType();
+            speed = 0.5;
         }
 
         public override void LoadContent(ref ResourcePack resources)
@@ -46,6 +47,18 @@ namespace MajorProject
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            if (target != null)
+            {
+
+                Vector2 directionVector = (target.BoundingBox.Location - BoundingBox.Location).ToVector2();
+
+                directionVector.Normalize();
+
+                velocity.X = (float)(directionVector.X * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                velocity.Y = (float)(directionVector.Y * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            }
+            else velocity = Vector2.Zero;
 
             slimeImage.position = position.ToPoint();
             slimeImage.Update(gameTime);

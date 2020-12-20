@@ -11,8 +11,6 @@ namespace MajorProject
     {
         public GameCharacter target;
 
-        public int speed = 100;
-
         public void SetTarget(GameCharacter t)
         {
             target = t;
@@ -31,23 +29,7 @@ namespace MajorProject
         {
             base.Update(gameTime);
 
-            /*
-
-            if (target != null)
-            {
-
-                Vector2 directionVector = (target.BoundingBox.Location - BoundingBox.Location).ToVector2();
-
-                directionVector.Normalize();
-
-                velocity = directionVector * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
-            else velocity = Vector2.Zero;
-
-            */
-
-
-            position += velocity;
+            
 
         }
 

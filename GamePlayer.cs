@@ -23,9 +23,12 @@ namespace MajorProject
 
         GameImage playerImage;
 
+        public int money;
+
         public GamePlayer()
         {
             playerImage = new GameImage();
+            money = 0;
         }
 
         string[] walkAnimation =
@@ -50,6 +53,7 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
+
             base.Update(gameTime);
 
             velocity = Vector2.Zero;
@@ -78,7 +82,7 @@ namespace MajorProject
             }
 
             // normalise velocity, apply scalar values and add to position // normalise returns NaN if magnitude is 0
-            if ((velocity.X * velocity.X + velocity.Y * velocity.Y) > 0)
+            if ((Math.Abs(velocity.X) + Math.Abs(velocity.Y)) > 0)
             {
                 velocity.Normalize();
                 velocity *= (float)(speed * (gameTime.ElapsedGameTime.TotalSeconds));
@@ -114,15 +118,6 @@ namespace MajorProject
                     playerImage.position = position.ToPoint();
                 }
             }
-
-            Random rand = new Random();
-
-            if (rand.NextDouble() < 0.01)
-            {
-                TakeDamage(5);
-            }
-
-
         }
 
         public override void Draw(SpriteBatch spriteBatch)

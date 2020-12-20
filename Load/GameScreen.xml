@@ -128,6 +128,9 @@
       <string>HealthBarTexture</string>
       <string>HealthBarTexture</string>
 
+      <string>DamageTexture</string>
+      <string>DamageTexture</string>
+
     </TextureNameAndPath>
 
     <AudioNameAndPath>
@@ -142,14 +145,82 @@
     </AudioNameAndPath>
 
 
-  </HUDResources> 
+  </HUDResources>
+
+  <ProjectileResources>
+
+    <BaseAudioPath>Audio/Sound/Game/Projectile/</BaseAudioPath>
+    <BaseTexturePath>Texture/Game/Projectile/</BaseTexturePath>
+
+    <TextureNameAndPath>
+
+      <string>Fire1</string>
+      <string>Fire/Fire1</string>
+
+      <string>Fire2</string>
+      <string>Fire/Fire2</string>
+
+      <string>Fire3</string>
+      <string>Fire/Fire3</string>
+
+
+      <string>Ice1</string>
+      <string>Ice/Ice1</string>
+
+      <string>Ice2</string>
+      <string>Ice/Ice2</string>
+
+      <string>Ice3</string>
+      <string>Ice/Ice3</string>
+      
+
+      <string>Toxic1</string>
+      <string>Toxic/Toxic1</string>
+
+      <string>Toxic2</string>
+      <string>Toxic/Toxic2</string>
+
+      <string>Toxic3</string>
+      <string>Toxic/Toxic3</string>
+
+      <string>Toxic4</string>
+      <string>Toxic/Toxic4</string>
+      
+
+      <string>Kinetic1</string>
+      <string>Kinetic/Kinetic1</string>
+
+      <string>Kinetic2</string>
+      <string>Kinetic/Kinetic2</string>
+
+      <string>Kinetic3</string>
+      <string>Kinetic/Kinetic3</string>
+
+      <string>Kinetic4</string>
+      <string>Kinetic/Kinetic4</string>
+
+    </TextureNameAndPath>
+
+    <AudioNameAndPath>
+
+      <!--
+      
+      <string></string>
+      <string></string>
+      
+      -->
+
+    </AudioNameAndPath>
+
+
+  </ProjectileResources>
+
   
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
 
 </GameScreen>

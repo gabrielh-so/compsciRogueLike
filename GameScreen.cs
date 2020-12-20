@@ -65,6 +65,8 @@ namespace MajorProject
         public ResourcePack BossResources;
         public ResourcePack GoblinResources;
 
+        public ResourcePack ProjectileResources;
+
         public ResourcePack HUDResources;
 
         public EnvironmentResourcePack EnvironmentResources;
@@ -125,7 +127,9 @@ namespace MajorProject
 
         public void AddProjectile(GameProjectile p)
         {
-            if (p.target == Player.GetType())
+            p.Map = GameWorld.Map;
+            p.LoadContent(ref ProjectileResources);
+            if (p.target == typeof(GamePlayer))
             {
                 EnemyProjectiles.Add(p);
             }
@@ -205,6 +209,12 @@ namespace MajorProject
             }
         }
 
+        void LoadItemResources()
+        {
+
+            ProjectileResources.LoadContent();
+        }
+
         void LoadCharacterResources()
         {
             PlayerResources.LoadContent();
@@ -264,6 +274,8 @@ namespace MajorProject
 
             LoadHUD();
 
+            LoadItemResources();
+
             AssignRooms();
 
             LoadRoomContents();
@@ -284,7 +296,7 @@ namespace MajorProject
             GoblinResources.UnloadContent();
             SlimeResources.UnloadContent();
             FlyerResources.UnloadContent();
-            BossResources.UnloadContent();
+            //BossResources.UnloadContent();
             EnvironmentResources.UnloadContent();
         }
 
@@ -322,22 +334,6 @@ namespace MajorProject
                 for (int j = 0; j < Enemies[i].Count; j++)
                 {
                     Enemies[i][j].Update(gameTime);
-                }
-            }
-            for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
-            {
-                EnemyProjectiles[i].Update(gameTime);
-                // check they aren't too old
-                if (EnemyProjectiles[i].currentLifeSpan >= EnemyProjectiles[i].totalLifeSpan)
-                {
-                    EnemyProjectiles[i].UnloadContent();
-                    EnemyProjectiles.RemoveAt(i);
-                }
-                // check they haven't hit wall
-                if (GameWorld.Map[(int)EnemyProjectiles[i].position.Y / World.tilePixelWidth, (int)EnemyProjectiles[i].position.X / World.tilePixelWidth] != (int)World.cellType.empty)
-                {
-                    EnemyProjectiles[i].UnloadContent();
-                    EnemyProjectiles.RemoveAt(i);
                 }
             }
 
@@ -410,7 +406,19 @@ namespace MajorProject
                     Player.ProjectileCollision(EnemyProjectiles[i]);
 
                     //destroy the projectile
-                    EnemyProjectiles[i].UnloadContent();
+                    EnemyProjectiles[i].removeable = true;
+                }
+            }
+
+
+
+
+
+
+            for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
+            {
+                if (EnemyProjectiles[i].removeable)
+                {
                     EnemyProjectiles.RemoveAt(i);
                 }
             }
@@ -424,6 +432,8 @@ namespace MajorProject
 
 
             // detect collisions between entities and trigger oncollide functions
+
+
 
 
 
@@ -477,6 +487,11 @@ namespace MajorProject
                 }
             }
 
+            foreach (GameProjectile p in EnemyProjectiles)
+            {
+                p.Draw(spriteBatch);
+            }
+
 
 
 
@@ -499,6 +514,37 @@ namespace MajorProject
                 bs.Serialize(sw.BaseStream, this);
             }
         }
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// need to add item
+        /// </summary>
+        /// <returns></returns>
+
+
+        /// need to add projectile
+        /// 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public bool LoadGame()
         {

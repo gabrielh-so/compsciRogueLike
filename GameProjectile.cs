@@ -10,14 +10,20 @@ namespace MajorProject
 {
     public class GameProjectile : GameEntity
     {
-        double speed;
+        public double speed;
 
         public double totalLifeSpan;
         public double currentLifeSpan;
 
+        public int[,] Map;
+        
+
         GameImage image;
 
         public Point SpriteSize;
+
+
+        string[] textureNames = new string[3];
 
         public enum DamageType
         {
@@ -34,6 +40,7 @@ namespace MajorProject
 
         public GameProjectile()
         {
+            image = new GameImage();
             totalLifeSpan = 2;
             currentLifeSpan = 0;
             SpriteSize = new Point(25, 25);
@@ -41,24 +48,51 @@ namespace MajorProject
             radius = 12;
         }
 
+        public void SetVelocity(Vector2 p)
+        {
+            velocity = p;
+            if (velocity.X * velocity.X + velocity.Y * velocity.Y > 0)
+            {
+                velocity.Normalize();
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             image.Update(gameTime);
 
             currentLifeSpan += gameTime.ElapsedGameTime.TotalSeconds;
+
+            position.X += (float)(velocity.X * speed);
+            position.Y += (float)(velocity.Y * speed);
+
+            // check they aren't too old
+            if (currentLifeSpan >= totalLifeSpan)
+            {
+                removeable = true;
+            }
+            // check they haven't hit wall
+            if (Map[(int)position.Y / World.tilePixelWidth, (int)position.X / World.tilePixelWidth] != (int)World.cellType.floor)
+            {
+                removeable = true;
+            }
+
+
         }
 
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
 
-            string[] textureNames = new string[3];
+            image.SpriteSize = new Point(25, 25);
+
             for (int i = 1; i < 4; i++)
             {
-                textureNames[i] = damageType.ToString() + i.ToString();
+                textureNames[i-1] = damageType.ToString() + i.ToString();
             }
 
             image.LoadContent(ref Resources, textureNames);
+            image.animated = true;
         }
 
         public override void UnloadContent()
@@ -70,6 +104,7 @@ namespace MajorProject
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            image.position = position.ToPoint();
             image.Draw(spriteBatch);
         }
 

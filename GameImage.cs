@@ -27,6 +27,9 @@ namespace MajorProject
         public bool animated; // is the image currently animating?
         public bool blinking; // is the image blinking in and out?
 
+        bool loopAnimation;
+        bool completed; // is the animation completed?
+
         public double frameLength; // total length of time per frame (seconds)
         public double frameTime; // time since last frame change
 
@@ -36,6 +39,8 @@ namespace MajorProject
 
         public Point position;
         public Point SpriteSize;
+
+        public float alpha;
 
 
         void MoveOrigin(Point newPosition)
@@ -52,7 +57,9 @@ namespace MajorProject
 
         public GameImage()
         {
+            loopAnimation = false;
             position = new Point();
+            alpha = 1;
         }
 
         public virtual void LoadContent(ref ResourcePack resources, string[] texturenames)
@@ -80,7 +87,7 @@ namespace MajorProject
 
         public virtual void Update(GameTime gameTime)
         {
-            if (!staticImage & animated)
+            if (!staticImage && animated)
             {
                 frameTime += gameTime.ElapsedGameTime.TotalSeconds;
                 if (frameTime > frameLength)
@@ -92,19 +99,23 @@ namespace MajorProject
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            if (staticImage) textureIndex = 0;
-            Point origin = new Point();
-            if (centered)
+            if (alpha > 0)
             {
-                origin.X = position.X - SpriteSize.X / 2;
-                origin.Y = position.Y - SpriteSize.Y / 2;
-            }
-            else
-            {
-                origin = position;
-            }
+                if (staticImage) textureIndex = 0;
+                Point origin = new Point();
+                if (centered)
+                {
+                    origin.X = position.X - SpriteSize.X / 2;
+                    origin.Y = position.Y - SpriteSize.Y / 2;
+                }
+                else
+                {
+                    origin = position;
+                }
 
-            spriteBatch.Draw(Resources.TexturePack[textureNames[textureIndex]], destinationRectangle: new Rectangle(origin, SpriteSize));
+                spriteBatch.Draw(Resources.TexturePack[textureNames[textureIndex]], destinationRectangle: new Rectangle(origin, SpriteSize), color: Color.White * alpha);
+
+            }
 
         }
     }
