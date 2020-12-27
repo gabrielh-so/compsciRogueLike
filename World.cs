@@ -93,7 +93,7 @@ namespace MajorProject
         List<Vector2> generation_DoorPositions;
 
         //List<Vector2> MazeGenerationPath;
-        List<Vector2> CorridorEndings;
+        public List<Vector2> CorridorEndings;
 
         #region Parameters
         // values to be assigned before generation

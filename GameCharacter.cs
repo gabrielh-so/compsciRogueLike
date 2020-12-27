@@ -18,6 +18,9 @@ namespace MajorProject
 
         public GameCharacter()
         {
+            meleeDamage = 10;
+            projectileDamage = 5;
+
             projectiles = new List<GameProjectile>();
             maxHealth = 100;
             alive = true;
@@ -50,7 +53,7 @@ namespace MajorProject
 
         public virtual void ProjectileCollision(GameProjectile p)
         {
-            
+            TakeDamage(p.damage);
         }
 
 
@@ -71,12 +74,13 @@ namespace MajorProject
                 alive = false;
             }
 
-            BoundingBox.Location = position.ToPoint();
+            BoundingBox.X = (int)position.X - BoundingBox.Size.X / 2;
+            BoundingBox.Y = (int)position.Y - BoundingBox.Size.Y / 2;
 
         }
 
 
-        public void onCollision(GameEntity e)
+        public virtual void onCollision(GameCharacter e)
         {
 
         }

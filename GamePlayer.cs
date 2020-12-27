@@ -25,10 +25,22 @@ namespace MajorProject
 
         public int money;
 
+        public bool hitCooldown;
+        double maxHitDelay;
+        double currentHitDelay;
+
+        public bool attackCooldown;
+        double currentAttackDelay;
+        double maxAttackDelay;
+
         public GamePlayer()
         {
+            inventory = new GameInventory();
             playerImage = new GameImage();
             money = 0;
+
+            maxHitDelay = 1;
+            currentHitDelay = 0;
         }
 
         string[] walkAnimation =
@@ -49,12 +61,35 @@ namespace MajorProject
             playerImage.animated = false;
             playerImage.centered = true;
             playerImage.SpriteSize = new Point(25, 25);
+
+            BoundingBox.Size = SpriteSize;
         }
 
         public override void Update(GameTime gameTime)
         {
 
             base.Update(gameTime);
+
+            if (hitCooldown)
+            {
+                currentHitDelay += gameTime.ElapsedGameTime.TotalSeconds;
+                if (currentHitDelay >= maxHitDelay)
+                {
+                    hitCooldown = false;
+                    currentHitDelay = 0;
+                }
+            }
+
+            if (attackCooldown)
+            {
+                currentAttackDelay += gameTime.ElapsedGameTime.TotalSeconds;
+                if (currentAttackDelay >= maxAttackDelay)
+                {
+                    attackCooldown = false;
+                    currentAttackDelay = 0;
+                }
+            }
+
 
             velocity = Vector2.Zero;
 
@@ -118,6 +153,12 @@ namespace MajorProject
                     playerImage.position = position.ToPoint();
                 }
             }
+
+            if (InputManager.Instance.MousePressed())
+            {
+                inventory.UseItem(this);
+            }
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -141,6 +182,31 @@ namespace MajorProject
             }
         }
 
+        public override void onCollision(GameCharacter e)
+        {
+            if (!hitCooldown)
+            {
+                TakeDamage(e.meleeDamage);
+                hitCooldown = true;
+            }
+        }
+
+        public bool AddItem(GameItem i)
+        {
+            return inventory.AddItem(i);
+        }
+
+        public bool AddAbility(GameAbility a)
+        {
+            return inventory.AddAbility(a);
+        }
+
+        public void AddAttackCooldown(double cooldownLength)
+        {
+            attackCooldown = true;
+            currentAttackDelay = 0;
+            maxAttackDelay = cooldownLength;
+        }
 
     }
 }

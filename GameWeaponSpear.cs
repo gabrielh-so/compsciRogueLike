@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    public abstract class GameAbility : GameItem
+    class GameWeaponSpear
     {
-
-        public GameAbility()
-        {
-
-        }
-
 
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    public class GamePotion : GameItem
+    public abstract class GamePotion : GameItem
     {
 
         public GamePotion()

@@ -27,12 +27,27 @@ namespace MajorProject
 
         public GameCoin()
         {
-            image = new GameImage();
+            base.LoadContent(ref Resources);
+
+            type = typeof(GameCoin);
+
+            BoundingBox.Size = new Point(25, 25);
+
             value = 100;
 
             radius = 25;
 
             image = new GameImage();
+
+            image.LoadContent(ref Resources, CoinAnimation);
+            image.animated = true;
+            image.centered = true;
+            image.SpriteSize = new Point(25, 25);
+
+            image.position = position.ToPoint();
+            BoundingBox.Location = position.ToPoint();
+
+            removeable = false;
 
         }
 
@@ -57,7 +72,22 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
+            // account for friction - allows launched coins to stop at some point
+            if (velocity.LengthSquared() > 0) velocity *= 0.8f;
+
+            position += velocity;
+            BoundingBox.Location = position.ToPoint();
+            BoundingBox.X -= BoundingBox.Width / 2;
+            BoundingBox.Y -= BoundingBox.Height / 2;
+
+            image.position = position.ToPoint();
             image.Update(gameTime);
+        }
+
+        public override void Use(GamePlayer user)
+        {
+
+            user.money += value;
         }
 
 

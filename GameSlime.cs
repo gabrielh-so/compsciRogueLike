@@ -31,7 +31,11 @@ namespace MajorProject
 
             slimeImage = new GameImage();
             type = GetType();
-            speed = 0.5;
+            speed = 50;
+
+
+            maxHealth = 150;
+            health = maxHealth;
         }
 
         public override void LoadContent(ref ResourcePack resources)
@@ -53,12 +57,19 @@ namespace MajorProject
 
                 Vector2 directionVector = (target.BoundingBox.Location - BoundingBox.Location).ToVector2();
 
-                directionVector.Normalize();
+                // check magnitude is bigger than 0 before normallizing
+                if (Math.Abs(directionVector.X) + Math.Abs(directionVector.Y) > 0)
+                    directionVector.Normalize();
 
                 velocity.X = (float)(directionVector.X * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 velocity.Y = (float)(directionVector.Y * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
             else velocity = Vector2.Zero;
+
+
+            position += velocity;
+
+
 
             slimeImage.position = position.ToPoint();
             slimeImage.Update(gameTime);
@@ -69,6 +80,17 @@ namespace MajorProject
             base.Draw(spriteBatch);
 
             slimeImage.Draw(spriteBatch);
+        }
+
+
+
+
+        public override void UnloadContent()
+        {
+            base.UnloadContent();
+
+            slimeImage.UnloadContent();
+            slimeAttackImage.UnloadContent();
         }
 
     }

@@ -15,7 +15,7 @@ namespace MajorProject
         GameImage goblinAttackImage;
 
 
-
+        int targetDistance;
 
         double maxFireInterval = 2;
         double currentFireInterval = 0;
@@ -35,10 +35,15 @@ namespace MajorProject
 
         public GameGoblin()
         {
+            speed = 50;
 
+            targetDistance = 250;
 
             goblinImage = new GameImage();
             type = GetType();
+
+            maxHealth = 100;
+            health = maxHealth;
         }
 
         public override void LoadContent(ref ResourcePack resources)
@@ -62,6 +67,54 @@ namespace MajorProject
 
             if (target != null)
             {
+                // move towards player if too far away,
+                // move closer if too near
+
+                Vector2 newPosition = position;
+
+                /*
+                Vector2 directionVector = (target.BoundingBox.Location - BoundingBox.Location).ToVector2();
+
+                // if goblin is too close, move away from player
+
+
+                // check if player is closer or nearer to target radius
+                if (Math.Pow(target.position.X - position.X, 2) + Math.Pow(target.position.Y - position.Y, 2) < targetDistance)
+                {
+                    velocity = new Vector2(-1, -1);
+                }
+                else
+                    velocity = new Vector2(1, 1);
+
+
+                // check magnitude is bigger than 0 before normallizing
+                if (directionVector.X * directionVector.X + directionVector.Y * directionVector.Y > 0)
+                {
+                    directionVector.Normalize();
+                }
+
+                velocity.X *= (float)(directionVector.X * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                velocity.Y *= (float)(directionVector.Y * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+
+                */
+
+
+                // check that the new location isn't in a wall or door
+
+                newPosition += velocity;
+
+                if (Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] != (int)World.cellType.wall)
+                {
+                    position = newPosition;
+
+                    // update boxes
+                    BoundingBox.Location = position.ToPoint();
+
+
+                    goblinImage.position = position.ToPoint();
+                }
+
+
                 currentFireInterval += gameTime.ElapsedGameTime.TotalSeconds;
                 if (currentFireInterval >= maxFireInterval)
                 {
@@ -87,6 +140,11 @@ namespace MajorProject
 
 
                 }
+
+                position += velocity;
+
+                goblinImage.position = position.ToPoint();
+                goblinImage.Update(gameTime);
             }
 
 

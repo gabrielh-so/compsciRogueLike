@@ -130,6 +130,21 @@
 
       <string>DamageTexture</string>
       <string>DamageTexture</string>
+      
+      <string>1</string>
+      <string>MiniMap/1</string>
+      
+      <string>2</string>
+      <string>MiniMap/2</string>
+    
+      <string>3</string>
+      <string>MiniMap/3</string>
+      
+      <string>4</string>
+      <string>MiniMap/4</string>
+      
+      <string>5</string>
+      <string>MiniMap/5</string>
 
     </TextureNameAndPath>
 
@@ -214,6 +229,44 @@
 
 
   </ProjectileResources>
+
+  <CoinResources>
+
+    <BaseAudioPath>Audio/Sound/Game/Loot/Coin/</BaseAudioPath>
+    <BaseTexturePath>Texture/Game/Loot/Coin/</BaseTexturePath>
+
+    <TextureNameAndPath>
+
+      <string>Coin1</string>
+      <string>Coin1</string>
+      
+      <string>Coin2</string>
+      <string>Coin2</string>
+      
+      <string>Coin3</string>
+      <string>Coin3</string>
+      
+      <string>Coin4</string>
+      <string>Coin4</string>
+      
+      <string>Coin5</string>
+      <string>Coin5</string>
+
+    </TextureNameAndPath>
+
+    <AudioNameAndPath>
+
+      <!--
+      
+      <string></string>
+      <string></string>
+      
+      -->
+
+    </AudioNameAndPath>
+
+
+  </CoinResources>
 
   
 

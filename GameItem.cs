@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    public class GameItem : GameEntity
+    public abstract class GameItem : GameEntity
     {
 
         public int radius;
 
-
+        public abstract void Use(GamePlayer user);
 
 
         public GameItem()
@@ -24,6 +24,8 @@ namespace MajorProject
         {
 
         }
+
+        
 
     }
 }

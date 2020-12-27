@@ -59,6 +59,8 @@ namespace MajorProject
         List<GameProjectile> EnemyProjectiles;
         List<GameProjectile> PlayerProjectiles;
 
+        List<GameItem> WorldItems;
+
         public ResourcePack PlayerResources;
         public ResourcePack SlimeResources;
         public ResourcePack FlyerResources;
@@ -70,6 +72,8 @@ namespace MajorProject
         public ResourcePack HUDResources;
 
         public EnvironmentResourcePack EnvironmentResources;
+
+        public ResourcePack CoinResources;
 
         public GameScreen()
         {
@@ -94,6 +98,8 @@ namespace MajorProject
 
             PlayerProjectiles = new List<GameProjectile>();
             EnemyProjectiles = new List<GameProjectile>();
+
+            WorldItems = new List<GameItem>();
 
             cameraTransformationMatrix = Matrix.Identity;
         }
@@ -135,6 +141,12 @@ namespace MajorProject
             }
             else
                 PlayerProjectiles.Add(p);
+        }
+
+        public void AddItem(GameItem i)
+        {
+            i.removeable = false;
+            WorldItems.Add(i);
         }
 
 
@@ -195,7 +207,7 @@ namespace MajorProject
 
                             e.alive = true;
                             e.BoundingBox = new Rectangle();
-                            e.BoundingBox.Size = new Point(50, 50);
+                            e.BoundingBox.Size = new Point(25, 25);
 
                             Enemies[i].Add(e);
 
@@ -211,7 +223,7 @@ namespace MajorProject
 
         void LoadItemResources()
         {
-
+            CoinResources.LoadContent();
             ProjectileResources.LoadContent();
         }
 
@@ -248,6 +260,32 @@ namespace MajorProject
 
         public void PlaceLoot()
         {
+            // give player a slingshot to start with - low damage
+
+            GameWeaponSword s = new GameWeaponSword();
+
+
+
+            // place items at the ends of corridors sometimes
+
+            foreach (Vector2 position in GameWorld.CorridorEndings)
+            {
+                // place item here
+                Vector2 coinPosition = new Vector2();
+                coinPosition.X = (position.X) * World.tilePixelWidth * 2 + World.tilePixelWidth;
+                coinPosition.Y = (position.Y) * World.tilePixelWidth * 2 + World.tilePixelWidth;
+
+                GameCoin c = new GameCoin();
+                c.LoadContent(ref CoinResources);
+                c.value = 10;
+                c.SetPosition(coinPosition.X + World.tilePixelWidth / 2, coinPosition.Y + World.tilePixelWidth / 2);
+
+                WorldItems.Add(c);
+            }
+
+
+
+            Player.AddItem(s);
 
         }
 
@@ -281,6 +319,8 @@ namespace MajorProject
             LoadRoomContents();
 
             PlaceLoot();
+
+            headsUpDisplay.GenerateMiniMap(GameWorld.Map);
         }
 
         public override void UnloadContent()
@@ -337,6 +377,11 @@ namespace MajorProject
                 }
             }
 
+            for (int i = 0; i < WorldItems.Count; i++)
+            {
+                WorldItems[i].Update(gameTime);
+            }
+
 
             // compare the player only to enemies it currently shares a room with
 
@@ -379,6 +424,37 @@ namespace MajorProject
                 Player.currentRoom = playerRoomIndex;
             }
 
+
+
+            if (Player.currentRoom > -1)
+            {
+                // player is in a room, compare collision with all enemies
+
+                for (int i = 0; i < Enemies[playerRoomIndex].Count; i++)
+                {
+                    if (Enemies[playerRoomIndex][i].BoundingBox.Contains(Player.BoundingBox))
+                    {
+                        // uh oh!
+                        // player has walked within the graps of an enemy
+                        // may need to do some damage
+
+                        Player.onCollision(Enemies[playerRoomIndex][i]);
+                        Enemies[playerRoomIndex][i].onCollision(Player);
+
+
+                    }
+                }
+
+
+
+            }
+
+
+
+
+
+
+
             // regardless, compare with all non-enemy entities
 
             // go backwards through projectile array
@@ -403,10 +479,19 @@ namespace MajorProject
                 if (distance <= EnemyProjectiles[i].radius)
                 {
                     // give projectile to player for damage
-                    Player.ProjectileCollision(EnemyProjectiles[i]);
+                    if (!Player.hitCooldown)
+                        Player.ProjectileCollision(EnemyProjectiles[i]);
 
                     //destroy the projectile
                     EnemyProjectiles[i].removeable = true;
+                }
+            }
+
+            for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
+            {
+                if (EnemyProjectiles[i].removeable)
+                {
+                    EnemyProjectiles.RemoveAt(i);
                 }
             }
 
@@ -415,11 +500,123 @@ namespace MajorProject
 
 
 
-            for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
+
+            foreach (List<GameEnemy> el in Enemies)
             {
-                if (EnemyProjectiles[i].removeable)
+                foreach (GameEnemy e in el)
                 {
-                    EnemyProjectiles.RemoveAt(i);
+                    // go backwards through projectile array
+                    for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+                    {
+                        // temporary variables to set edges for testing
+                        float testX = PlayerProjectiles[i].position.X;
+                        float testY = PlayerProjectiles[i].position.Y;
+
+                        // which edge is closest?
+                        if (PlayerProjectiles[i].position.X < e.BoundingBox.X) testX = e.BoundingBox.X;      // test left edge
+                        else if (PlayerProjectiles[i].position.X > e.BoundingBox.X + e.BoundingBox.Width) testX = Player.BoundingBox.X + Player.BoundingBox.Width;   // right edge
+                        if (PlayerProjectiles[i].position.Y < e.BoundingBox.Y) testY = e.BoundingBox.Y;      // top edge
+                        else if (PlayerProjectiles[i].position.Y > e.BoundingBox.Y + e.BoundingBox.Height) testY = Player.BoundingBox.Y + Player.BoundingBox.Height;   // bottom edge
+
+                        // get distance from closest edges
+                        double distX = PlayerProjectiles[i].position.X - testX;
+                        double distY = PlayerProjectiles[i].position.Y - testY;
+                        double distance = Math.Sqrt((distX * distX) + (distY * distY));
+
+                        // collision if the distance is less than the radius
+                        if (distance <= PlayerProjectiles[i].radius)
+                        {
+                            // give projectile to player for damage
+                            e.ProjectileCollision(PlayerProjectiles[i]);
+
+                            //destroy the projectile
+                            PlayerProjectiles[i].removeable = true;
+                        }
+                    }
+
+                    for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+                    {
+                        if (PlayerProjectiles[i].removeable)
+                        {
+                            PlayerProjectiles.RemoveAt(i);
+                        }
+                    }
+                }
+            }
+
+            for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+            {
+                if (PlayerProjectiles[i].removeable)
+                {
+                    PlayerProjectiles.RemoveAt(i);
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // go backwards through WorldItems array
+            for (int i = WorldItems.Count - 1; i > -1; i--)
+            {
+                // temporary variables to set edges for testing
+                float testX = WorldItems[i].position.X;
+                float testY = WorldItems[i].position.Y;
+
+                // which edge is closest?
+                if (WorldItems[i].position.X < Player.BoundingBox.X) testX = Player.BoundingBox.X;      // test left edge
+                else if (WorldItems[i].position.X > Player.BoundingBox.X + Player.BoundingBox.Width) testX = Player.BoundingBox.X + Player.BoundingBox.Width;   // right edge
+                if (WorldItems[i].position.Y < Player.BoundingBox.Y) testY = Player.BoundingBox.Y;      // top edge
+                else if (WorldItems[i].position.Y > Player.BoundingBox.Y + Player.BoundingBox.Height) testY = Player.BoundingBox.Y + Player.BoundingBox.Height;   // bottom edge
+
+                // get distance from closest edges
+                double distX = WorldItems[i].position.X - testX;
+                double distY = WorldItems[i].position.Y - testY;
+                double distance = Math.Sqrt((distX * distX) + (distY * distY));
+
+                // collision if the distance is less than the radius
+                if (distance <= WorldItems[i].radius)
+                {
+
+                    // is item pickupable, and if so has the player signaled to pick up?
+                    if (WorldItems[i].type != typeof(GameCoin))
+                    {
+                        Player.AddItem(WorldItems[i]);
+                        WorldItems[i].removeable = true;
+                    }
+                    else
+                    {
+                        // item is a coin, add money to player balance then unload
+                        WorldItems[i].Use(Player);
+                        WorldItems[i].UnloadContent();
+                        WorldItems[i].removeable = true;
+                    }
+
+
+                }
+            }
+
+            for (int i = WorldItems.Count - 1; i > -1; i--)
+            {
+                if (WorldItems[i].removeable)
+                {
+                    WorldItems.RemoveAt(i);
                 }
             }
 
@@ -493,6 +690,12 @@ namespace MajorProject
             }
 
 
+            foreach (GameItem i in WorldItems)
+            {
+                i.Draw(spriteBatch);
+            }
+
+
 
 
             spriteBatch.End();
@@ -531,8 +734,6 @@ namespace MajorProject
 
         /// need to add projectile
         /// 
-
-
 
 
 

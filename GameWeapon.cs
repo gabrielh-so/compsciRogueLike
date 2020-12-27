@@ -6,14 +6,21 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    public class GameWeapon : GameItem
+    public abstract class GameWeapon : GameItem
     {
+        public string weaponType;
+
+        public double attackCooldown;
 
         public GameWeapon()
         {
 
         }
 
+        public override void Use(GamePlayer user)
+        {
+            user.AddAttackCooldown(attackCooldown);
+        }
 
     }
 }

@@ -20,9 +20,7 @@ namespace MajorProject
 
         // it will also display a mini-map of the level!
 
-
-        GameImage minimap;
-
+        MiniMap miniMap;
 
         GamePlayer player;
 
@@ -49,6 +47,8 @@ namespace MajorProject
             healthBar = new GameImage();
             damageOverlay = new GameImage();
             lowHealthOverlay = new GameImage();
+
+            miniMap = new MiniMap();
         }
 
 
@@ -75,6 +75,9 @@ namespace MajorProject
 
         public void GenerateMiniMap(int[,] map)
         {
+            miniMap.Map = map;
+
+            miniMap.RenderTexture();
             // assigns the minimap texture a new value based on what the map details are
         }
 
@@ -123,7 +126,7 @@ namespace MajorProject
 
             }
 
-            
+            miniMap.TargetPosition = player.position.ToPoint();
 
 
         }
@@ -136,11 +139,19 @@ namespace MajorProject
             damageOverlay.Draw(spriteBatch);
 
             lowHealthOverlay.Draw(spriteBatch);
+
+            miniMap.Draw(spriteBatch);
         }
 
         public void UnloadContent()
         {
             HUDResources = null;
+
+            mainBar.UnloadContent();
+            healthBar.UnloadContent();
+            damageOverlay.UnloadContent();
+            lowHealthOverlay.UnloadContent();
+            miniMap.UnloadContent();
         }
 
         public void LoadContent(ResourcePack resources)
@@ -158,6 +169,12 @@ namespace MajorProject
 
             lowHealthOverlay.position = new Point(0, 0);
             lowHealthOverlay.SpriteSize = new Point(1200, 720);
+
+            miniMap.position = new Point(1000, 575);
+            miniMap.SpriteSize = new Point(95, 95);
+            miniMap.ViewSize = new Point(1500/25, 1500/25);
+
+            miniMap.LoadContent(ref HUDResources);
 
             mainBar.LoadContent(ref HUDResources, new string[1]{ "HUDTexture" });
             healthBar.LoadContent(ref HUDResources, new string[1] { "HealthBarTexture" });
