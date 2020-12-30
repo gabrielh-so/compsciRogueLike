@@ -73,7 +73,7 @@ namespace MajorProject
         public override void Update(GameTime gameTime)
         {
             // account for friction - allows launched coins to stop at some point
-            if (velocity.LengthSquared() > 0) velocity *= 0.8f;
+            if (velocity.LengthSquared() > 0) velocity *= 0.96f;
 
             position += velocity;
             BoundingBox.Location = position.ToPoint();

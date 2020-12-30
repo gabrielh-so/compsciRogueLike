@@ -54,9 +54,14 @@ namespace MajorProject
             abilityList = new GameAbility[abilitySpace];
         }
 
-        public bool RemoveItem(int index)
+        public bool RemoveItem(GamePlayer user, int index)
         {
+            // can't remove an item that doesn't exist
             if (itemList[index] == null) return false;
+
+
+            // update the item's position
+            itemList[index].SetPosition(user.position.X, user.position.Y);
             ((GameScreen)ScreenManager.Instance.currentScreen).AddItem(itemList[index]);
 
             itemList[index] = null;
@@ -64,10 +69,10 @@ namespace MajorProject
             return true;
         }
 
-        public bool AddItem(GameItem i)
+        public bool AddItem(GamePlayer user, GameItem i)
         {
-
-            RemoveItem(SelectedItemSlot);
+            if (itemList[SelectedItemSlot] != null)
+                RemoveItem(user, SelectedItemSlot);
             itemList[SelectedItemSlot] = i;
 
 

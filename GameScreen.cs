@@ -73,7 +73,7 @@ namespace MajorProject
 
         public EnvironmentResourcePack EnvironmentResources;
 
-        public ResourcePack CoinResources;
+        public ResourcePack LootResources;
 
         public GameScreen()
         {
@@ -146,6 +146,8 @@ namespace MajorProject
         public void AddItem(GameItem i)
         {
             i.removeable = false;
+            i.OnGround = true;
+            i.LoadContent(ref LootResources);
             WorldItems.Add(i);
         }
 
@@ -223,7 +225,7 @@ namespace MajorProject
 
         void LoadItemResources()
         {
-            CoinResources.LoadContent();
+            LootResources.LoadContent();
             ProjectileResources.LoadContent();
         }
 
@@ -262,7 +264,7 @@ namespace MajorProject
         {
             // give player a slingshot to start with - low damage
 
-            GameWeaponSword s = new GameWeaponSword();
+            //GameWeaponSword s = new GameWeaponSword();
 
 
 
@@ -271,21 +273,53 @@ namespace MajorProject
             foreach (Vector2 position in GameWorld.CorridorEndings)
             {
                 // place item here
-                Vector2 coinPosition = new Vector2();
-                coinPosition.X = (position.X) * World.tilePixelWidth * 2 + World.tilePixelWidth;
-                coinPosition.Y = (position.Y) * World.tilePixelWidth * 2 + World.tilePixelWidth;
 
-                GameCoin c = new GameCoin();
-                c.LoadContent(ref CoinResources);
-                c.value = 10;
-                c.SetPosition(coinPosition.X + World.tilePixelWidth / 2, coinPosition.Y + World.tilePixelWidth / 2);
+                Vector2 itemPosition = new Vector2();
+                itemPosition.X = (position.X) * World.tilePixelWidth * 2 + World.tilePixelWidth;
+                itemPosition.Y = (position.Y) * World.tilePixelWidth * 2 + World.tilePixelWidth;
 
-                WorldItems.Add(c);
+                if (rand.NextDouble() < 0.2)
+                {
+                    GameCoin c = new GameCoin();
+                    c.LoadContent(ref LootResources);
+                    c.value = 10;
+                    c.SetPosition(itemPosition.X + World.tilePixelWidth / 2, itemPosition.Y + World.tilePixelWidth / 2);
+
+                    c.OnGround = true;
+                    WorldItems.Add(c);
+                }
+                else
+                {
+                    GameWeapon w = new GameWeapon();
+
+                    double weaponRoll = rand.NextDouble();
+                    if (weaponRoll < 0.25)
+                    {
+                        w = new GameWeaponSword();
+                    }
+                    else if (weaponRoll < 0.5)
+                    {
+                        w = new GameWeaponSpear();
+                    }
+                    else if (weaponRoll < 0.75)
+                    {
+                        w = new GameWeaponSlingShot();
+                    }
+                    else
+                    {
+                        w = new GameWeaponRifle();
+                    }
+                    w.OnGround = true;
+                    w.SetPosition(itemPosition.X + World.tilePixelWidth / 2, itemPosition.Y + World.tilePixelWidth / 2);
+                    w.LoadContent(ref LootResources);
+                    WorldItems.Add(w);
+
+                }
             }
 
 
 
-            Player.AddItem(s);
+            //Player.AddItem(s);
 
         }
 
@@ -340,11 +374,6 @@ namespace MajorProject
             EnvironmentResources.UnloadContent();
         }
 
-        void CreateCollision(GameEntity a, GameEntity b)
-        {
-
-        }
-
         public override void Update(GameTime gameTime)
         {
 
@@ -380,6 +409,21 @@ namespace MajorProject
             for (int i = 0; i < WorldItems.Count; i++)
             {
                 WorldItems[i].Update(gameTime);
+            }
+
+
+            for (int i = 0; i < WorldItems.Count; i++)
+            {
+                WorldItems[i].Update(gameTime);
+            }
+
+            foreach (GameProjectile p in EnemyProjectiles)
+            {
+                p.Update(gameTime);
+            }
+            foreach (GameProjectile p in PlayerProjectiles)
+            {
+                p.Update(gameTime);
             }
 
 
@@ -432,17 +476,18 @@ namespace MajorProject
 
                 for (int i = 0; i < Enemies[playerRoomIndex].Count; i++)
                 {
-                    if (Enemies[playerRoomIndex][i].BoundingBox.Contains(Player.BoundingBox))
-                    {
-                        // uh oh!
-                        // player has walked within the graps of an enemy
-                        // may need to do some damage
+                    if (Enemies[playerRoomIndex][i].alive)
+                        if (Enemies[playerRoomIndex][i].BoundingBox.Contains(Player.BoundingBox))
+                        {
+                            // uh oh!
+                            // player has walked within the graps of an enemy
+                            // may need to do some damage
 
-                        Player.onCollision(Enemies[playerRoomIndex][i]);
-                        Enemies[playerRoomIndex][i].onCollision(Player);
+                            Player.onCollision(Enemies[playerRoomIndex][i]);
+                            Enemies[playerRoomIndex][i].onCollision(Player);
 
 
-                    }
+                        }
                 }
 
 
@@ -505,50 +550,45 @@ namespace MajorProject
             {
                 foreach (GameEnemy e in el)
                 {
-                    // go backwards through projectile array
-                    for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+                    if (e.alive)
                     {
-                        // temporary variables to set edges for testing
-                        float testX = PlayerProjectiles[i].position.X;
-                        float testY = PlayerProjectiles[i].position.Y;
-
-                        // which edge is closest?
-                        if (PlayerProjectiles[i].position.X < e.BoundingBox.X) testX = e.BoundingBox.X;      // test left edge
-                        else if (PlayerProjectiles[i].position.X > e.BoundingBox.X + e.BoundingBox.Width) testX = Player.BoundingBox.X + Player.BoundingBox.Width;   // right edge
-                        if (PlayerProjectiles[i].position.Y < e.BoundingBox.Y) testY = e.BoundingBox.Y;      // top edge
-                        else if (PlayerProjectiles[i].position.Y > e.BoundingBox.Y + e.BoundingBox.Height) testY = Player.BoundingBox.Y + Player.BoundingBox.Height;   // bottom edge
-
-                        // get distance from closest edges
-                        double distX = PlayerProjectiles[i].position.X - testX;
-                        double distY = PlayerProjectiles[i].position.Y - testY;
-                        double distance = Math.Sqrt((distX * distX) + (distY * distY));
-
-                        // collision if the distance is less than the radius
-                        if (distance <= PlayerProjectiles[i].radius)
+                        // go backwards through projectile array
+                        for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
                         {
-                            // give projectile to player for damage
-                            e.ProjectileCollision(PlayerProjectiles[i]);
+                            // temporary variables to set edges for testing
+                            float testX = PlayerProjectiles[i].position.X;
+                            float testY = PlayerProjectiles[i].position.Y;
 
-                            //destroy the projectile
-                            PlayerProjectiles[i].removeable = true;
+                            // which edge is closest?
+                            if (PlayerProjectiles[i].position.X < e.BoundingBox.X) testX = e.BoundingBox.X;      // test left edge
+                            else if (PlayerProjectiles[i].position.X > e.BoundingBox.X + e.BoundingBox.Width) testX = Player.BoundingBox.X + Player.BoundingBox.Width;   // right edge
+                            if (PlayerProjectiles[i].position.Y < e.BoundingBox.Y) testY = e.BoundingBox.Y;      // top edge
+                            else if (PlayerProjectiles[i].position.Y > e.BoundingBox.Y + e.BoundingBox.Height) testY = Player.BoundingBox.Y + Player.BoundingBox.Height;   // bottom edge
+
+                            // get distance from closest edges
+                            double distX = PlayerProjectiles[i].position.X - testX;
+                            double distY = PlayerProjectiles[i].position.Y - testY;
+                            double distance = Math.Sqrt((distX * distX) + (distY * distY));
+
+                            // collision if the distance is less than the radius
+                            if (distance <= PlayerProjectiles[i].radius)
+                            {
+                                // give projectile to player for damage
+                                e.ProjectileCollision(PlayerProjectiles[i]);
+
+                                //destroy the projectile
+                                PlayerProjectiles[i].removeable = true;
+                            }
+                        }
+
+                        for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+                        {
+                            if (PlayerProjectiles[i].removeable)
+                            {
+                                PlayerProjectiles.RemoveAt(i);
+                            }
                         }
                     }
-
-                    for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
-                    {
-                        if (PlayerProjectiles[i].removeable)
-                        {
-                            PlayerProjectiles.RemoveAt(i);
-                        }
-                    }
-                }
-            }
-
-            for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
-            {
-                if (PlayerProjectiles[i].removeable)
-                {
-                    PlayerProjectiles.RemoveAt(i);
                 }
             }
 
@@ -597,8 +637,12 @@ namespace MajorProject
                     // is item pickupable, and if so has the player signaled to pick up?
                     if (WorldItems[i].type != typeof(GameCoin))
                     {
-                        Player.AddItem(WorldItems[i]);
-                        WorldItems[i].removeable = true;
+                        if (InputManager.Instance.ActionKeyDown(ActionType.pick_up))
+                        {
+                            Player.AddItem(WorldItems[i]);
+                            WorldItems[i].OnGround = false;
+                            WorldItems[i].removeable = true;
+                        }
                     }
                     else
                     {
@@ -685,6 +729,12 @@ namespace MajorProject
             }
 
             foreach (GameProjectile p in EnemyProjectiles)
+            {
+                p.Draw(spriteBatch);
+            }
+
+
+            foreach (GameProjectile p in PlayerProjectiles)
             {
                 p.Draw(spriteBatch);
             }

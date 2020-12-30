@@ -119,6 +119,7 @@
 
     <BaseAudioPath>Audio/Sound/Game/HUD/</BaseAudioPath>
     <BaseTexturePath>Texture/Game/HUD/</BaseTexturePath>
+    <BaseFontPath>Fonts/</BaseFontPath>
 
     <TextureNameAndPath>
 
@@ -158,6 +159,13 @@
       -->
 
     </AudioNameAndPath>
+
+    <FontNameAndPath>
+
+      <string>coders_crux</string>
+      <string>coders_crux</string>
+
+    </FontNameAndPath>
 
 
   </HUDResources>
@@ -214,6 +222,18 @@
       <string>Kinetic4</string>
       <string>Kinetic/Kinetic4</string>
 
+      <string>SwordSwipe1</string>
+      <string>SwordSwipe1</string>
+
+      <string>SwordSwipe2</string>
+      <string>SwordSwipe2</string>
+
+      <string>SwordSwipe3</string>
+      <string>SwordSwipe3</string>
+
+      <string>SwordSwipe4</string>
+      <string>SwordSwipe4</string>
+
     </TextureNameAndPath>
 
     <AudioNameAndPath>
@@ -230,27 +250,42 @@
 
   </ProjectileResources>
 
-  <CoinResources>
+  <LootResources>
 
-    <BaseAudioPath>Audio/Sound/Game/Loot/Coin/</BaseAudioPath>
-    <BaseTexturePath>Texture/Game/Loot/Coin/</BaseTexturePath>
+    <BaseAudioPath>Audio/Sound/Game/Loot/</BaseAudioPath>
+    <BaseTexturePath>Texture/Game/Loot/</BaseTexturePath>
 
     <TextureNameAndPath>
 
       <string>Coin1</string>
-      <string>Coin1</string>
+      <string>Coin/Coin1</string>
       
       <string>Coin2</string>
-      <string>Coin2</string>
+      <string>Coin/Coin2</string>
       
       <string>Coin3</string>
-      <string>Coin3</string>
+      <string>Coin/Coin3</string>
       
       <string>Coin4</string>
-      <string>Coin4</string>
+      <string>Coin/Coin4</string>
       
       <string>Coin5</string>
-      <string>Coin5</string>
+      <string>Coin/Coin5</string>
+
+      
+      
+      
+      <string>Rifle</string>
+      <string>Weapons/Rifle</string>
+
+      <string>Slingshot</string>
+      <string>Weapons/Slingshot</string>
+
+      <string>Sword</string>
+      <string>Weapons/Sword</string>
+
+      <string>Spear</string>
+      <string>Weapons/Spear</string>
 
     </TextureNameAndPath>
 
@@ -266,7 +301,7 @@
     </AudioNameAndPath>
 
 
-  </CoinResources>
+  </LootResources>
 
   
 

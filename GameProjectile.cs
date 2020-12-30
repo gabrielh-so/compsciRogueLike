@@ -30,7 +30,8 @@ namespace MajorProject
             Kinetic,
             Fire,
             Ice,
-            Toxic
+            Toxic,
+            SwordSwipe
         }
 
         public DamageType damageType;
@@ -71,11 +72,13 @@ namespace MajorProject
             {
                 removeable = true;
             }
+
             // check they haven't hit wall
-            if (Map[(int)position.Y / World.tilePixelWidth, (int)position.X / World.tilePixelWidth] != (int)World.cellType.floor)
-            {
-                removeable = true;
-            }
+            if (damageType != DamageType.SwordSwipe)
+                if (Map[(int)position.Y / World.tilePixelWidth, (int)position.X / World.tilePixelWidth] != (int)World.cellType.floor)
+                {
+                    removeable = true;
+                }
 
 
         }

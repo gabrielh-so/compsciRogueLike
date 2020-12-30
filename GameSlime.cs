@@ -31,7 +31,7 @@ namespace MajorProject
 
             slimeImage = new GameImage();
             type = GetType();
-            speed = 50;
+            speed = 25;
 
 
             maxHealth = 150;
@@ -52,22 +52,26 @@ namespace MajorProject
         {
             base.Update(gameTime);
 
-            if (target != null)
+            if (alive)
             {
 
-                Vector2 directionVector = (target.BoundingBox.Location - BoundingBox.Location).ToVector2();
+                if (target != null)
+                {
 
-                // check magnitude is bigger than 0 before normallizing
-                if (Math.Abs(directionVector.X) + Math.Abs(directionVector.Y) > 0)
-                    directionVector.Normalize();
+                    Vector2 directionVector = (target.BoundingBox.Location - BoundingBox.Location).ToVector2();
 
-                velocity.X = (float)(directionVector.X * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                velocity.Y = (float)(directionVector.Y * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                    // check magnitude is bigger than 0 before normallizing
+                    if (Math.Abs(directionVector.X) + Math.Abs(directionVector.Y) > 0)
+                        directionVector.Normalize();
+
+                    velocity.X = (float)(directionVector.X * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                    velocity.Y = (float)(directionVector.Y * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                }
+                else velocity = Vector2.Zero;
+
+
+                position += velocity;
             }
-            else velocity = Vector2.Zero;
-
-
-            position += velocity;
 
 
 

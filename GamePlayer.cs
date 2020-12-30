@@ -19,7 +19,7 @@ namespace MajorProject
 {
     public class GamePlayer : GameCharacter
     {
-        GameInventory inventory;
+        public GameInventory inventory;
 
         GameImage playerImage;
 
@@ -30,15 +30,15 @@ namespace MajorProject
         double currentHitDelay;
 
         public bool attackCooldown;
-        double currentAttackDelay;
-        double maxAttackDelay;
+        public double currentAttackDelay;
+        public double maxAttackDelay;
 
         public GamePlayer()
         {
             inventory = new GameInventory();
             playerImage = new GameImage();
             money = 0;
-
+            speed = 250;
             maxHitDelay = 1;
             currentHitDelay = 0;
         }
@@ -193,7 +193,7 @@ namespace MajorProject
 
         public bool AddItem(GameItem i)
         {
-            return inventory.AddItem(i);
+            return inventory.AddItem(this, i);
         }
 
         public bool AddAbility(GameAbility a)

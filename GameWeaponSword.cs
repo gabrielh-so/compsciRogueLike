@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace MajorProject
@@ -17,13 +16,14 @@ namespace MajorProject
         public GameWeaponSword()
         {
             attackCooldown = 1;
-            weaponType = "sword";
+            itemType = "Sword";
+
         }
 
         public override void Use(GamePlayer user)
         {
-            base.Use(user);
-
+            position = user.position;
+            // checks player hasn't already swung a weapon
             if (!user.attackCooldown)
             {
 
@@ -36,11 +36,8 @@ namespace MajorProject
                 Vector2 mouseDirection = new Vector2((int)(mousePosition.X - ScreenManager.Instance.Dimensions.X / 2), (int)(mousePosition.Y - ScreenManager.Instance.Dimensions.Y / 2));
 
 
-                if (mousePosition.X * mousePosition.X + mousePosition.Y * mousePosition.Y == 0)
-                {
-
-                }
-                else mouseDirection.Normalize();
+                if (mousePosition.X * mousePosition.X + mousePosition.Y * mousePosition.Y != 0)
+                    mouseDirection.Normalize();
 
 
 
@@ -48,15 +45,18 @@ namespace MajorProject
 
                 p.position = new Vector2(position.X + mouseDirection.X * range, position.Y + mouseDirection.Y * range);
                 p.target = typeof(GameEnemy);
-                p.totalLifeSpan = 0.5;
+                p.totalLifeSpan = 0.6;
                 p.SetVelocity(new Vector2()); // the projectile shouldn't move anywhere
                 p.speed = 0;
-                p.damageType = GameProjectile.DamageType.Kinetic;
+                p.damageType = GameProjectile.DamageType.SwordSwipe;
                 p.damage = 50;
 
                 p.BoundingBox.Location = position.ToPoint();
                 p.BoundingBox.Size = new Point(25, 25);
 
+                ((GameScreen)ScreenManager.Instance.currentScreen).AddProjectile(p);
+
+                base.Use(user);
             }
 
 

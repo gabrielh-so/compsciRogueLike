@@ -26,6 +26,8 @@ namespace MajorProject
 
         ResourcePack HUDResources;
 
+        GameLabel playerAttackCooldownLabel;
+
 
         GameImage mainBar;
         GameImage healthBar;
@@ -47,6 +49,8 @@ namespace MajorProject
             healthBar = new GameImage();
             damageOverlay = new GameImage();
             lowHealthOverlay = new GameImage();
+
+            playerAttackCooldownLabel = new GameLabel();
 
             miniMap = new MiniMap();
         }
@@ -126,6 +130,12 @@ namespace MajorProject
 
             }
 
+            if (player.attackCooldown)
+            {
+
+                playerAttackCooldownLabel.Text = (player.maxAttackDelay - player.currentAttackDelay).ToString();
+            }
+
             miniMap.TargetPosition = player.position.ToPoint();
 
 
@@ -135,6 +145,21 @@ namespace MajorProject
         {
             mainBar.Draw(spriteBatch);
             healthBar.Draw(spriteBatch);
+
+            int offset = 0;
+            foreach (GameItem i in player.inventory.itemList)
+            {
+                if (i != null)
+                {
+                    spriteBatch.Draw(i.Resources.TexturePack[i.itemType], destinationRectangle: new Rectangle(new Point(400 + 100 * offset, 575), new Point(50, 50)));
+                }
+                offset++;
+            }
+
+            if (player.attackCooldown)
+            {
+                playerAttackCooldownLabel.Draw(spriteBatch);
+            }
 
             damageOverlay.Draw(spriteBatch);
 
@@ -152,6 +177,8 @@ namespace MajorProject
             damageOverlay.UnloadContent();
             lowHealthOverlay.UnloadContent();
             miniMap.UnloadContent();
+
+            playerAttackCooldownLabel.UnloadContent();
         }
 
         public void LoadContent(ResourcePack resources)
@@ -174,12 +201,17 @@ namespace MajorProject
             miniMap.SpriteSize = new Point(95, 95);
             miniMap.ViewSize = new Point(1500/25, 1500/25);
 
+            playerAttackCooldownLabel.SetPosition(50, 550);
+            playerAttackCooldownLabel.FontName = "coders_crux";
+
             miniMap.LoadContent(ref HUDResources);
 
             mainBar.LoadContent(ref HUDResources, new string[1]{ "HUDTexture" });
             healthBar.LoadContent(ref HUDResources, new string[1] { "HealthBarTexture" });
             damageOverlay.LoadContent(ref HUDResources, new string[1] { "DamageTexture" });
             lowHealthOverlay.LoadContent(ref HUDResources, new string[1] { "DamageTexture" });
+            playerAttackCooldownLabel.LoadContent(ref HUDResources);
+
         }
 
 

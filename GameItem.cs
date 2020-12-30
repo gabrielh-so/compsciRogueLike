@@ -9,8 +9,11 @@ namespace MajorProject
 {
     public abstract class GameItem : GameEntity
     {
+        public string itemType;
 
         public int radius;
+
+        public bool OnGround;
 
         public abstract void Use(GamePlayer user);
 

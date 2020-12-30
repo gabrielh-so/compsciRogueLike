@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    class GameWeaponSlingShot
+    public class GameWeaponSlingShot : GameWeapon
     {
+        public GameWeaponSlingShot()
+        {
+            attackCooldown = 1;
+            itemType = "Slingshot";
+        }
+
     }
 }

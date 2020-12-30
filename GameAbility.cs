@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    public abstract class GameAbility : GameItem
+    public class GameAbility : GameItem
     {
 
         public GameAbility()
@@ -14,6 +14,10 @@ namespace MajorProject
 
         }
 
+        public override void Use(GamePlayer user)
+        {
+            throw new NotImplementedException();
+        }
 
     }
 }

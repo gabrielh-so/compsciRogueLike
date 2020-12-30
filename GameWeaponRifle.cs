@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    class GameWeaponRifle
+    public class GameWeaponRifle : GameWeapon
     {
+
+        public GameWeaponRifle()
+        {
+            attackCooldown = 1;
+            itemType = "Rifle";
+        }
+
     }
 }

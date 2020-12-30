@@ -30,7 +30,7 @@ namespace MajorProject
         {
             flyerImage = new GameImage();
             type = GetType();
-            speed = 100;
+            speed = 50;
 
             maxHealth = 50;
             health = maxHealth;
@@ -52,23 +52,26 @@ namespace MajorProject
         {
             base.Update(gameTime);
 
-            if (target != null)
+            if (alive)
             {
+                if (target != null)
+                {
 
-                Vector2 directionVector = (target.BoundingBox.Location - BoundingBox.Location).ToVector2();
+                    Vector2 directionVector = (target.BoundingBox.Location - BoundingBox.Location).ToVector2();
 
 
-                // check magnitude is bigger than 0 before normallizing
-                if (Math.Abs(directionVector.X) + Math.Abs(directionVector.Y) > 0)
-                    directionVector.Normalize();
+                    // check magnitude is bigger than 0 before normallizing
+                    if (Math.Abs(directionVector.X) + Math.Abs(directionVector.Y) > 0)
+                        directionVector.Normalize();
 
-                velocity.X = (float)(directionVector.X * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                velocity.Y = (float)(directionVector.Y * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                    velocity.X = (float)(directionVector.X * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                    velocity.Y = (float)(directionVector.Y * speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                }
+                else velocity = Vector2.Zero;
+
+
+                position += velocity;
             }
-            else velocity = Vector2.Zero;
-
-
-            position += velocity;
 
             flyerImage.position = position.ToPoint();
             flyerImage.Update(gameTime);

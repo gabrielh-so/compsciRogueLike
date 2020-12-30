@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    public abstract class GamePotion : GameItem
+    public class GamePotion : GameItem
     {
 
         public GamePotion()
         {
 
+        }
+
+        public override void Use(GamePlayer user)
+        {
+            throw new NotImplementedException();
         }
 
 
