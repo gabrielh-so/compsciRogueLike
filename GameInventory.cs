@@ -29,8 +29,8 @@ namespace MajorProject
 
             foreach (Keys k in numberKeyMap.Keys)
             {
-                if (numberKeyMap[k] <= itemSpace)
-                    if (InputManager.Instance.KeyPressed(k)) SelectedItemSlot = numberKeyMap[k];
+                if (0 < numberKeyMap[k] && numberKeyMap[k] <= itemSpace)
+                    if (InputManager.Instance.KeyPressed(k)) SelectedItemSlot = numberKeyMap[k] - 1;
             }
 
         }
@@ -62,6 +62,12 @@ namespace MajorProject
 
             // update the item's position
             itemList[index].SetPosition(user.position.X, user.position.Y);
+
+            // add a slide to the item
+            Random rand = new Random();
+            double movementAngle = rand.NextDouble() * Math.PI * 2;
+            itemList[index].velocity = new Vector2((float)Math.Sin(movementAngle), (float)Math.Cos(movementAngle)) * 1.5f;
+
             ((GameScreen)ScreenManager.Instance.currentScreen).AddItem(itemList[index]);
 
             itemList[index] = null;

@@ -122,14 +122,13 @@ namespace MajorProject
                         p.target = typeof(GamePlayer);
                         p.totalLifeSpan = 3;
                         p.SetVelocity(target.position - position);
-                        p.speed = 2;
+                        p.speed = 200;
                         p.damageType = GameProjectile.DamageType.Fire;
                         p.damage = 5;
 
                         p.BoundingBox.Location = position.ToPoint();
                         p.BoundingBox.Size = new Point(25, 25);
 
-                        projectiles.Add(p);
 
                         // now *that's* punk
                         ((GameScreen)ScreenManager.Instance.currentScreen).AddProjectile(p);
@@ -143,8 +142,6 @@ namespace MajorProject
                     //position += velocity;
                 }
 
-                goblinImage.position = position.ToPoint();
-                goblinImage.Update(gameTime);
             }
 
 

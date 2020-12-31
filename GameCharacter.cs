@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Xml.Serialization;
+
 namespace MajorProject
 {
     public abstract class GameCharacter : GameEntity
@@ -38,6 +40,7 @@ namespace MajorProject
 
         public bool alive;
 
+        [XmlIgnore]
         public int[,] Map;
         public int tileWidth;
 

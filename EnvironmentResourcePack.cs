@@ -28,6 +28,10 @@ namespace MajorProject
             {
                 AudioPack.Add(AudioNameAndPath[i], content.Load<SoundEffect>(BaseAudioPath + EnvironmentName + "/" + AudioNameAndPath[i + 1]));
             }
+            for (int i = 0; i < FontNameAndPath.Count - 1; i += 2)
+            {
+                FontPack.Add(FontNameAndPath[i], content.Load<SpriteFont>(BaseFontPath + FontNameAndPath[i + 1]));
+            }
         }
     }
 }

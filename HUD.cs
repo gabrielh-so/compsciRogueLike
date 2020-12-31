@@ -27,6 +27,7 @@ namespace MajorProject
         ResourcePack HUDResources;
 
         GameLabel playerAttackCooldownLabel;
+        GameLabel MoneyLabel;
 
 
         GameImage mainBar;
@@ -51,6 +52,7 @@ namespace MajorProject
             lowHealthOverlay = new GameImage();
 
             playerAttackCooldownLabel = new GameLabel();
+            MoneyLabel = new GameLabel();
 
             miniMap = new MiniMap();
         }
@@ -102,7 +104,7 @@ namespace MajorProject
 
                 // find the ratio of current player health to max health
 
-                if (previousHealth > player.health)
+                if (previousHealth != player.health)
                 {
 
                     double healthRatio = (double)player.health / player.maxHealth;
@@ -110,7 +112,8 @@ namespace MajorProject
                     healthBar.SpriteSize.X = (int)(healthRatio * maxHealthBarSize);
 
                     // the player has taken damage since last frame, so show the damage overlay
-                    damageOverlay.alpha = 1;
+                    if (previousHealth > player.health)
+                        damageOverlay.alpha = 1;
 
 
                     // update the low health overlay
@@ -118,6 +121,7 @@ namespace MajorProject
                     {
                         lowHealthOverlay.alpha = 1 - (player.health / ((float)player.maxHealth / 2));
                     }
+                    else lowHealthOverlay.alpha = 0;
 
                 } else if (damageOverlay.alpha > 0)
                 {
@@ -128,15 +132,17 @@ namespace MajorProject
                 previousHealth = player.health;
 
 
+                if (player.attackCooldown)
+                {
+
+                    playerAttackCooldownLabel.Text = (player.maxAttackDelay - player.currentAttackDelay).ToString();
+                }
+
+                miniMap.TargetPosition = player.position.ToPoint();
+
+                MoneyLabel.Text = player.money.ToString() + "G";
             }
 
-            if (player.attackCooldown)
-            {
-
-                playerAttackCooldownLabel.Text = (player.maxAttackDelay - player.currentAttackDelay).ToString();
-            }
-
-            miniMap.TargetPosition = player.position.ToPoint();
 
 
         }
@@ -146,13 +152,17 @@ namespace MajorProject
             mainBar.Draw(spriteBatch);
             healthBar.Draw(spriteBatch);
 
+            int selectedSlot = player.inventory.SelectedItemSlot;
             int offset = 0;
             foreach (GameItem i in player.inventory.itemList)
             {
                 if (i != null)
                 {
-                    spriteBatch.Draw(i.Resources.TexturePack[i.itemType], destinationRectangle: new Rectangle(new Point(400 + 100 * offset, 575), new Point(50, 50)));
+                    spriteBatch.Draw(i.Resources.TexturePack[i.itemType], destinationRectangle: new Rectangle(new Point(450 + 100 * offset, 575), new Point(50, 50)));
                 }
+                if (offset == selectedSlot)
+                    spriteBatch.Draw(HUDResources.TexturePack["5"], destinationRectangle: new Rectangle(new Point(450 + 100 * offset, 575), new Point(50, 50)), color: Color.White * 0.25f);
+
                 offset++;
             }
 
@@ -160,6 +170,8 @@ namespace MajorProject
             {
                 playerAttackCooldownLabel.Draw(spriteBatch);
             }
+
+            MoneyLabel.Draw(spriteBatch);
 
             damageOverlay.Draw(spriteBatch);
 
@@ -179,6 +191,8 @@ namespace MajorProject
             miniMap.UnloadContent();
 
             playerAttackCooldownLabel.UnloadContent();
+
+            MoneyLabel.UnloadContent();
         }
 
         public void LoadContent(ResourcePack resources)
@@ -204,6 +218,10 @@ namespace MajorProject
             playerAttackCooldownLabel.SetPosition(50, 550);
             playerAttackCooldownLabel.FontName = "coders_crux";
 
+            MoneyLabel.SetPosition(450, 550);
+            MoneyLabel.FontName = "coders_crux";
+            MoneyLabel.FontColor = Color.Yellow;
+
             miniMap.LoadContent(ref HUDResources);
 
             mainBar.LoadContent(ref HUDResources, new string[1]{ "HUDTexture" });
@@ -211,6 +229,7 @@ namespace MajorProject
             damageOverlay.LoadContent(ref HUDResources, new string[1] { "DamageTexture" });
             lowHealthOverlay.LoadContent(ref HUDResources, new string[1] { "DamageTexture" });
             playerAttackCooldownLabel.LoadContent(ref HUDResources);
+            MoneyLabel.LoadContent(ref HUDResources);
 
         }
 

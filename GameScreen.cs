@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Xml.Serialization;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -19,13 +21,18 @@ namespace MajorProject
     public class GameScreen : Screen
     {
 
+        public bool signalLevelChange;
+
         Random rand;
 
         string saveFileName = "SaveFile.bin";
 
         Vector2 ScreenSize;
 
-        
+        public void SignalLevelChange()
+        {
+            signalLevelChange = true;
+        }
 
         public enum RoomType
         {
@@ -55,11 +62,14 @@ namespace MajorProject
 
         public HUD headsUpDisplay;
 
-        List<List<GameEnemy>> Enemies;
-        List<GameProjectile> EnemyProjectiles;
-        List<GameProjectile> PlayerProjectiles;
+        [XmlIgnore]
+        public List<List<GameEnemy>> Enemies;
+        public List<GameProjectile> EnemyProjectiles;
+        public List<GameProjectile> PlayerProjectiles;
 
-        List<GameItem> WorldItems;
+        public List<GameItem> WorldItems;
+
+        public List<GameInteractable> WorldInteractables;
 
         public ResourcePack PlayerResources;
         public ResourcePack SlimeResources;
@@ -81,7 +91,7 @@ namespace MajorProject
 
             ScreenSize = ScreenManager.Instance.Dimensions;
 
-            GameWorld =  new World();
+            GameWorld = new World();
 
             GameWorld.room_count = 8;
 
@@ -98,6 +108,8 @@ namespace MajorProject
 
             PlayerProjectiles = new List<GameProjectile>();
             EnemyProjectiles = new List<GameProjectile>();
+
+            WorldInteractables = new List<GameInteractable>();
 
             WorldItems = new List<GameItem>();
 
@@ -121,7 +133,38 @@ namespace MajorProject
             GameWorld.UnloadContent();
             EnvironmentResources.UnloadContent();
 
+
+
+            foreach (List<GameEnemy> el in Enemies)
+            {
+                foreach (GameEnemy e in el)
+                    e.UnloadContent();
+                el.Clear();
+            }
+            foreach (GameProjectile p in EnemyProjectiles)
+                p.UnloadContent();
+
+            foreach (GameProjectile p in PlayerProjectiles)
+                p.UnloadContent();
+            foreach (GameItem p in WorldItems)
+                p.UnloadContent();
+
+            foreach (GameInteractable p in WorldInteractables)
+                p.UnloadContent();
+
+            Enemies.Clear();
+            EnemyProjectiles.Clear();
+            PlayerProjectiles.Clear();
+            WorldItems.Clear();
+            WorldInteractables.Clear();
+
             ConstructWorld();
+
+            headsUpDisplay.GenerateMiniMap(GameWorld.Map);
+
+            PlaceLoot();
+
+            LoadRoomContents();
         }
 
         public void SetPlayerToEntrance()
@@ -161,6 +204,7 @@ namespace MajorProject
             SetPlayerToEntrance();
         }
 
+
         void LoadRoomContents()
         {
 
@@ -168,6 +212,7 @@ namespace MajorProject
             {
 
                 Vector2 RoomPosition = GameWorld.generation_RoomIndexPositions[i];
+                Vector2 RoomCentre = GameWorld.generation_RoomIndexPositions[i] + GameWorld.generation_RoomIndexDimensions[i] / 2;
                 Enemies.Add(new List<GameEnemy>());
 
                 switch (GameWorld.roomTypes[i])
@@ -216,10 +261,44 @@ namespace MajorProject
                         }
                         break;
 
+                    case RoomType.Loot:
+
+                        TreasureChest t = new TreasureChest();
+
+                        t.position = RoomCentre * World.tilePixelWidth;
+                        t.LoadContent(ref LootResources);
+                        WorldInteractables.Add(t);
+
+                        break;
+                    case RoomType.Shop:
+                        for (int j = 0; j < 3; j++)
+                        {
+                            Shop s = new Shop();
+
+                            s.position = (RoomCentre * World.tilePixelWidth) - new Vector2(World.tilePixelWidth, World.tilePixelWidth) + new Vector2(World.tilePixelWidth, World.tilePixelWidth) * j;
+                            s.NewItem(100 + 50 * j);
+                            s.LoadContent(ref LootResources);
+                            WorldInteractables.Add(s);
+                        }
+                        break;
+                    case RoomType.Boss:
+                        GameBoss b = new GameBoss();
+
+                        b.position = RoomCentre * World.tilePixelWidth;
+                        b.LoadContent(ref BossResources);
+
+                        Enemies[i].Add(b);
+
+                        ExitInteractable exit = new ExitInteractable();
+                        exit.position = RoomCentre * World.tilePixelWidth;
+                        exit.LoadContent(ref EnvironmentResources);
+
+                        WorldInteractables.Add(exit);
+                        break;
                 }
 
 
-                
+
             }
         }
 
@@ -235,7 +314,7 @@ namespace MajorProject
             GoblinResources.LoadContent();
             FlyerResources.LoadContent();
             SlimeResources.LoadContent();
-            //BossResources.LoadContent();
+            BossResources.LoadContent();
         }
 
         public void AssignRooms()
@@ -250,12 +329,12 @@ namespace MajorProject
 
             GameWorld.roomTypes.Add(RoomType.Boss);
             GameWorld.roomTypes.Add(RoomType.Loot);
-            GameWorld.roomTypes.Add(RoomType.Loot);
-            GameWorld.roomTypes.Add(RoomType.Combat);
-            GameWorld.roomTypes.Add(RoomType.Combat);
             GameWorld.roomTypes.Add(RoomType.Combat);
             GameWorld.roomTypes.Add(RoomType.Combat);
             GameWorld.roomTypes.Add(RoomType.Shop);
+            GameWorld.roomTypes.Add(RoomType.Combat);
+            GameWorld.roomTypes.Add(RoomType.Loot);
+            GameWorld.roomTypes.Add(RoomType.Combat);
 
 
         }
@@ -274,46 +353,82 @@ namespace MajorProject
             {
                 // place item here
 
-                Vector2 itemPosition = new Vector2();
-                itemPosition.X = (position.X) * World.tilePixelWidth * 2 + World.tilePixelWidth;
-                itemPosition.Y = (position.Y) * World.tilePixelWidth * 2 + World.tilePixelWidth;
-
-                if (rand.NextDouble() < 0.2)
+                if (rand.NextDouble() < 0.75)
                 {
-                    GameCoin c = new GameCoin();
-                    c.LoadContent(ref LootResources);
-                    c.value = 10;
-                    c.SetPosition(itemPosition.X + World.tilePixelWidth / 2, itemPosition.Y + World.tilePixelWidth / 2);
 
-                    c.OnGround = true;
-                    WorldItems.Add(c);
-                }
-                else
-                {
-                    GameWeapon w = new GameWeapon();
+                    Vector2 itemPosition = new Vector2();
+                    itemPosition.X = position.X * World.tilePixelWidth * 2 + World.tilePixelWidth;
+                    itemPosition.Y = position.Y * World.tilePixelWidth * 2 + World.tilePixelWidth;
 
-                    double weaponRoll = rand.NextDouble();
-                    if (weaponRoll < 0.25)
+                    if (rand.NextDouble() < 0.2)
                     {
-                        w = new GameWeaponSword();
-                    }
-                    else if (weaponRoll < 0.5)
-                    {
-                        w = new GameWeaponSpear();
-                    }
-                    else if (weaponRoll < 0.75)
-                    {
-                        w = new GameWeaponSlingShot();
+                        GameCoin c = new GameCoin();
+                        c.LoadContent(ref LootResources);
+                        c.value = 10;
+                        c.SetPosition(itemPosition.X + World.tilePixelWidth / 2, itemPosition.Y + World.tilePixelWidth / 2);
+
+                        c.OnGround = true;
+                        WorldItems.Add(c);
                     }
                     else
                     {
-                        w = new GameWeaponRifle();
-                    }
-                    w.OnGround = true;
-                    w.SetPosition(itemPosition.X + World.tilePixelWidth / 2, itemPosition.Y + World.tilePixelWidth / 2);
-                    w.LoadContent(ref LootResources);
-                    WorldItems.Add(w);
+                        if (rand.NextDouble() < 0.5)
+                        {
+                            GameWeapon w;
 
+                            double weaponRoll = rand.NextDouble();
+                            if (weaponRoll < 0.25)
+                            {
+                                w = new GameWeaponSword();
+                            }
+                            else if (weaponRoll < 0.5)
+                            {
+                                w = new GameWeaponSpear();
+                            }
+                            else if (weaponRoll < 0.75)
+                            {
+                                w = new GameWeaponSlingShot();
+                            }
+                            else
+                            {
+                                w = new GameWeaponRifle();
+                            }
+                            w.OnGround = true;
+                            w.SetPosition(itemPosition.X + World.tilePixelWidth / 2, itemPosition.Y + World.tilePixelWidth / 2);
+                            w.LoadContent(ref LootResources);
+                            WorldItems.Add(w);
+
+                        }
+                        else
+                        {
+                            GamePotion p;
+
+                            double potionRoll = rand.NextDouble();
+                            if (potionRoll < 0.25)
+                            {
+                                p = new GamePotionHealth();
+                            }
+                            else if (potionRoll < 0.5)
+                            {
+                                p = new GamePotionImmune();
+                            }
+                            else //if (weaponRoll < 0.75)
+                            {
+                                p = new GamePotionSpeed();
+                            }
+                            /*
+                            else // only want to buy potion recharges
+                            {
+                                p = new GamePotionRecharge();
+                            }
+                            */
+                            p.OnGround = true;
+                            p.SetPosition(itemPosition.X + World.tilePixelWidth / 2, itemPosition.Y + World.tilePixelWidth / 2);
+                            p.LoadContent(ref LootResources);
+                            WorldItems.Add(p);
+                        }
+
+                    }
                 }
             }
 
@@ -355,6 +470,24 @@ namespace MajorProject
             PlaceLoot();
 
             headsUpDisplay.GenerateMiniMap(GameWorld.Map);
+
+            SetCharacterAndProjectileMaps();
+        }
+
+        void SetCharacterAndProjectileMaps()
+        {
+
+            Player.Map = GameWorld.Map;
+
+            foreach (List<GameEnemy> el in Enemies)
+                foreach (GameEnemy e in el)
+                    e.Map = GameWorld.Map;
+            foreach (GameProjectile p in EnemyProjectiles)
+                p.Map = GameWorld.Map;
+
+            foreach (GameProjectile p in PlayerProjectiles)
+                p.Map = GameWorld.Map;
+
         }
 
         public override void UnloadContent()
@@ -370,13 +503,25 @@ namespace MajorProject
             GoblinResources.UnloadContent();
             SlimeResources.UnloadContent();
             FlyerResources.UnloadContent();
-            //BossResources.UnloadContent();
+            BossResources.UnloadContent();
             EnvironmentResources.UnloadContent();
+        }
+
+        void ChangeToNextLevel()
+        {
+            LevelIndex++;
+            AudioManager.Instance.StopSoundInstance("Music", true);
+            RegenerateWorld();
+            SetCharacterAndProjectileMaps();
+            SetPlayerToEntrance();
         }
 
         public override void Update(GameTime gameTime)
         {
-
+            if (InputManager.Instance.KeyPressed(Keys.R))
+            {
+                Enemies[0][0].alive = false;
+            }
 
             if (InputManager.Instance.KeyPressed(Keys.Escape))
             {
@@ -384,16 +529,14 @@ namespace MajorProject
             }
 
 
-            if (InputManager.Instance.KeyPressed(Keys.R))
-            {
-                LevelIndex++;
-                LevelIndex %= LevelNames.Length;
-                AudioManager.Instance.StopSoundInstance("Music", true);
-                RegenerateWorld();
-                SetPlayerToEntrance();
-            }
 
             // update each entity
+
+
+            foreach (GameInteractable i in WorldInteractables)
+            {
+                i.Update(gameTime);
+            }
 
             if (Player.alive)
                 Player.Update(gameTime);
@@ -405,12 +548,6 @@ namespace MajorProject
                     Enemies[i][j].Update(gameTime);
                 }
             }
-
-            for (int i = 0; i < WorldItems.Count; i++)
-            {
-                WorldItems[i].Update(gameTime);
-            }
-
 
             for (int i = 0; i < WorldItems.Count; i++)
             {
@@ -490,15 +627,19 @@ namespace MajorProject
                         }
                 }
 
-
+                for (int i = 0; i < WorldInteractables.Count; i++)
+                {
+                    if (WorldInteractables[i].BoundingBox.Contains(Player.BoundingBox))
+                    {
+                        if (InputManager.Instance.KeyPressed(Keys.E))
+                        {
+                            WorldInteractables[i].Use(LevelIndex, Player);
+                        }
+                        WorldInteractables[i].Hovering();
+                    }
+                }
 
             }
-
-
-
-
-
-
 
             // regardless, compare with all non-enemy entities
 
@@ -541,75 +682,60 @@ namespace MajorProject
             }
 
 
-
-
-
-
-
-            foreach (List<GameEnemy> el in Enemies)
-            {
-                foreach (GameEnemy e in el)
+            if (Player.currentRoom > -1)
+                foreach (List<GameEnemy> el in Enemies)
                 {
-                    if (e.alive)
+                    foreach (GameEnemy e in el)
                     {
-                        // go backwards through projectile array
-                        for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+                        if (e.alive)
                         {
-                            // temporary variables to set edges for testing
-                            float testX = PlayerProjectiles[i].position.X;
-                            float testY = PlayerProjectiles[i].position.Y;
-
-                            // which edge is closest?
-                            if (PlayerProjectiles[i].position.X < e.BoundingBox.X) testX = e.BoundingBox.X;      // test left edge
-                            else if (PlayerProjectiles[i].position.X > e.BoundingBox.X + e.BoundingBox.Width) testX = Player.BoundingBox.X + Player.BoundingBox.Width;   // right edge
-                            if (PlayerProjectiles[i].position.Y < e.BoundingBox.Y) testY = e.BoundingBox.Y;      // top edge
-                            else if (PlayerProjectiles[i].position.Y > e.BoundingBox.Y + e.BoundingBox.Height) testY = Player.BoundingBox.Y + Player.BoundingBox.Height;   // bottom edge
-
-                            // get distance from closest edges
-                            double distX = PlayerProjectiles[i].position.X - testX;
-                            double distY = PlayerProjectiles[i].position.Y - testY;
-                            double distance = Math.Sqrt((distX * distX) + (distY * distY));
-
-                            // collision if the distance is less than the radius
-                            if (distance <= PlayerProjectiles[i].radius)
+                            // go backwards through projectile array
+                            for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
                             {
-                                // give projectile to player for damage
-                                e.ProjectileCollision(PlayerProjectiles[i]);
+                                // temporary variables to set edges for testing
+                                float testX = PlayerProjectiles[i].position.X;
+                                float testY = PlayerProjectiles[i].position.Y;
 
-                                //destroy the projectile
-                                PlayerProjectiles[i].removeable = true;
+                                // which edge is closest?
+                                if (PlayerProjectiles[i].position.X < e.BoundingBox.X) testX = e.BoundingBox.X;      // test left edge
+                                else if (PlayerProjectiles[i].position.X > e.BoundingBox.X + e.BoundingBox.Width) testX = e.BoundingBox.X + e.BoundingBox.Width;   // right edge
+                                if (PlayerProjectiles[i].position.Y < e.BoundingBox.Y) testY = e.BoundingBox.Y;      // top edge
+                                else if (PlayerProjectiles[i].position.Y > e.BoundingBox.Y + e.BoundingBox.Height) testY = e.BoundingBox.Y + e.BoundingBox.Height;   // bottom edge
+
+                                // get distance from closest edges
+                                double distX = PlayerProjectiles[i].position.X - testX;
+                                double distY = PlayerProjectiles[i].position.Y - testY;
+                                double distance = Math.Sqrt((distX * distX) + (distY * distY));
+
+                                // collision if the distance is less than the radius
+                                if (distance <= PlayerProjectiles[i].radius)
+                                {
+                                    // give projectile to player for damage
+                                    e.ProjectileCollision(PlayerProjectiles[i]);
+
+                                    //destroy the projectile
+                                    PlayerProjectiles[i].removeable = true;
+                                }
                             }
-                        }
 
-                        for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
-                        {
-                            if (PlayerProjectiles[i].removeable)
+                            for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
                             {
-                                PlayerProjectiles.RemoveAt(i);
+                                if (PlayerProjectiles[i].removeable)
+                                {
+                                    PlayerProjectiles.RemoveAt(i);
+                                }
                             }
                         }
                     }
                 }
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                else
+                    for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+                    {
+                        if (PlayerProjectiles[i].removeable)
+                        {
+                            PlayerProjectiles.RemoveAt(i);
+                        }
+                    }
 
 
             // go backwards through WorldItems array
@@ -637,7 +763,7 @@ namespace MajorProject
                     // is item pickupable, and if so has the player signaled to pick up?
                     if (WorldItems[i].type != typeof(GameCoin))
                     {
-                        if (InputManager.Instance.ActionKeyDown(ActionType.pick_up))
+                        if (InputManager.Instance.ActionKeyPressed(ActionType.pick_up))
                         {
                             Player.AddItem(WorldItems[i]);
                             WorldItems[i].OnGround = false;
@@ -684,21 +810,11 @@ namespace MajorProject
 
             // update player viewmatrix using player location
             cameraTransformationMatrix.Translation = new Vector3((-Player.position.X) + ScreenSize.X / 2, (-Player.position.Y) + ScreenSize.Y / 2, 0);
-        }
 
-
-        void recordValues(string value1) // throwaway methods for testing without second screen
-        {
-            using (StreamWriter sw = new StreamWriter("output.txt"))
+            if (signalLevelChange)
             {
-                sw.WriteLine("value 1: " + value1);
-            }
-        }
-        void recordValues(string value1, string value2) // for the love of god please don't use these they write a new line every frame
-        {
-            using (StreamWriter sw = new StreamWriter("output.txt"))
-            {
-                sw.WriteLine("value 1: " + value1 + " | value 2 :" + value2);
+                signalLevelChange = false;
+                ChangeToNextLevel();
             }
         }
 
@@ -717,8 +833,10 @@ namespace MajorProject
 
             GameWorld.Draw(spriteBatch);
 
-
-            Player.Draw(spriteBatch);
+            foreach (GameInteractable i in WorldInteractables)
+            {
+                i.Draw(spriteBatch);
+            }
 
             foreach (List<GameEnemy> el in Enemies)
             {
@@ -726,11 +844,6 @@ namespace MajorProject
                 {
                     e.Draw(spriteBatch);
                 }
-            }
-
-            foreach (GameProjectile p in EnemyProjectiles)
-            {
-                p.Draw(spriteBatch);
             }
 
 
@@ -745,7 +858,12 @@ namespace MajorProject
                 i.Draw(spriteBatch);
             }
 
+            Player.Draw(spriteBatch);
 
+            foreach (GameProjectile p in EnemyProjectiles)
+            {
+                p.Draw(spriteBatch);
+            }
 
 
             spriteBatch.End();
@@ -767,34 +885,6 @@ namespace MajorProject
                 bs.Serialize(sw.BaseStream, this);
             }
         }
-
-
-
-
-
-
-
-
-
-        /// <summary>
-        /// need to add item
-        /// </summary>
-        /// <returns></returns>
-
-
-        /// need to add projectile
-        /// 
-
-
-
-
-
-
-
-
-
-
-
 
 
         public bool LoadGame()

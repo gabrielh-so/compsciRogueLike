@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Xml.Serialization;
+
 namespace MajorProject
 {
     public class GameProjectile : GameEntity
@@ -15,12 +17,11 @@ namespace MajorProject
         public double totalLifeSpan;
         public double currentLifeSpan;
 
+        [XmlIgnore]
         public int[,] Map;
         
 
         GameImage image;
-
-        public Point SpriteSize;
 
 
         string[] textureNames = new string[3];
@@ -31,7 +32,8 @@ namespace MajorProject
             Fire,
             Ice,
             Toxic,
-            SwordSwipe
+            SwordSwipe,
+            Bullet
         }
 
         public DamageType damageType;
@@ -64,8 +66,8 @@ namespace MajorProject
 
             currentLifeSpan += gameTime.ElapsedGameTime.TotalSeconds;
 
-            position.X += (float)(velocity.X * speed);
-            position.Y += (float)(velocity.Y * speed);
+            position.X += (float)(velocity.X * speed * gameTime.ElapsedGameTime.TotalSeconds);
+            position.Y += (float)(velocity.Y * speed * gameTime.ElapsedGameTime.TotalSeconds);
 
             // check they aren't too old
             if (currentLifeSpan >= totalLifeSpan)
@@ -87,7 +89,7 @@ namespace MajorProject
         {
             base.LoadContent(ref resources);
 
-            image.SpriteSize = new Point(25, 25);
+            image.SpriteSize = SpriteSize;
 
             for (int i = 1; i < 4; i++)
             {

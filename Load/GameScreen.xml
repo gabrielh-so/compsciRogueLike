@@ -19,6 +19,7 @@
   
     <BaseAudioPath>Audio/Sound/Game/Environment/</BaseAudioPath>
     <BaseTexturePath>Texture/Game/Environment/</BaseTexturePath>
+    <BaseFontPath>Fonts/</BaseFontPath>
 
     <TextureNameAndPath>
 
@@ -45,7 +46,14 @@
       <string>Music</string>
 
     </AudioNameAndPath>
-    
+
+
+    <FontNameAndPath>
+
+      <string>coders_crux</string>
+      <string>coders_crux</string>
+
+    </FontNameAndPath>
   
   </EnvironmentResources>
 
@@ -109,7 +117,23 @@
 
   </FlyerResources>
 
+  <BossResources>
 
+    <BaseAudioPath>Audio/Sound/Game/Character/Boss/</BaseAudioPath>
+    <BaseTexturePath>Texture/Game/Character/Boss/</BaseTexturePath>
+
+    <TextureNameAndPath>
+
+      <string>Boss1</string>
+      <string>Boss1</string>
+
+      <string>BossCharge</string>
+      <string>BossCharge</string>
+
+
+    </TextureNameAndPath>
+
+  </BossResources>
 
 
 
@@ -234,6 +258,15 @@
       <string>SwordSwipe4</string>
       <string>SwordSwipe4</string>
 
+      <string>Bullet1</string>
+      <string>Bullet1</string>
+
+      <string>Bullet2</string>
+      <string>Bullet2</string>
+
+      <string>Bullet3</string>
+      <string>Bullet3</string>
+
     </TextureNameAndPath>
 
     <AudioNameAndPath>
@@ -254,6 +287,7 @@
 
     <BaseAudioPath>Audio/Sound/Game/Loot/</BaseAudioPath>
     <BaseTexturePath>Texture/Game/Loot/</BaseTexturePath>
+    <BaseFontPath>Fonts/</BaseFontPath>
 
     <TextureNameAndPath>
 
@@ -287,6 +321,39 @@
       <string>Spear</string>
       <string>Weapons/Spear</string>
 
+
+      <string>Health</string>
+      <string>Potions/Health</string>
+
+      <string>Immune</string>
+      <string>Potions/Immune</string>
+
+      <string>Speed</string>
+      <string>Potions/Speed</string>
+
+      <string>Recharge</string>
+      <string>Potions/Recharge</string>
+
+      <string>Empty</string>
+      <string>Potions/Empty</string>
+
+      
+
+      <string>Chest1</string>
+      <string>Chests/Chest1</string>
+
+      <string>Chest2</string>
+      <string>Chests/Chest2</string>
+
+      <string>Chest3</string>
+      <string>Chests/Chest3</string>
+
+      <string>Chest4</string>
+      <string>Chests/Chest4</string>
+
+      <string>Chest5</string>
+      <string>Chests/Chest5</string>
+
     </TextureNameAndPath>
 
     <AudioNameAndPath>
@@ -299,6 +366,14 @@
       -->
 
     </AudioNameAndPath>
+
+
+    <FontNameAndPath>
+
+      <string>coders_crux</string>
+      <string>coders_crux</string>
+
+    </FontNameAndPath>
 
 
   </LootResources>

@@ -49,7 +49,7 @@ namespace MajorProject
                 p.SetVelocity(new Vector2()); // the projectile shouldn't move anywhere
                 p.speed = 0;
                 p.damageType = GameProjectile.DamageType.SwordSwipe;
-                p.damage = 50;
+                p.damage = 75;
 
                 p.BoundingBox.Location = position.ToPoint();
                 p.BoundingBox.Size = new Point(25, 25);

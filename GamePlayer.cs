@@ -26,19 +26,25 @@ namespace MajorProject
         public int money;
 
         public bool hitCooldown;
-        double maxHitDelay;
-        double currentHitDelay;
+        public double maxHitDelay;
+        public double currentHitDelay;
 
         public bool attackCooldown;
         public double currentAttackDelay;
         public double maxAttackDelay;
+
+        double BaseSpeed;
+        bool boostCooldown;
+        double maxBoostDelay;
+        double currentBoostDelay;
 
         public GamePlayer()
         {
             inventory = new GameInventory();
             playerImage = new GameImage();
             money = 0;
-            speed = 250;
+            BaseSpeed = 200;
+            speed = BaseSpeed;
             maxHitDelay = 1;
             currentHitDelay = 0;
         }
@@ -50,7 +56,8 @@ namespace MajorProject
 
         public override void ProjectileCollision(GameProjectile p)
         {
-            TakeDamage(p.damage);
+            if (!hitCooldown)
+                TakeDamage(p.damage);
         }
 
         public override void LoadContent(ref ResourcePack resources)
@@ -69,6 +76,18 @@ namespace MajorProject
         {
 
             base.Update(gameTime);
+
+            if (boostCooldown)
+            {
+                currentBoostDelay += gameTime.ElapsedGameTime.TotalSeconds;
+                if (currentBoostDelay >= maxBoostDelay)
+                {
+                    boostCooldown = false;
+                    currentBoostDelay = 0;
+
+                    speed = BaseSpeed;
+                }
+            }
 
             if (hitCooldown)
             {
@@ -154,6 +173,8 @@ namespace MajorProject
                 }
             }
 
+            inventory.Update(gameTime);
+
             if (InputManager.Instance.MousePressed())
             {
                 inventory.UseItem(this);
@@ -206,6 +227,13 @@ namespace MajorProject
             attackCooldown = true;
             currentAttackDelay = 0;
             maxAttackDelay = cooldownLength;
+        }
+
+        public void Boost(double duration, int newSpeed)
+        {
+            speed = newSpeed;
+            maxBoostDelay = duration;
+            boostCooldown = true;
         }
 
     }

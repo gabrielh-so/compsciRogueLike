@@ -94,7 +94,6 @@ namespace MajorProject
             base.UnloadContent();
 
             slimeImage.UnloadContent();
-            slimeAttackImage.UnloadContent();
         }
 
     }

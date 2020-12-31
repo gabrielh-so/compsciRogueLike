@@ -11,18 +11,17 @@ namespace MajorProject
 {
     public class GameWeaponSpear : GameWeapon
     {
-        int range = 150;
+        int range = 100;
 
         public GameWeaponSpear()
         {
-            attackCooldown = 1;
+            attackCooldown = 2.5;
             itemType = "Spear";
         }
 
         public override void Use(GamePlayer user)
         {
-            base.Use(user);
-
+            position = user.position;
             // checks player hasn't already swung a weapon
             if (!user.attackCooldown)
             {
@@ -52,11 +51,15 @@ namespace MajorProject
                 p.SetVelocity(new Vector2()); // the projectile shouldn't move anywhere
                 p.speed = 0;
                 p.damageType = GameProjectile.DamageType.SwordSwipe;
-                p.damage = 50;
+                p.damage = 150;
+                p.SpriteSize = new Point(50);
 
                 p.BoundingBox.Location = position.ToPoint();
-                p.BoundingBox.Size = new Point(25, 25);
+                p.BoundingBox.Size = new Point(50, 50);
 
+                ((GameScreen)ScreenManager.Instance.currentScreen).AddProjectile(p);
+
+                base.Use(user);
             }
 
 
