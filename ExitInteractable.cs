@@ -17,6 +17,7 @@ namespace MajorProject
 
         public ExitInteractable()
         {
+            type = this.GetType();
 
             image = new GameImage();
 
@@ -41,7 +42,7 @@ namespace MajorProject
                 ((GameScreen)ScreenManager.Instance.currentScreen).SignalLevelChange();
         }
 
-        public void LoadContent(ref EnvironmentResourcePack resources)
+        public override void LoadContent(ref ResourcePack resources)
         {
             Resources = resources;
 

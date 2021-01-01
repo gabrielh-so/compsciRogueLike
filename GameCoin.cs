@@ -28,7 +28,13 @@ namespace MajorProject
         public GameCoin()
         {
 
-            type = typeof(GameCoin);
+            type = this.GetType();
+
+        }
+
+        public override void LoadContent(ref ResourcePack resources)
+        {
+            base.LoadContent(ref resources);
 
             BoundingBox.Size = new Point(25, 25);
 
@@ -47,18 +53,14 @@ namespace MajorProject
 
             removeable = false;
 
-        }
-
-        public override void LoadContent(ref ResourcePack resources)
-        {
-            base.LoadContent(ref resources);
-
             image.LoadContent(ref resources, CoinAnimation);
         }
 
         public override void UnloadContent()
         {
             base.UnloadContent();
+
+            Resources = null;
 
             image.UnloadContent();
         }

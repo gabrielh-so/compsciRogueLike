@@ -23,6 +23,7 @@ namespace MajorProject
 
         public GameEnemy()
         {
+
             WasAlive = true;
         }
 

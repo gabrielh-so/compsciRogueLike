@@ -25,10 +25,6 @@ namespace MajorProject
         {
             rand = new Random();
 
-            BoundingBox.Size = new Vector2(25, 25).ToPoint();
-            BoundingBox.Location = (position - BoundingBox.Size.ToVector2() / 2).ToPoint();
-
-            removeable = false;
         }
 
         public override void Use(int LevelIndex, GamePlayer user)
@@ -57,6 +53,11 @@ namespace MajorProject
         {
             Resources = resources;
 
+            BoundingBox.Size = new Vector2(25, 25).ToPoint();
+            BoundingBox.Location = (position - BoundingBox.Size.ToVector2() / 2).ToPoint();
+
+            removeable = false;
+
             if (item != null)
                 item.LoadContent(ref Resources);
         }
@@ -67,7 +68,6 @@ namespace MajorProject
             if (item != null)
                 item.UnloadContent();
             Resources = null;
-            item = null;
         }
 
         public override void Update(GameTime gameTime)

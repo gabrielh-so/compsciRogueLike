@@ -24,14 +24,21 @@ namespace MajorProject
         {
             full = true;
 
+            itemType = "Empty";
+
             type = typeof(GamePotion);
+            image = new GameImage();
 
             BoundingBox.Size = new Point(25, 25);
 
+        }
+        public override void LoadContent(ref ResourcePack resources)
+        {
+            base.LoadContent(ref resources);
+
             radius = 25;
 
-            image = new GameImage();
-            
+
             image.animated = true;
             image.centered = true;
             image.SpriteSize = new Point(25, 25);
@@ -40,12 +47,6 @@ namespace MajorProject
             BoundingBox.Location = position.ToPoint();
 
             removeable = false;
-
-            itemType = "Empty";
-        }
-        public override void LoadContent(ref ResourcePack resources)
-        {
-            base.LoadContent(ref resources);
 
             string[] potionImages = new string[2]
             {

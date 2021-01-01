@@ -36,14 +36,21 @@ namespace MajorProject
 
         public GameBoss()
         {
+
+            bossImage = new GameImage();
+            type = GetType();
+        }
+
+        public override void LoadContent(ref ResourcePack resources)
+        {
+            base.LoadContent(ref resources);
+
+
             rand = new Random();
 
             speed = 50;
 
             targetDistance = 250;
-
-            bossImage = new GameImage();
-            type = GetType();
 
             BoundingBox.Size = new Point(150, 150);
             bossImage.position = position.ToPoint();
@@ -53,11 +60,6 @@ namespace MajorProject
             health = maxHealth;
 
             ProjectilesPerCharge = 15;
-        }
-
-        public override void LoadContent(ref ResourcePack resources)
-        {
-            base.LoadContent(ref resources);
 
             bossImage.LoadContent(ref Resources, bossAnimation);
 

@@ -11,8 +11,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using System.Runtime.Serialization.Formatters.Binary;
-
 using static MajorProject.InputManager;
 
 namespace MajorProject
@@ -21,11 +19,11 @@ namespace MajorProject
     public class GameScreen : Screen
     {
 
+        static string saveFileName = "SaveFile.bin";
+
         public bool signalLevelChange;
 
         Random rand;
-
-        string saveFileName = "SaveFile.bin";
 
         Vector2 ScreenSize;
 
@@ -56,9 +54,10 @@ namespace MajorProject
 
         Matrix cameraTransformationMatrix;
 
-        World GameWorld;
+        [XmlIgnore]
+        public World GameWorld;
 
-        GamePlayer Player;
+        public GamePlayer Player;
 
         public HUD headsUpDisplay;
 
@@ -81,7 +80,7 @@ namespace MajorProject
 
         public ResourcePack HUDResources;
 
-        public EnvironmentResourcePack EnvironmentResources;
+        public ResourcePack EnvironmentResources;
 
         public ResourcePack LootResources;
 
@@ -353,7 +352,7 @@ namespace MajorProject
             {
                 // place item here
 
-                if (rand.NextDouble() < 0.75)
+                if (rand.NextDouble() <= 1)
                 {
 
                     Vector2 itemPosition = new Vector2();
@@ -443,6 +442,7 @@ namespace MajorProject
             headsUpDisplay = new HUD();
             HUDResources.LoadContent();
             headsUpDisplay.LoadContent(HUDResources);
+            headsUpDisplay.GenerateMiniMap(GameWorld.Map);
             headsUpDisplay.SetPlayer(Player);
         }
 
@@ -468,8 +468,6 @@ namespace MajorProject
             LoadRoomContents();
 
             PlaceLoot();
-
-            headsUpDisplay.GenerateMiniMap(GameWorld.Map);
 
             SetCharacterAndProjectileMaps();
         }
@@ -510,6 +508,7 @@ namespace MajorProject
         void ChangeToNextLevel()
         {
             LevelIndex++;
+            GameWorld.LevelIndex++;
             AudioManager.Instance.StopSoundInstance("Music", true);
             RegenerateWorld();
             SetCharacterAndProjectileMaps();
@@ -879,10 +878,56 @@ namespace MajorProject
 
         public void SaveGame()
         {
-            using (StreamWriter sw = new StreamWriter(saveFileName))
+
+            Player.UnloadContent();
+
+            foreach (List<GameEnemy> el in Enemies)
+                foreach (GameEnemy e in el)
+                    e.UnloadContent();
+            foreach (GameProjectile e in EnemyProjectiles)
+                e.UnloadContent();
+            foreach (GameProjectile e in PlayerProjectiles)
+                e.UnloadContent();
+            foreach (GameItem e in WorldItems)
+                e.UnloadContent();
+            foreach (GameInteractable e in WorldInteractables)
+                e.UnloadContent();
+
+            GameSerializer.SerializeGame(this);
+
+
+            Player.LoadContent(ref PlayerResources);
+
+            foreach (List<GameEnemy> el in Enemies)
+                foreach (GameEnemy e in el)
+                {
+                    if (e.type == typeof(GameGoblin))
+                    {
+                        e.LoadContent(ref GoblinResources);
+                    } else if (e.type == typeof(GameFlyer))
+                    {
+                        e.LoadContent(ref FlyerResources);
+                    }
+                    else if (e.type == typeof(GameSlime))
+                    {
+                        e.LoadContent(ref SlimeResources);
+                    }
+                    else
+                    {
+                        e.LoadContent(ref BossResources);
+                    }
+                }
+            foreach (GameProjectile e in EnemyProjectiles)
+                e.LoadContent(ref ProjectileResources);
+            foreach (GameProjectile e in PlayerProjectiles)
+                e.LoadContent(ref ProjectileResources);
+            foreach (GameItem e in WorldItems)
+                e.LoadContent(ref LootResources);
+            foreach (GameInteractable e in WorldInteractables)
             {
-                BinaryFormatter bs = new BinaryFormatter();
-                bs.Serialize(sw.BaseStream, this);
+                if (e.type == typeof(ExitInteractable))
+                    e.LoadContent(ref EnvironmentResources);
+                else e.LoadContent(ref LootResources);
             }
         }
 
@@ -891,25 +936,59 @@ namespace MajorProject
         {
             if (File.Exists(saveFileName))
             {
-
-                using (StreamReader sr = new StreamReader(saveFileName))
-                {
-                    BinaryFormatter bs = new BinaryFormatter();
-                    GameScreen gs = (GameScreen)bs.Deserialize(sr.BaseStream);
-
-                    GameWorld = gs.GameWorld;
-                    LevelIndex = gs.LevelIndex;
-                    Player = gs.Player;
-                    cameraTransformationMatrix = gs.cameraTransformationMatrix;
-
-                    // and then any entity information
-
-                    return true;
-
-                }
+                GameSerializer.DeSerializeGame(this);
 
                 ///don't forget to reload content
                 ///
+
+                LevelIndex = GameWorld.LevelIndex;
+
+                LoadCharacterResources();
+                LoadItemResources();
+                EnvironmentResources.LoadContent(LevelNames[LevelIndex]);
+
+                GameWorld.LoadContent(ref EnvironmentResources);
+                GameWorld.RenderTexture();
+                GameWorld.GenerateNewRandom();
+
+                Player.LoadContent(ref PlayerResources);
+
+                foreach (List<GameEnemy> el in Enemies)
+                    foreach (GameEnemy e in el)
+                    {
+                        if (e.type == typeof(GameGoblin))
+                        {
+                            e.LoadContent(ref GoblinResources);
+                        }
+                        else if (e.type == typeof(GameFlyer))
+                        {
+                            e.LoadContent(ref FlyerResources);
+                        }
+                        else if (e.type == typeof(GameSlime))
+                        {
+                            e.LoadContent(ref SlimeResources);
+                        }
+                        else
+                        {
+                            e.LoadContent(ref BossResources);
+                        }
+                    }
+                foreach (GameProjectile e in EnemyProjectiles)
+                    e.LoadContent(ref ProjectileResources);
+                foreach (GameProjectile e in PlayerProjectiles)
+                    e.LoadContent(ref ProjectileResources);
+                foreach (GameItem e in WorldItems)
+                    e.LoadContent(ref LootResources);
+                foreach (GameInteractable e in WorldInteractables)
+                {
+                    if (e.type == typeof(ExitInteractable))
+                        e.LoadContent(ref EnvironmentResources);
+                    else e.LoadContent(ref LootResources);
+                }
+
+                LoadHUD();
+
+                return true;
             }
 
             return false;

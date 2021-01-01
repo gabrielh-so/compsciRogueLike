@@ -24,17 +24,6 @@ namespace MajorProject
             rand = new Random();
 
             image = new GameImage();
-
-            BoundingBox.Size = new Point(100, 100);
-
-            image.NoLoop = true;
-            image.centered = true;
-            image.SpriteSize = new Point(100, 100);
-
-            image.position = position.ToPoint();
-            BoundingBox.Location = (position - BoundingBox.Size.ToVector2() / 2).ToPoint();
-
-            removeable = false;
         }
 
         public override void Use(int LevelIndex, GamePlayer user)
@@ -75,6 +64,18 @@ namespace MajorProject
         public override void LoadContent(ref ResourcePack resources)
         {
             Resources = resources;
+
+
+            BoundingBox.Size = new Point(100, 100);
+
+            image.NoLoop = true;
+            image.centered = true;
+            image.SpriteSize = new Point(100, 100);
+
+            image.position = position.ToPoint();
+            BoundingBox.Location = (position - BoundingBox.Size.ToVector2() / 2).ToPoint();
+
+            removeable = false;
 
             OpenAnimation = new string[5]
             {

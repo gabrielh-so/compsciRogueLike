@@ -31,16 +31,17 @@ namespace MajorProject
 
             slimeImage = new GameImage();
             type = GetType();
-            speed = 25;
-
-
-            maxHealth = 150;
-            health = maxHealth;
         }
 
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
+
+            speed = 25;
+
+
+            maxHealth = 150;
+            health = maxHealth;
 
             slimeImage.LoadContent(ref Resources, walkAnimation);
             slimeImage.animated = true;

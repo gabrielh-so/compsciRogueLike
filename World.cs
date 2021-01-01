@@ -3,24 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using System.Xml.Serialization;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using System.Runtime.Serialization.Formatters.Binary;
+
 namespace MajorProject
 {
-
+    [Serializable]
     public class World
     {
         [XmlIgnore]
+        [NonSerialized]
         Random rand;
         [XmlIgnore]
+        [NonSerialized]
         Texture2D WorldImageTexture;
-
 
         public List<GameScreen.RoomType> roomTypes;
 
+        public int LevelIndex;
 
         /// <summary>
         /// values for setting the size of standard tiles
@@ -35,7 +41,8 @@ namespace MajorProject
         ContentManager content;
         */
 
-        EnvironmentResourcePack Resources;
+        [NonSerialized]
+        ResourcePack Resources;
 
         public Vector2 entry;
         public Vector2 entryIndex;
@@ -80,17 +87,13 @@ namespace MajorProject
         // 2 - visited by corridor
         public int[,] Map;
 
-        public int[,] TextCase;
-        public int[,] TextAnswer;
-
-
-        List<Vector2> generation_RoomPositions;
-        List<Vector2> generation_RoomDimensions;
+        public List<Vector2> generation_RoomPositions;
+        public List<Vector2> generation_RoomDimensions;
 
         public List<Vector2> generation_RoomIndexPositions;
         public List<Vector2> generation_RoomIndexDimensions;
 
-        List<Vector2> generation_DoorPositions;
+        public List<Vector2> generation_DoorPositions;
 
         //List<Vector2> MazeGenerationPath;
         public List<Vector2> CorridorEndings;
@@ -103,8 +106,8 @@ namespace MajorProject
         public int level_cell_height;
 
         // internally used
-        int width;
-        int height;
+        public int width;
+        public int height;
 
         // how many rooms there are
         public int room_count;
@@ -127,6 +130,11 @@ namespace MajorProject
             DirectionVector2Map.Add(directions.left, new Vector2(-1, 0));
 
             roomTypes = new List<GameScreen.RoomType>();
+        }
+
+        public void GenerateNewRandom()
+        {
+            rand = new Random();
         }
 
         public int ToCellIndex(int cell)
@@ -444,7 +452,7 @@ namespace MajorProject
             Console.WriteLine();
         }
 
-        public void LoadContent(ref EnvironmentResourcePack resources)
+        public void LoadContent(ref ResourcePack resources)
         {
             Resources = resources;
         }
@@ -457,7 +465,8 @@ namespace MajorProject
 
             // put textures in a dictionary to be easily called upon to be displayed
 
-
+            width = level_cell_width * 2 + 1;
+            height = level_cell_width * 2 + 1;
 
 
             dimensions.X = tilePixelWidth * width;

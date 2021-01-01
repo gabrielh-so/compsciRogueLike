@@ -13,6 +13,7 @@ namespace MajorProject
         public GamePotionHealth()
         {
             full = true;
+            type = this.GetType();
             itemType = "Health";
         }
 

@@ -15,6 +15,7 @@ namespace MajorProject
         public GameWeaponRifle()
         {
             attackCooldown = 2;
+            type = this.GetType();
             itemType = "Rifle";
         }
 

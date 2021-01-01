@@ -13,6 +13,7 @@ namespace MajorProject
         public GamePotionRecharge()
         {
             full = true;
+            type = this.GetType();
             itemType = "Recharge";
         }
 

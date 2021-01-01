@@ -13,6 +13,7 @@ namespace MajorProject
         public GamePotionSpeed()
         {
             full = true;
+            type = this.GetType();
             itemType = "Speed";
         }
 

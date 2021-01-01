@@ -15,6 +15,7 @@ namespace MajorProject
         public GameWeaponSlingShot()
         {
             attackCooldown = 1;
+            type = this.GetType();
             itemType = "Slingshot";
         }
 

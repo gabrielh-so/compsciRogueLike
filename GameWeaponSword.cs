@@ -16,6 +16,7 @@ namespace MajorProject
         public GameWeaponSword()
         {
             attackCooldown = 1;
+            type = this.GetType();
             itemType = "Sword";
 
         }

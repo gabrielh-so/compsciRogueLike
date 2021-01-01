@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    public abstract class GameItem : GameEntity
+    public class GameItem : GameEntity
     {
         public string itemType;
 
@@ -15,7 +15,10 @@ namespace MajorProject
 
         public bool OnGround;
 
-        public abstract void Use(GamePlayer user);
+        public virtual void Use(GamePlayer user)
+        {
+
+        }
 
 
         public GameItem()

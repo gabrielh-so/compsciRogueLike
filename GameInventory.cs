@@ -101,9 +101,27 @@ namespace MajorProject
             }
         }
 
+        public void LoadContent()
+        {
+            foreach (GameItem i in itemList)
+            {
+                if (i != null)
+                    i.LoadContent(ref ((GameScreen)ScreenManager.Instance.currentScreen).LootResources);
+            }
+        }
+
         public void UnLoadContent()
         {
-
+            foreach (GameItem i in itemList)
+            {
+                if (i != null)
+                    i.UnloadContent();
+            }
+            foreach (GameAbility a in abilityList)
+            {
+                if (a != null)
+                    a.UnloadContent();
+            }
         }
 
     }

@@ -44,11 +44,9 @@ namespace MajorProject
         public GameProjectile()
         {
             image = new GameImage();
-            totalLifeSpan = 2;
+            type = this.GetType();
             currentLifeSpan = 0;
-            SpriteSize = new Point(25, 25);
-            image.centered = true;
-            radius = 12;
+            totalLifeSpan = 2;
         }
 
         public void SetVelocity(Vector2 p)
@@ -88,6 +86,10 @@ namespace MajorProject
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
+
+            SpriteSize = new Point(25, 25);
+            image.centered = true;
+            radius = 12;
 
             image.SpriteSize = SpriteSize;
 

@@ -30,16 +30,16 @@ namespace MajorProject
         {
             flyerImage = new GameImage();
             type = GetType();
-            speed = 50;
-
-            maxHealth = 50;
-            health = maxHealth;
         }
 
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
 
+            speed = 50;
+
+            maxHealth = 50;
+            health = maxHealth;
             BoundingBox.Size = new Point(25, 25);
 
             flyerImage.LoadContent(ref Resources, walkAnimation);

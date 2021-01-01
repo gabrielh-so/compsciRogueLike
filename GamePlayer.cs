@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using System.IO;
 
+using System.Runtime.Serialization.Formatters.Binary;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,6 +18,7 @@ using static MajorProject.InputManager;
 
 namespace MajorProject
 {
+    [Serializable]
     public class GamePlayer : GameCharacter
     {
         public GameInventory inventory;
@@ -63,6 +65,8 @@ namespace MajorProject
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
+
+            inventory.LoadContent();
 
             playerImage.LoadContent(ref Resources, walkAnimation);
             playerImage.animated = false;
@@ -234,6 +238,13 @@ namespace MajorProject
             speed = newSpeed;
             maxBoostDelay = duration;
             boostCooldown = true;
+        }
+
+        public override void UnloadContent()
+        {
+            base.UnloadContent();
+
+            inventory.UnLoadContent();
         }
 
     }

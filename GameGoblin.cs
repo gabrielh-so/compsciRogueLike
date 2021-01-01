@@ -35,20 +35,21 @@ namespace MajorProject
 
         public GameGoblin()
         {
-            speed = 50;
-
-            targetDistance = 250;
 
             goblinImage = new GameImage();
             type = GetType();
 
-            maxHealth = 100;
-            health = maxHealth;
         }
 
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
+
+            speed = 50;
+
+            targetDistance = 250;
+            maxHealth = 100;
+            health = maxHealth;
 
             goblinImage.LoadContent(ref Resources, walkAnimation);
 

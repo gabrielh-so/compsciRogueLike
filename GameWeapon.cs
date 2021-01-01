@@ -23,18 +23,6 @@ namespace MajorProject
             radius = 25;
 
             image = new GameImage();
-
-            image.animated = true;
-            image.centered = true;
-            image.SpriteSize = new Point(25, 25);
-
-            image.position = position.ToPoint();
-            BoundingBox.Location = position.ToPoint();
-
-
-            BoundingBox.Size = new Point(25, 25);
-
-            removeable = false;
         }
 
         public override void Use(GamePlayer user)
@@ -61,6 +49,19 @@ namespace MajorProject
             Resources = resources;
 
 
+            image.animated = true;
+            image.centered = true;
+            image.SpriteSize = new Point(25, 25);
+
+            image.position = position.ToPoint();
+            BoundingBox.Location = position.ToPoint();
+
+
+            BoundingBox.Size = new Point(25, 25);
+
+            removeable = false;
+
+
             WeaponAnimation = new string[1]
             {
                 itemType
@@ -74,6 +75,7 @@ namespace MajorProject
         }
         public override void UnloadContent()
         {
+            Resources = null;
             image.UnloadContent();
         }
 

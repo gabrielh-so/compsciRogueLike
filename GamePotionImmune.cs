@@ -14,6 +14,7 @@ namespace MajorProject
         public GamePotionImmune()
         {
             full = true;
+            type = this.GetType();
             itemType = "Immune";
         }
 
