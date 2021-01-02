@@ -23,6 +23,8 @@ namespace MajorProject
         {
             rand = new Random();
 
+            type = this.GetType();
+
             image = new GameImage();
         }
 

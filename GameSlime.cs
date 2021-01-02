@@ -77,7 +77,8 @@ namespace MajorProject
 
 
             slimeImage.position = position.ToPoint();
-            slimeImage.Update(gameTime);
+            if (alive)
+                slimeImage.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

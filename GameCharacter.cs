@@ -14,6 +14,8 @@ namespace MajorProject
         // this is a character
         // (yeah thanks gab)
 
+        Random rand;
+
 
 
         public List<GameProjectile> projectiles;
@@ -22,17 +24,19 @@ namespace MajorProject
         {
             meleeDamage = 10;
             projectileDamage = 5;
-
+            rand = new Random();
             projectiles = new List<GameProjectile>();
             maxHealth = 100;
             alive = true;
             health = maxHealth;
+            lastHealth = maxHealth;
         }
 
         public int currentRoom = -1;
 
         public int maxHealth;
         public int health;
+        public int lastHealth;
 
         public double speed = 250;
 
@@ -72,6 +76,28 @@ namespace MajorProject
                 }
             }
 
+            if (health < lastHealth)
+            {
+                GameProjectile p = new GameProjectile();
+
+                double i = rand.NextDouble() * Math.PI * 2;
+
+                p.position = new Vector2(position.X, position.Y);
+                p.target = typeof(GamePlayer);
+                p.totalLifeSpan = 5;
+                p.velocity = new Vector2((float)Math.Sin(i), (float)Math.Cos(i));
+                p.speed = 150;
+                p.damageType = GameProjectile.DamageType.Blood;
+                p.damage = 0;
+                p.hit = true;
+                p.BoundingBox.Location = position.ToPoint();
+                p.BoundingBox.Size = new Point(25, 25);
+
+
+                // now *that's* punk
+                ((GameScreen)ScreenManager.Instance.currentScreen).AddProjectile(p);
+            }
+
             if (health <= 0)
             {
                 alive = false;
@@ -79,6 +105,8 @@ namespace MajorProject
 
             BoundingBox.X = (int)position.X - BoundingBox.Size.X / 2;
             BoundingBox.Y = (int)position.Y - BoundingBox.Size.Y / 2;
+
+            lastHealth = health;
 
         }
 

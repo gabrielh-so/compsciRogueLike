@@ -18,7 +18,7 @@ namespace MajorProject
 
         int targetDistance = 25;
 
-        double maxFireInterval = 2;
+        double maxFireInterval = 1;
         double currentFireInterval = 0;
 
         int ProjectilesPerCharge;
@@ -166,7 +166,8 @@ namespace MajorProject
 
 
             bossImage.position = position.ToPoint();
-            bossImage.Update(gameTime);
+            if (alive)
+                bossImage.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

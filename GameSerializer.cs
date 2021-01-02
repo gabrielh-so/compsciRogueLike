@@ -446,14 +446,14 @@ namespace MajorProject
                 {
                     Shop s = (Shop)JsonConvert.DeserializeObject(serializedInteractables[i], typeof(Shop));
 
-                    s.item = (GameItem)JsonConvert.DeserializeObject(shopItems[i], shopTypes[i]);
+                    s.item = (GameItem)JsonConvert.DeserializeObject(shopItems[shopCount], shopTypes[shopCount]);
 
                     gameScreen.WorldInteractables.Add(s);
 
                     shopCount++;
                 }
                 else
-                    gameScreen.WorldItems.Add((GameItem)JsonConvert.DeserializeObject(serializedItems[i], itemTypes[i]));
+                    gameScreen.WorldInteractables.Add((GameInteractable)JsonConvert.DeserializeObject(serializedInteractables[i], interactableTypes[i]));
             }
 
             gameScreen.Player = (GamePlayer)JsonConvert.DeserializeObject(serializedPlayer, typeof(GamePlayer));

@@ -24,6 +24,7 @@ namespace MajorProject
         public Shop()
         {
             rand = new Random();
+            type = this.GetType();
 
         }
 

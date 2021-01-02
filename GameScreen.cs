@@ -275,8 +275,9 @@ namespace MajorProject
                             Shop s = new Shop();
 
                             s.position = (RoomCentre * World.tilePixelWidth) - new Vector2(World.tilePixelWidth, World.tilePixelWidth) + new Vector2(World.tilePixelWidth, World.tilePixelWidth) * j;
-                            s.NewItem(100 + 50 * j);
+                            
                             s.LoadContent(ref LootResources);
+                            s.NewItem(100 + 50 * j);
                             WorldInteractables.Add(s);
                         }
                         break;
@@ -691,50 +692,45 @@ namespace MajorProject
                             // go backwards through projectile array
                             for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
                             {
-                                // temporary variables to set edges for testing
-                                float testX = PlayerProjectiles[i].position.X;
-                                float testY = PlayerProjectiles[i].position.Y;
-
-                                // which edge is closest?
-                                if (PlayerProjectiles[i].position.X < e.BoundingBox.X) testX = e.BoundingBox.X;      // test left edge
-                                else if (PlayerProjectiles[i].position.X > e.BoundingBox.X + e.BoundingBox.Width) testX = e.BoundingBox.X + e.BoundingBox.Width;   // right edge
-                                if (PlayerProjectiles[i].position.Y < e.BoundingBox.Y) testY = e.BoundingBox.Y;      // top edge
-                                else if (PlayerProjectiles[i].position.Y > e.BoundingBox.Y + e.BoundingBox.Height) testY = e.BoundingBox.Y + e.BoundingBox.Height;   // bottom edge
-
-                                // get distance from closest edges
-                                double distX = PlayerProjectiles[i].position.X - testX;
-                                double distY = PlayerProjectiles[i].position.Y - testY;
-                                double distance = Math.Sqrt((distX * distX) + (distY * distY));
-
-                                // collision if the distance is less than the radius
-                                if (distance <= PlayerProjectiles[i].radius)
+                                if (!PlayerProjectiles[i].hit)
                                 {
-                                    // give projectile to player for damage
-                                    e.ProjectileCollision(PlayerProjectiles[i]);
+                                    // temporary variables to set edges for testing
+                                    float testX = PlayerProjectiles[i].position.X;
+                                    float testY = PlayerProjectiles[i].position.Y;
 
-                                    //destroy the projectile
-                                    PlayerProjectiles[i].removeable = true;
-                                }
-                            }
+                                    // which edge is closest?
+                                    if (PlayerProjectiles[i].position.X < e.BoundingBox.X) testX = e.BoundingBox.X;      // test left edge
+                                    else if (PlayerProjectiles[i].position.X > e.BoundingBox.X + e.BoundingBox.Width) testX = e.BoundingBox.X + e.BoundingBox.Width;   // right edge
+                                    if (PlayerProjectiles[i].position.Y < e.BoundingBox.Y) testY = e.BoundingBox.Y;      // top edge
+                                    else if (PlayerProjectiles[i].position.Y > e.BoundingBox.Y + e.BoundingBox.Height) testY = e.BoundingBox.Y + e.BoundingBox.Height;   // bottom edge
 
-                            for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
-                            {
-                                if (PlayerProjectiles[i].removeable)
-                                {
-                                    PlayerProjectiles.RemoveAt(i);
+                                    // get distance from closest edges
+                                    double distX = PlayerProjectiles[i].position.X - testX;
+                                    double distY = PlayerProjectiles[i].position.Y - testY;
+                                    double distance = Math.Sqrt((distX * distX) + (distY * distY));
+
+                                    // collision if the distance is less than the radius
+                                    if (distance <= PlayerProjectiles[i].radius)
+                                    {
+                                        // give projectile to player for damage
+                                        e.ProjectileCollision(PlayerProjectiles[i]);
+
+                                        //destroy the projectile
+                                        PlayerProjectiles[i].hit = true;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                else
-                    for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+
+                for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+                {
+                    if (PlayerProjectiles[i].removeable)
                     {
-                        if (PlayerProjectiles[i].removeable)
-                        {
-                            PlayerProjectiles.RemoveAt(i);
-                        }
+                        PlayerProjectiles.RemoveAt(i);
                     }
+                }
 
 
             // go backwards through WorldItems array

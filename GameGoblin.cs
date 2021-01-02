@@ -153,7 +153,8 @@ namespace MajorProject
 
 
             goblinImage.position = position.ToPoint();
-            goblinImage.Update(gameTime);
+            if (alive)
+                goblinImage.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -74,7 +74,8 @@ namespace MajorProject
             }
 
             flyerImage.position = position.ToPoint();
-            flyerImage.Update(gameTime);
+            if (alive)
+                flyerImage.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -12,6 +12,8 @@ namespace MajorProject
 {
     public class GameProjectile : GameEntity
     {
+        public bool hit;
+
         public double speed;
 
         public double totalLifeSpan;
@@ -33,7 +35,8 @@ namespace MajorProject
             Ice,
             Toxic,
             SwordSwipe,
-            Bullet
+            Bullet,
+            Blood
         }
 
         public DamageType damageType;
@@ -64,11 +67,19 @@ namespace MajorProject
 
             currentLifeSpan += gameTime.ElapsedGameTime.TotalSeconds;
 
-            position.X += (float)(velocity.X * speed * gameTime.ElapsedGameTime.TotalSeconds);
-            position.Y += (float)(velocity.Y * speed * gameTime.ElapsedGameTime.TotalSeconds);
+            if (damageType != DamageType.Blood)
+            {
+                position.X += (float)(velocity.X * speed * gameTime.ElapsedGameTime.TotalSeconds);
+                position.Y += (float)(velocity.Y * speed * gameTime.ElapsedGameTime.TotalSeconds);
+            } else
+            {
+                velocity *= 0.96f;
+                position.X += (float)(velocity.X * speed * gameTime.ElapsedGameTime.TotalSeconds);
+                position.Y += (float)(velocity.Y * speed * gameTime.ElapsedGameTime.TotalSeconds);
+            }
 
             // check they aren't too old
-            if (currentLifeSpan >= totalLifeSpan)
+            if (currentLifeSpan >= totalLifeSpan || (hit && damageType == DamageType.Bullet))
             {
                 removeable = true;
             }
@@ -90,6 +101,7 @@ namespace MajorProject
             SpriteSize = new Point(25, 25);
             image.centered = true;
             radius = 12;
+            image.NoLoop = true;
 
             image.SpriteSize = SpriteSize;
 
