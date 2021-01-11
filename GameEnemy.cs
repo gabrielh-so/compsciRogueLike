@@ -10,7 +10,7 @@ namespace MajorProject
     public class GameEnemy : GameCharacter
     {
         public GameCharacter target;
-        bool WasAlive;
+        public bool WasAlive;
 
         public void SetTarget(GameCharacter t)
         {
@@ -31,7 +31,7 @@ namespace MajorProject
         {
             base.Update(gameTime);
 
-            if (WasAlive != alive)
+            if (WasAlive && !alive)
             {
                 Random rand = new Random();
                 GameCoin c = new GameCoin();

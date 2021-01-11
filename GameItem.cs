@@ -11,6 +11,8 @@ namespace MajorProject
     {
         public string itemType;
 
+        public string Description;
+
         public int radius;
 
         public bool OnGround;

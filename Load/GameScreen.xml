@@ -72,6 +72,9 @@
 
     <string>Goblin3</string>
     <string>Goblin3</string>
+
+    <string>Dead</string>
+    <string>Dead</string>
     
     </TextureNameAndPath>
 
@@ -92,6 +95,9 @@
 
     <string>Slime3</string>
     <string>Slime3</string>
+
+    <string>Dead</string>
+    <string>Dead</string>
       
     </TextureNameAndPath>
 
@@ -112,6 +118,9 @@
 
     <string>Flyer3</string>
     <string>Flyer3</string>
+
+    <string>Dead</string>
+    <string>Dead</string>
       
     </TextureNameAndPath>
 
@@ -129,6 +138,9 @@
 
       <string>BossCharge</string>
       <string>BossCharge</string>
+
+      <string>Dead</string>
+      <string>Dead</string>
 
 
     </TextureNameAndPath>

@@ -11,12 +11,15 @@ namespace MajorProject
 {
     public class GameWeaponRifle : GameWeapon
     {
+        int Damage;
 
         public GameWeaponRifle()
         {
             attackCooldown = 2;
             type = this.GetType();
             itemType = "Rifle";
+            Damage = 100;
+            Description = "Rifle.\nWeapon. Fires high-damage bullet projectiles\nat a slow rate.\nDamage: " + Damage + "\nCooldown: " + attackCooldown + "s";
         }
 
         public override void Use(GamePlayer user)
@@ -48,7 +51,7 @@ namespace MajorProject
                 p.SetVelocity(mouseDirection); // the projectile shouldn't move anywhere
                 p.speed = 300;
                 p.damageType = GameProjectile.DamageType.Bullet;
-                p.damage = 100;
+                p.damage = Damage;
 
                 p.BoundingBox.Location = position.ToPoint();
                 p.BoundingBox.Size = new Point(25, 25);

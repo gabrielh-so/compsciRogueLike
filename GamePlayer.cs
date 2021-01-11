@@ -148,8 +148,24 @@ namespace MajorProject
             }
 
             // check that there's no collision with a wall
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            if (Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] != (int)World.cellType.wall)
+            // this is a bodge
+            // please forgive me god of code
+
+            /////////////
+            
+            bool recalculatePosition = false;
+            if (Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] == (int)World.cellType.wall)
+            {
+                recalculatePosition = true;
+            }
+            if ( !((GameScreen)ScreenManager.Instance.currentScreen).IsRoomDead(currentRoom) && Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] == (int)World.cellType.door)
+            {
+                recalculatePosition = true;
+            }
+
+            if (!recalculatePosition)
             {
                 position = newPosition;
 
@@ -161,11 +177,22 @@ namespace MajorProject
             }
             else
             {
+                recalculatePosition = false;
                 // issue - colliding with walls stops *all* movement, so take out colliding velocity
                 if ((int)newPosition.Y / tileWidth != (int)position.Y / tileWidth) velocity.Y = 0; //colides with something above or below, so remove vertical component of velocity
                 else velocity.X = 0;
                 newPosition = position + velocity;
-                if (Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] != (int)World.cellType.wall)
+
+                if (Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] == (int)World.cellType.wall)
+                {
+                    recalculatePosition = true;
+                }
+                if (!((GameScreen)ScreenManager.Instance.currentScreen).IsRoomDead(currentRoom) && Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] == (int)World.cellType.door)
+                {
+                    recalculatePosition = true;
+                }
+
+                if (!recalculatePosition)
                 {
                     position = newPosition;
 
@@ -176,6 +203,9 @@ namespace MajorProject
                     playerImage.position = position.ToPoint();
                 }
             }
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             inventory.Update(gameTime);
 

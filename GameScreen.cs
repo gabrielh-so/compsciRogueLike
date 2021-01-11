@@ -203,6 +203,15 @@ namespace MajorProject
             SetPlayerToEntrance();
         }
 
+        public bool IsRoomDead(int room)
+        {
+            if (room >= GameWorld.room_count || room < 0) return true; // anything that isn't a room doesn't have enemies in it
+            foreach (GameEnemy e in Enemies[room]) if (e.alive)
+            {
+                return false;
+            }
+            return true;
+        }
 
         void LoadRoomContents()
         {
@@ -724,14 +733,15 @@ namespace MajorProject
                     }
                 }
 
-                for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+            for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+            {
+                if (PlayerProjectiles[i].removeable)
                 {
-                    if (PlayerProjectiles[i].removeable)
-                    {
-                        PlayerProjectiles.RemoveAt(i);
-                    }
+                    PlayerProjectiles.RemoveAt(i);
                 }
+            }
 
+            bool playerIntersects = false;
 
             // go backwards through WorldItems array
             for (int i = WorldItems.Count - 1; i > -1; i--)
@@ -758,12 +768,23 @@ namespace MajorProject
                     // is item pickupable, and if so has the player signaled to pick up?
                     if (WorldItems[i].type != typeof(GameCoin))
                     {
-                        if (InputManager.Instance.ActionKeyPressed(ActionType.pick_up))
+                        if (!playerIntersects)
                         {
-                            Player.AddItem(WorldItems[i]);
-                            WorldItems[i].OnGround = false;
-                            WorldItems[i].removeable = true;
+                            // player has not already intersected something - now they have
+                            playerIntersects = true;
+
+                            // send to the hud to display details of item
+
+                            headsUpDisplay.ShowDetailsOfItem(WorldItems[i]);
+
+                            if (InputManager.Instance.ActionKeyPressed(ActionType.pick_up))
+                            {
+                                Player.AddItem(WorldItems[i]);
+                                WorldItems[i].OnGround = false;
+                                WorldItems[i].removeable = true;
+                            }
                         }
+                        
                     }
                     else
                     {

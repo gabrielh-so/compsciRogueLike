@@ -14,6 +14,8 @@ namespace MajorProject
         Random rand;
 
         GameImage bossImage;
+        GameImage bossChargeImage;
+        GameImage bossDeadImage;
 
 
         int targetDistance = 25;
@@ -27,8 +29,17 @@ namespace MajorProject
 
         string[] bossAnimation =
         {
-            "Boss1",
+            "Boss1"
+        };
+
+        string[] chargeAnimation =
+        {
             "BossCharge"
+        };
+
+        string[] deadAnimation =
+        {
+            "Dead"
         };
 
 
@@ -38,6 +49,8 @@ namespace MajorProject
         {
 
             bossImage = new GameImage();
+            bossChargeImage = new GameImage();
+            bossDeadImage = new GameImage();
             type = GetType();
         }
 
@@ -45,6 +58,8 @@ namespace MajorProject
         {
             base.LoadContent(ref resources);
 
+            if (!alive)
+                WasAlive = false;
 
             rand = new Random();
 
@@ -56,6 +71,8 @@ namespace MajorProject
             bossImage.position = position.ToPoint();
             BoundingBox.Location = (position - BoundingBox.Size.ToVector2() / 2).ToPoint();
 
+            bossDeadImage.position = position.ToPoint();
+
             maxHealth = 1500;
             health = maxHealth;
 
@@ -66,6 +83,21 @@ namespace MajorProject
             bossImage.animated = false;
             bossImage.centered = true;
             bossImage.SpriteSize = new Point(150, 150);
+
+            bossDeadImage.LoadContent(ref Resources, deadAnimation);
+
+            bossDeadImage.animated = false;
+            bossDeadImage.centered = true;
+            bossDeadImage.SpriteSize = new Point(150, 150);
+            bossDeadImage.alpha = 0.5f;
+
+
+            bossChargeImage.position = position.ToPoint();
+            bossChargeImage.LoadContent(ref Resources, chargeAnimation);
+
+            bossChargeImage.animated = false;
+            bossChargeImage.centered = true;
+            bossChargeImage.SpriteSize = new Point(150, 150);
         }
 
         public override void Update(GameTime gameTime)
@@ -174,7 +206,24 @@ namespace MajorProject
         {
             base.Draw(spriteBatch);
 
-            bossImage.Draw(spriteBatch);
+            if (alive)
+            {
+                if (maxFireInterval - currentFireInterval < 0.5)
+                {
+                    bossChargeImage.Draw(spriteBatch);
+                }
+                else bossImage.Draw(spriteBatch);
+            }
+            else bossDeadImage.Draw(spriteBatch);
+        }
+
+        public override void UnloadContent()
+        {
+            base.UnloadContent();
+
+            bossImage.UnloadContent();
+            bossChargeImage.UnloadContent();
+            bossDeadImage.UnloadContent();
         }
 
     }

@@ -12,7 +12,7 @@ namespace MajorProject
     {
 
         GameImage goblinImage;
-        GameImage goblinAttackImage;
+        GameImage goblinDeadImage;
 
 
         int targetDistance = 25;
@@ -30,6 +30,11 @@ namespace MajorProject
             "Goblin3"
         };
 
+        string[] deathAnimation =
+        {
+            "Dead"
+        };
+
 
 
 
@@ -37,6 +42,7 @@ namespace MajorProject
         {
 
             goblinImage = new GameImage();
+            goblinDeadImage = new GameImage();
             type = GetType();
 
         }
@@ -44,6 +50,9 @@ namespace MajorProject
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
+
+            if (!alive)
+                WasAlive = false;
 
             speed = 50;
 
@@ -56,6 +65,12 @@ namespace MajorProject
             goblinImage.animated = true;
             goblinImage.centered = true;
             goblinImage.SpriteSize = new Point(25, 25);
+
+            goblinDeadImage.LoadContent(ref Resources, deathAnimation);
+
+            goblinDeadImage.animated = true;
+            goblinDeadImage.centered = true;
+            goblinDeadImage.SpriteSize = new Point(25, 25);
         }
 
         public override void Update(GameTime gameTime)
@@ -71,6 +86,8 @@ namespace MajorProject
                 {
                     // move towards player if too far away,
                     // move closer if too near
+
+                    goblinImage.animated = true;
 
                     Vector2 newPosition = position;
 
@@ -112,6 +129,7 @@ namespace MajorProject
 
 
                         goblinImage.position = position.ToPoint();
+                        goblinDeadImage.position = position.ToPoint();
                     }
 
 
@@ -142,6 +160,11 @@ namespace MajorProject
 
                     //position += velocity;
                 }
+                else
+                {
+                    goblinImage.RestartAnimation();
+                    goblinImage.animated = false;
+                }
 
             }
 
@@ -153,15 +176,28 @@ namespace MajorProject
 
 
             goblinImage.position = position.ToPoint();
+            goblinDeadImage.position = position.ToPoint();
             if (alive)
                 goblinImage.Update(gameTime);
+            else
+                goblinDeadImage.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
 
-            goblinImage.Draw(spriteBatch);
+            if (alive)
+                goblinImage.Draw(spriteBatch);
+            else goblinDeadImage.Draw(spriteBatch);
+        }
+
+        public override void UnloadContent()
+        {
+            base.UnloadContent();
+
+            goblinImage.UnloadContent();
+            goblinDeadImage.UnloadContent();
         }
     }
 }

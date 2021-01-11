@@ -15,6 +15,8 @@ namespace MajorProject
             full = true;
             type = this.GetType();
             itemType = "Recharge";
+
+            Description = "Recharge potion.\nNon-refillable consumable. A potion that\nrefills any other potion in your inventory\n(except other recharge potions).";
         }
 
         public override void Update(GameTime gameTime)

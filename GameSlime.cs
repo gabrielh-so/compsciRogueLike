@@ -13,7 +13,7 @@ namespace MajorProject
     {
 
         GameImage slimeImage;
-        GameImage slimeAttackImage;
+        GameImage slimeDeadImage;
 
 
         string[] walkAnimation =
@@ -23,6 +23,11 @@ namespace MajorProject
             "Slime3"
         };
 
+        string[] deadAnimation =
+        {
+            "Dead"
+        };
+
 
 
 
@@ -30,6 +35,7 @@ namespace MajorProject
         {
 
             slimeImage = new GameImage();
+            slimeDeadImage = new GameImage();
             type = GetType();
         }
 
@@ -39,6 +45,8 @@ namespace MajorProject
 
             speed = 25;
 
+            if (!alive)
+                WasAlive = false;
 
             maxHealth = 150;
             health = maxHealth;
@@ -47,6 +55,11 @@ namespace MajorProject
             slimeImage.animated = true;
             slimeImage.centered = true;
             slimeImage.SpriteSize = new Point(25, 25);
+
+            slimeDeadImage.LoadContent(ref Resources, deadAnimation);
+            slimeDeadImage.animated = true;
+            slimeDeadImage.centered = true;
+            slimeDeadImage.SpriteSize = new Point(25, 25);
         }
 
         public override void Update(GameTime gameTime)
@@ -76,16 +89,26 @@ namespace MajorProject
 
 
 
-            slimeImage.position = position.ToPoint();
             if (alive)
+            {
+                slimeImage.position = position.ToPoint();
                 slimeImage.Update(gameTime);
+            }
+            else
+            {
+                slimeDeadImage.position = position.ToPoint();
+                slimeDeadImage.Update(gameTime);
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
 
-            slimeImage.Draw(spriteBatch);
+            if (alive)
+                slimeImage.Draw(spriteBatch);
+            else
+                slimeDeadImage.Draw(spriteBatch);
         }
 
 
@@ -96,6 +119,7 @@ namespace MajorProject
             base.UnloadContent();
 
             slimeImage.UnloadContent();
+            slimeDeadImage.UnloadContent();
         }
 
     }

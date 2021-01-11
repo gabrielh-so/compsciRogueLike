@@ -12,11 +12,13 @@ namespace MajorProject
 {
     public class GameWeaponSlingShot : GameWeapon
     {
+        int Damage = 50;
         public GameWeaponSlingShot()
         {
             attackCooldown = 1;
             type = this.GetType();
             itemType = "Slingshot";
+            Description = "Slingshot.\nWeapon. Fires low-damage projectiles at a\nfast rate.\nDamage: " + Damage + "\nCooldown: " + attackCooldown + "s";
         }
 
         public override void Use(GamePlayer user)
@@ -48,7 +50,7 @@ namespace MajorProject
                 p.SetVelocity(mouseDirection); // the projectile should move
                 p.speed = 250;
                 p.damageType = GameProjectile.DamageType.Kinetic;
-                p.damage = 50;
+                p.damage = Damage;
 
                 p.BoundingBox.Location = position.ToPoint();
                 p.BoundingBox.Size = new Point(25, 25);

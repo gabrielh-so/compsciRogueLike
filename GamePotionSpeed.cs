@@ -10,11 +10,18 @@ namespace MajorProject
 {
     public class GamePotionSpeed : GamePotion
     {
+        int Speed;
+
         public GamePotionSpeed()
         {
             full = true;
             type = this.GetType();
             itemType = "Speed";
+
+            Speed = 275;
+
+            Description = "Speed potion.\nRefillable consumable. A potion that gives\nthe player a speed boost on use.\nSpeed Boost: " + Speed;
+
         }
 
         public override void Update(GameTime gameTime)
@@ -32,7 +39,7 @@ namespace MajorProject
         {
             if (full)
             {
-                user.Boost(7.5, 275);
+                user.Boost(7.5, Speed);
                 full = false;
                 itemType = "Empty";
             }

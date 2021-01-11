@@ -13,7 +13,7 @@ namespace MajorProject
     {
 
         GameImage flyerImage;
-        GameImage flyerAttackImage;
+        GameImage flyerDeadImage;
 
 
         string[] walkAnimation =
@@ -23,18 +23,27 @@ namespace MajorProject
             "Flyer3"
         };
 
+        string[] deathAnimation =
+        {
+            "Dead"
+        };
+
 
 
 
         public GameFlyer()
         {
             flyerImage = new GameImage();
+            flyerDeadImage = new GameImage();
             type = GetType();
         }
 
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
+
+            if (!alive)
+                WasAlive = false;
 
             speed = 50;
 
@@ -46,6 +55,11 @@ namespace MajorProject
             flyerImage.animated = true;
             flyerImage.centered = true;
             flyerImage.SpriteSize = new Point(25, 25);
+
+            flyerDeadImage.LoadContent(ref Resources, deathAnimation);
+            flyerDeadImage.animated = true;
+            flyerDeadImage.centered = true;
+            flyerDeadImage.SpriteSize = new Point(25, 25);
         }
 
         public override void Update(GameTime gameTime)
@@ -73,16 +87,33 @@ namespace MajorProject
                 position += velocity;
             }
 
-            flyerImage.position = position.ToPoint();
             if (alive)
+            {
+                flyerImage.position = position.ToPoint();
                 flyerImage.Update(gameTime);
+            }
+            else
+            {
+                flyerDeadImage.position = position.ToPoint();
+                flyerDeadImage.Update(gameTime);
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
 
-            flyerImage.Draw(spriteBatch);
+            if (alive)
+                flyerImage.Draw(spriteBatch);
+            else
+                flyerDeadImage.Draw(spriteBatch);
+        }
+        public override void UnloadContent()
+        {
+            base.UnloadContent();
+
+            flyerImage.UnloadContent();
+            flyerDeadImage.UnloadContent();
         }
 
     }

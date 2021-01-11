@@ -197,6 +197,30 @@
 /processorParam:TextureFormat=Color
 /build:Texture/Game/Character/Boss/BossCharge.png
 
+#begin Texture/Game/Character/Boss/Dead.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Texture/Game/Character/Boss/Dead.png
+
+#begin Texture/Game/Character/Flyer/Dead.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Texture/Game/Character/Flyer/Dead.png
+
 #begin Texture/Game/Character/Flyer/Flyer1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -232,6 +256,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Texture/Game/Character/Flyer/Flyer3.png
+
+#begin Texture/Game/Character/Goblin/Dead.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Texture/Game/Character/Goblin/Dead.png
 
 #begin Texture/Game/Character/Goblin/Goblin1.png
 /importer:TextureImporter
@@ -269,6 +305,18 @@
 /processorParam:TextureFormat=Color
 /build:Texture/Game/Character/Goblin/Goblin3.png
 
+#begin Texture/Game/Character/Player/Dead.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Texture/Game/Character/Player/Dead.png
+
 #begin Texture/Game/Character/Player/Player_Forward.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -280,6 +328,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Texture/Game/Character/Player/Player_Forward.png
+
+#begin Texture/Game/Character/Slime/Dead.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Texture/Game/Character/Slime/Dead.png
 
 #begin Texture/Game/Character/Slime/Slime1.png
 /importer:TextureImporter

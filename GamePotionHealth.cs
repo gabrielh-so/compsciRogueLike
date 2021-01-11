@@ -10,11 +10,17 @@ namespace MajorProject
 {
     public class GamePotionHealth : GamePotion
     {
+        float healFraction;
+
         public GamePotionHealth()
         {
             full = true;
             type = this.GetType();
             itemType = "Health";
+            healFraction = 0.75f;
+
+
+            Description = "Health potion.\nRefillable consumable. A potion that refills\na portion of your health bar.\nHeals: " + healFraction * 100 + "% of player health.";
         }
 
         public override void Update(GameTime gameTime)
@@ -32,7 +38,7 @@ namespace MajorProject
         {
             if (full)
             {
-                user.health = (int)Math.Min(user.health + (user.maxHealth * 0.75), user.maxHealth);
+                user.health = (int)Math.Min(user.health + (user.maxHealth * healFraction), user.maxHealth);
                 full = false;
                 itemType = "Empty";
             }

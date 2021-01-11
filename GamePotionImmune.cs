@@ -10,12 +10,16 @@ namespace MajorProject
 {
     public class GamePotionImmune : GamePotion
     {
+        float ImmuneTime;
 
         public GamePotionImmune()
         {
             full = true;
             type = this.GetType();
             itemType = "Immune";
+            ImmuneTime = 7.5f;
+
+            Description = "Immunity potion.\nRefillable consumable. A potion that\ntemporarily shields player from all damage.\nImmune time: " + ImmuneTime + "s.";
         }
 
         public override void Update(GameTime gameTime)
@@ -35,7 +39,7 @@ namespace MajorProject
             {
                 // gives 7.5 seconds of damage immunit
                 user.hitCooldown = true;
-                user.currentHitDelay = user.maxHitDelay - 7.5;
+                user.currentHitDelay = user.maxHitDelay - ImmuneTime;
 
                 full = false;
                 itemType = "Empty";

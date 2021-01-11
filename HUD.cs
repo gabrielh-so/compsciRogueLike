@@ -11,6 +11,9 @@ namespace MajorProject
 {
     public class HUD
     {
+        GameItem hoverItem;
+        public bool CanShowDetails;
+
 
         // woah! new class time(TM)
 
@@ -29,6 +32,12 @@ namespace MajorProject
         GameLabel playerAttackCooldownLabel;
         GameLabel MoneyLabel;
 
+        GameLabel heldItemLabel;
+        GameLabel hoverItemLabel;
+
+        GameImage bossHealthBar;
+        GameImage bossHealthBarBackground;
+        GameLabel bossHealthBarText;
 
         GameImage mainBar;
         GameImage healthBar;
@@ -54,7 +63,12 @@ namespace MajorProject
             playerAttackCooldownLabel = new GameLabel();
             MoneyLabel = new GameLabel();
 
+            heldItemLabel = new GameLabel();
+            hoverItemLabel = new GameLabel();
+
             miniMap = new MiniMap();
+
+            CanShowDetails = false;
         }
 
 
@@ -138,10 +152,30 @@ namespace MajorProject
                     playerAttackCooldownLabel.Text = (player.maxAttackDelay - player.currentAttackDelay).ToString();
                 }
 
+                if (player.currentRoom == 0)
+                {
+                    // player is in boss room - show boss health bar
+                }
+
                 miniMap.TargetPosition = player.position.ToPoint();
 
                 MoneyLabel.Text = player.money.ToString() + "G";
+
+
+
+
+
+
+
+
+
+                if (!CanShowDetails)
+                {
+                    hoverItem = null;
+                }
             }
+
+
 
 
 
@@ -159,12 +193,24 @@ namespace MajorProject
                 if (i != null)
                 {
                     spriteBatch.Draw(i.Resources.TexturePack[i.itemType], destinationRectangle: new Rectangle(new Point(450 + 100 * offset, 575), new Point(50, 50)));
+                    if (offset == selectedSlot)
+                    {
+                        spriteBatch.Draw(HUDResources.TexturePack["5"], destinationRectangle: new Rectangle(new Point(750, 575), new Point(250, 75)), color: Color.White * 1);
+                        heldItemLabel.Text = i.Description;
+                        heldItemLabel.Draw(spriteBatch);
+                    }
                 }
                 if (offset == selectedSlot)
+                {
                     spriteBatch.Draw(HUDResources.TexturePack["5"], destinationRectangle: new Rectangle(new Point(450 + 100 * offset, 575), new Point(50, 50)), color: Color.White * 0.25f);
+                }
+                    
 
                 offset++;
             }
+
+            if (CanShowDetails)
+                ShowDetails(spriteBatch);
 
             if (player.attackCooldown)
             {
@@ -172,6 +218,15 @@ namespace MajorProject
             }
 
             MoneyLabel.Draw(spriteBatch);
+
+            if (CanShowDetails)
+            {
+                // show the details of the item
+
+                // draw the background
+
+                //
+            }
 
             damageOverlay.Draw(spriteBatch);
 
@@ -184,6 +239,8 @@ namespace MajorProject
         {
             HUDResources = null;
 
+
+
             mainBar.UnloadContent();
             healthBar.UnloadContent();
             damageOverlay.UnloadContent();
@@ -193,6 +250,10 @@ namespace MajorProject
             playerAttackCooldownLabel.UnloadContent();
 
             MoneyLabel.UnloadContent();
+
+            heldItemLabel.UnloadContent();
+            hoverItemLabel.UnloadContent();
+
         }
 
         public void LoadContent(ResourcePack resources)
@@ -222,6 +283,14 @@ namespace MajorProject
             MoneyLabel.FontName = "coders_crux";
             MoneyLabel.FontColor = Color.Yellow;
 
+            heldItemLabel.SetPosition(750, 575);
+            heldItemLabel.FontName = "coders_crux";
+            heldItemLabel.FontColor = Color.White;
+
+            hoverItemLabel.SetPosition(750, 300);
+            hoverItemLabel.FontName = "coders_crux";
+            hoverItemLabel.FontColor = Color.White;
+
             miniMap.LoadContent(ref HUDResources);
 
             mainBar.LoadContent(ref HUDResources, new string[1]{ "HUDTexture" });
@@ -230,10 +299,26 @@ namespace MajorProject
             lowHealthOverlay.LoadContent(ref HUDResources, new string[1] { "DamageTexture" });
             playerAttackCooldownLabel.LoadContent(ref HUDResources);
             MoneyLabel.LoadContent(ref HUDResources);
+            heldItemLabel.LoadContent(ref HUDResources);
+            hoverItemLabel.LoadContent(ref HUDResources);
 
         }
 
+        public void ShowDetailsOfItem(GameItem i)
+        {
+            hoverItem = i;
+            CanShowDetails = true;
+        }
 
+        void ShowDetails(SpriteBatch spriteBatch)
+        {
+
+            spriteBatch.Draw(HUDResources.TexturePack["5"], destinationRectangle: new Rectangle(new Point(750, 300), new Point(250, 75)), color: Color.White * 1);
+            hoverItemLabel.Text = hoverItem.Description;
+            hoverItemLabel.Draw(spriteBatch);
+            
+            CanShowDetails = false;
+        }
 
 
 
