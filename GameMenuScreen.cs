@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,6 +24,8 @@ namespace MajorProject
         public Button BackToGameButton;
 
         difficultyLevel difficulty;
+
+        bool returnToGame;
 
         public GameMenuScreen()
         {
@@ -73,6 +75,20 @@ namespace MajorProject
             OptionsButton.Update(gameTime);
             DifficultyButton.Update(gameTime);
             BackToGameButton.Update(gameTime);
+
+            if (returnToGame)
+            {
+                if (!ScreenManager.Instance.IsTransitioning) {
+
+                    if (((GameScreen)(ScreenManager.Instance.oldScreen)).saveOperationMut.WaitOne(1))
+                    {
+                        ScreenManager.Instance.LoadPreservedScreen();
+
+                        ((GameScreen)(ScreenManager.Instance.oldScreen)).saveOperationMut.ReleaseMutex();
+                    }
+
+                }
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -116,7 +132,9 @@ namespace MajorProject
 
         void BackToGame(UiElement triggerElement)
         {
-            ScreenManager.Instance.LoadPreservedScreen();
+
+            returnToGame = true;
+
         }
     }
 }

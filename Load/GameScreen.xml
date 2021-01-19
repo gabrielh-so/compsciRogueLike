@@ -182,6 +182,9 @@
       
       <string>5</string>
       <string>MiniMap/5</string>
+      
+      <string>PlayerPosition</string>
+      <string>MiniMap/PlayerPosition</string>
 
     </TextureNameAndPath>
 

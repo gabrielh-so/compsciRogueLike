@@ -367,7 +367,13 @@ namespace MajorProject
                 bs.Serialize(fs, savefiledata.ToArray());
                 
             }
+
+            gameScreen.ReloadSerialisedContent();
+
+
         }
+
+        
 
 
         public static void DeSerializeGame(GameScreen gameScreen)
@@ -465,8 +471,7 @@ namespace MajorProject
 
             gameScreen.GameWorld = (World)JsonConvert.DeserializeObject(serializedGameWorld, typeof(World));
 
-
-            int ryrit = 438695;
+            gameScreen.ReloadSerialisedContent();
 
 
         }

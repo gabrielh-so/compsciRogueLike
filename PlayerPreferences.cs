@@ -37,6 +37,26 @@ namespace MajorProject
             insane
         }
 
+
+
+        public static Dictionary<difficultyLevel, float> enemyDamageScalars = new Dictionary<difficultyLevel, float>()
+        {
+            { difficultyLevel.easy, 1.5f },
+            { difficultyLevel.normal, 1.0f },
+            { difficultyLevel.hard, 0.75f },
+            { difficultyLevel.insane, 0.5f }
+        };
+        public static Dictionary<difficultyLevel, float> playerDamageScalars = new Dictionary<difficultyLevel, float>()
+        {
+            { difficultyLevel.easy, 0.5f },
+            { difficultyLevel.normal, 1.0f },
+            { difficultyLevel.hard, 1.5f },
+            { difficultyLevel.insane, 2.0f }
+        };
+
+
+
+
         public difficultyLevel difficulty;
 
         public float SoundVolume;

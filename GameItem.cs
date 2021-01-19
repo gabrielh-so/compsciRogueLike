@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    public class GameItem : GameEntity
+    public abstract class GameItem : GameEntity
     {
         public string itemType;
 

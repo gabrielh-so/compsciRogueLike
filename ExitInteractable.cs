@@ -37,9 +37,10 @@ namespace MajorProject
         {
             // determine powerful weapon based on level number and difficulty
 
-            // check that the boss is dead
-            if (!((GameScreen)ScreenManager.Instance.currentScreen).Enemies[0][0].alive)
-                ((GameScreen)ScreenManager.Instance.currentScreen).SignalLevelChange();
+            // check that the boss is dead and not already transitioningsd
+            if (!ScreenManager.Instance.IsTransitioning)
+                if (!((GameScreen)ScreenManager.Instance.currentScreen).Enemies[0][0].alive)
+                    ((GameScreen)ScreenManager.Instance.currentScreen).SignalLevelChange();
         }
 
         public override void LoadContent(ref ResourcePack resources)

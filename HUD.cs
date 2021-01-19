@@ -85,7 +85,7 @@ namespace MajorProject
 
             damageOverlay.alpha = 0;
 
-            lowHealthOverlay.alpha = 0;
+            CalculateLowHealthOverlayAlpha();
         }
 
         public void UnSetPlayer()
@@ -101,77 +101,84 @@ namespace MajorProject
             // assigns the minimap texture a new value based on what the map details are
         }
 
+        public void CalculateLowHealthOverlayAlpha()
+        {
+            lowHealthOverlay.alpha = 1 - (player.health / ((float)player.maxHealth / 2));
+            return;
+        }
+
         public void Update(GameTime gameTime)
         {
 
             if (player != null)
             {
-                // roight so you 'ave a gander at the ol' playah, yeah?
-                // then you get wot he has, and then put it on the screen
 
-                // update the displayed inventory
-
-                // player handles dropping stuff
-
-
-                // for now, just display the main bar and the player's health
-
-                // find the ratio of current player health to max health
-
-                if (previousHealth != player.health)
+                if (player.alive)
                 {
+                    // roight so you 'ave a gander at the ol' playah, yeah?
+                    // then you get wot he has, and then put it on the screen
 
-                    double healthRatio = (double)player.health / player.maxHealth;
+                    // update the displayed inventory
 
-                    healthBar.SpriteSize.X = (int)(healthRatio * maxHealthBarSize);
-
-                    // the player has taken damage since last frame, so show the damage overlay
-                    if (previousHealth > player.health)
-                        damageOverlay.alpha = 1;
+                    // player handles dropping stuff
 
 
-                    // update the low health overlay
-                    if (player.health < player.maxHealth / 2)
+                    // for now, just display the main bar and the player's health
+
+                    // find the ratio of current player health to max health
+
+                    if (previousHealth != player.health)
                     {
-                        lowHealthOverlay.alpha = 1 - (player.health / ((float)player.maxHealth / 2));
+
+                        double healthRatio = (double)player.health / player.maxHealth;
+
+                        healthBar.SpriteSize.X = (int)(healthRatio * maxHealthBarSize);
+
+                        // the player has taken damage since last frame, so show the damage overlay
+                        if (previousHealth > player.health)
+                            damageOverlay.alpha = 1;
+
+
+                        // update the low health overlay
+                        if (player.health < player.maxHealth / 2)
+                        {
+                            CalculateLowHealthOverlayAlpha();
+                        }
+                        else lowHealthOverlay.alpha = 0;
+
                     }
-                    else lowHealthOverlay.alpha = 0;
+                    else if (damageOverlay.alpha > 0)
+                    {
 
-                } else if (damageOverlay.alpha > 0)
+                        damageOverlay.alpha -= (float)(gameTime.ElapsedGameTime.TotalSeconds / damageOverlayFadeTime);
+                    }
+
+                    previousHealth = player.health;
+
+
+                    if (player.attackCooldown)
+                    {
+
+                        playerAttackCooldownLabel.Text = (player.maxAttackDelay - player.currentAttackDelay).ToString();
+                    }
+
+                    if (player.currentRoom == 0)
+                    {
+                        // player is in boss room - show boss health bar
+                    }
+
+                    miniMap.TargetPosition = player.position.ToPoint();
+
+                    MoneyLabel.Text = player.money.ToString() + "G";
+
+                    if (!CanShowDetails)
+                    {
+                        hoverItem = null;
+                    }
+                } else
                 {
+                    // the player died! present an option screen to keep some of their items before resetting
 
-                    damageOverlay.alpha -= (float)(gameTime.ElapsedGameTime.TotalSeconds / damageOverlayFadeTime);
-                }
-
-                previousHealth = player.health;
-
-
-                if (player.attackCooldown)
-                {
-
-                    playerAttackCooldownLabel.Text = (player.maxAttackDelay - player.currentAttackDelay).ToString();
-                }
-
-                if (player.currentRoom == 0)
-                {
-                    // player is in boss room - show boss health bar
-                }
-
-                miniMap.TargetPosition = player.position.ToPoint();
-
-                MoneyLabel.Text = player.money.ToString() + "G";
-
-
-
-
-
-
-
-
-
-                if (!CanShowDetails)
-                {
-                    hoverItem = null;
                 }
             }
 
@@ -301,6 +308,7 @@ namespace MajorProject
             MoneyLabel.LoadContent(ref HUDResources);
             heldItemLabel.LoadContent(ref HUDResources);
             hoverItemLabel.LoadContent(ref HUDResources);
+
 
         }
 

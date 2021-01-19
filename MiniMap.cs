@@ -102,6 +102,7 @@ namespace MajorProject
             TargetOffset.Y -= ViewSize.Y / 2;
             spriteBatch.Draw(MiniMapTexture, sourceRectangle: new Rectangle(TargetOffset, ViewSize), destinationRectangle: new Rectangle(position, SpriteSize));
 
+            spriteBatch.Draw(Resources.TexturePack["PlayerPosition"], destinationRectangle: new Rectangle(position + (SpriteSize.ToVector2()*7/16).ToPoint(), new Point(SpriteSize.X/8, SpriteSize.Y/8)), color: Color.White);
             // restart spritebatch using normal settings
 
             spriteBatch.End();

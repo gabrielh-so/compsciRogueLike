@@ -23,6 +23,8 @@ namespace MajorProject
         Dictionary<Keys, int> numberKeyMap;
 
 
+        public bool ContainsWeapon;
+
 
         public void Update(GameTime gameTime)
         {
@@ -33,6 +35,21 @@ namespace MajorProject
                     if (InputManager.Instance.KeyPressed(k)) SelectedItemSlot = numberKeyMap[k] - 1;
             }
 
+        }
+
+        // need to check that player can fight enemies in a room before entering
+        public void UpdateWeaponStatus()
+        {
+            foreach (GameItem i in itemList) {
+                if (i != null)
+                    if (i.type.BaseType == typeof(GameWeapon))
+                    {
+                        ContainsWeapon = true;
+                        return;
+                    }
+            }
+            ContainsWeapon = false;
+            return;
         }
 
         public GameInventory()
@@ -72,6 +89,8 @@ namespace MajorProject
 
             itemList[index] = null;
 
+            UpdateWeaponStatus();
+
             return true;
         }
 
@@ -81,6 +100,7 @@ namespace MajorProject
                 RemoveItem(user, SelectedItemSlot);
             itemList[SelectedItemSlot] = i;
 
+            UpdateWeaponStatus();
 
             return true;
         }

@@ -15,7 +15,7 @@ namespace MajorProject
         GameImage goblinDeadImage;
 
 
-        int targetDistance = 25;
+        int targetDistance = 50;
 
         double maxFireInterval = 2;
         double currentFireInterval = 0;
@@ -97,7 +97,7 @@ namespace MajorProject
 
 
                     // check if player is closer or nearer to target radius
-                    if (Math.Pow(target.position.X - position.X, 2) + Math.Pow(target.position.Y - position.Y, 2) < targetDistance)
+                    if (Math.Pow(target.position.X - position.X, 2) + Math.Pow(target.position.Y - position.Y, 2) < targetDistance * targetDistance)
                     {
                         velocity = new Vector2(-1, -1);
                     }
@@ -120,18 +120,24 @@ namespace MajorProject
 
                     newPosition += velocity;
 
-                    if (Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] != (int)World.cellType.wall)
+                    // switch statement is so so so much more readable my god
+                    switch (Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth])
                     {
-                        position = newPosition;
+                        case 2: // wall
+                        case 3: // door
+                            // do nothing because they must not leave the room bounds
+                            break;
+                        default:
+                            position = newPosition;
 
-                        // update boxes
-                        BoundingBox.Location = position.ToPoint();
+                            // update boxes
+                            BoundingBox.Location = position.ToPoint();
 
 
-                        goblinImage.position = position.ToPoint();
-                        goblinDeadImage.position = position.ToPoint();
+                            goblinImage.position = position.ToPoint();
+                            goblinDeadImage.position = position.ToPoint();
+                            break;
                     }
-
 
                     currentFireInterval += gameTime.ElapsedGameTime.TotalSeconds;
                     if (currentFireInterval >= maxFireInterval)

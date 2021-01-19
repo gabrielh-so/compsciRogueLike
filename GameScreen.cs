@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 using System.Xml.Serialization;
 
@@ -12,20 +12,26 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using static MajorProject.InputManager;
+using static MajorProject.PlayerPreferences;
 
 namespace MajorProject
 {
 
     public class GameScreen : Screen
     {
-
+        [XmlIgnore]
+        public Thread SerialiserThread;
         static string saveFileName = "SaveFile.bin";
+        public bool hasSaved;
+        public Mutex saveOperationMut = new Mutex();
 
         public bool signalLevelChange;
 
         Random rand;
 
         Vector2 ScreenSize;
+
+        float secondsPlayed;
 
         public void SignalLevelChange()
         {
@@ -39,6 +45,10 @@ namespace MajorProject
             Boss,
             Shop
         }
+
+        readonly int[] shopPrices = { 1000, 2000, 3000, 4000, 5000 };
+
+        Dictionary<int, Dictionary<string, int>> weaponDamages;
 
         string[] LevelNames =
         {
@@ -113,6 +123,21 @@ namespace MajorProject
             WorldItems = new List<GameItem>();
 
             cameraTransformationMatrix = Matrix.Identity;
+
+            weaponDamages = new Dictionary<int, Dictionary<string, int>>();
+
+
+            for (int i = 0; i < LevelNames.Length; i++)
+            {
+                Dictionary<string, int> weaponDamage = new Dictionary<string, int>();
+
+                weaponDamage.Add("Sword", 75 * (i + 1));
+                weaponDamage.Add("Spear", 75 * (i + 1));
+                weaponDamage.Add("Rifle", 75 * (i + 1));
+                weaponDamage.Add("Slingshot", 75 * (i + 1));
+
+                weaponDamages.Add(i, weaponDamage);
+            }
         }
 
         public void ConstructWorld()
@@ -122,8 +147,6 @@ namespace MajorProject
             GameWorld.LoadContent(ref EnvironmentResources);
             GameWorld.GenerateWorld();
             GameWorld.RenderTexture();
-
-            //AudioManager.Instance.PlaySoundInstance(EnvironmentResources.AudioPack["Music"].CreateInstance(), "Music", true);
             AudioManager.Instance.PlayMusic(EnvironmentResources.AudioPack["Music"].Name);
         }
 
@@ -286,7 +309,7 @@ namespace MajorProject
                             s.position = (RoomCentre * World.tilePixelWidth) - new Vector2(World.tilePixelWidth, World.tilePixelWidth) + new Vector2(World.tilePixelWidth, World.tilePixelWidth) * j;
                             
                             s.LoadContent(ref LootResources);
-                            s.NewItem(100 + 50 * j);
+                            s.NewItem(shopPrices[LevelIndex] + (int)(shopPrices[0] * (float)j * 1/3));
                             WorldInteractables.Add(s);
                         }
                         break;
@@ -458,11 +481,15 @@ namespace MajorProject
 
         public override void LoadContent()
         {
+            // we don't want to regenerate the world if the class contains information already that's been loaded in from a save file
             if (PlayerPreferences.Instance.LoadSavedGame)
             {
                 if (LoadGame()) return;
+
+                // if load game doesn't return, the save file has probably been corrupted, so create a new world instead
             }
 
+            // generates the tile map
             ConstructWorld();
 
             LoadCharacterResources();
@@ -480,6 +507,8 @@ namespace MajorProject
             PlaceLoot();
 
             SetCharacterAndProjectileMaps();
+
+            AudioManager.Instance.PlayMusic(EnvironmentResources.AudioPack["Music"].Name);
         }
 
         void SetCharacterAndProjectileMaps()
@@ -517,26 +546,51 @@ namespace MajorProject
 
         void ChangeToNextLevel()
         {
+            /// check if the completed level was the last one
             LevelIndex++;
-            GameWorld.LevelIndex++;
+
+            if (LevelIndex == LevelNames.Length)
+            {
+                // show score splashscreen
+
+
+
+
+                ScreenManager.Instance.ChangeScreens("GameWonScreen", true);
+
+            }
+            LevelIndex %= LevelNames.Length;
             AudioManager.Instance.StopSoundInstance("Music", true);
             RegenerateWorld();
             SetCharacterAndProjectileMaps();
             SetPlayerToEntrance();
+
         }
 
         public override void Update(GameTime gameTime)
         {
+            // reset save flag (because main update has been run and game state has changed)
+            hasSaved = false;
+
             if (InputManager.Instance.KeyPressed(Keys.R))
             {
                 Enemies[0][0].alive = false;
             }
 
-            if (InputManager.Instance.KeyPressed(Keys.Escape))
+            // only want to quit if the player is alive
+            if (Player.alive)
             {
-                ScreenManager.Instance.ChangeScreens("GameMenuScreen", true);
+                if (InputManager.Instance.KeyPressed(Keys.Escape))
+                {
+                    ScreenManager.Instance.ChangeScreens("GameMenuScreen", true);
+                }
             }
+            else
+            {
+                //player has died. player should select two items in inventory to carry over to next run
 
+            }
+            
 
 
             // update each entity
@@ -814,12 +868,6 @@ namespace MajorProject
 
 
 
-            // detect collisions between entities and trigger oncollide functions
-
-
-
-
-
 
 
 
@@ -896,61 +944,37 @@ namespace MajorProject
         public void SaveGame()
         {
 
-            Player.UnloadContent();
-
-            foreach (List<GameEnemy> el in Enemies)
-                foreach (GameEnemy e in el)
-                    e.UnloadContent();
-            foreach (GameProjectile e in EnemyProjectiles)
-                e.UnloadContent();
-            foreach (GameProjectile e in PlayerProjectiles)
-                e.UnloadContent();
-            foreach (GameItem e in WorldItems)
-                e.UnloadContent();
-            foreach (GameInteractable e in WorldInteractables)
-                e.UnloadContent();
-
-            GameSerializer.SerializeGame(this);
-
-
-            Player.LoadContent(ref PlayerResources);
-
-            foreach (List<GameEnemy> el in Enemies)
-                foreach (GameEnemy e in el)
-                {
-                    if (e.type == typeof(GameGoblin))
-                    {
-                        e.LoadContent(ref GoblinResources);
-                    } else if (e.type == typeof(GameFlyer))
-                    {
-                        e.LoadContent(ref FlyerResources);
-                    }
-                    else if (e.type == typeof(GameSlime))
-                    {
-                        e.LoadContent(ref SlimeResources);
-                    }
-                    else
-                    {
-                        e.LoadContent(ref BossResources);
-                    }
-                }
-            foreach (GameProjectile e in EnemyProjectiles)
-                e.LoadContent(ref ProjectileResources);
-            foreach (GameProjectile e in PlayerProjectiles)
-                e.LoadContent(ref ProjectileResources);
-            foreach (GameItem e in WorldItems)
-                e.LoadContent(ref LootResources);
-            foreach (GameInteractable e in WorldInteractables)
+            // checks if game has been saved in menu before
+            if (!hasSaved)
             {
-                if (e.type == typeof(ExitInteractable))
-                    e.LoadContent(ref EnvironmentResources);
-                else e.LoadContent(ref LootResources);
+                hasSaved = true;
+
+                Player.UnloadContent();
+
+                foreach (List<GameEnemy> el in Enemies)
+                    foreach (GameEnemy e in el)
+                        e.UnloadContent();
+                foreach (GameProjectile e in EnemyProjectiles)
+                    e.UnloadContent();
+                foreach (GameProjectile e in PlayerProjectiles)
+                    e.UnloadContent();
+                foreach (GameItem e in WorldItems)
+                    e.UnloadContent();
+                foreach (GameInteractable e in WorldInteractables)
+                    e.UnloadContent();
+
+                SerialiserThread = new Thread(() => GameSerializer.SerializeGame(this));
+                SerialiserThread.Start();
+
             }
+
         }
 
 
         public bool LoadGame()
         {
+
+
             if (File.Exists(saveFileName))
             {
                 GameSerializer.DeSerializeGame(this);
@@ -1005,10 +1029,54 @@ namespace MajorProject
 
                 LoadHUD();
 
+                AudioManager.Instance.PlayMusic(EnvironmentResources.AudioPack["Music"].Name);
+
                 return true;
             }
 
+            AudioManager.Instance.PlayMusic(EnvironmentResources.AudioPack["Music"].Name);
+
             return false;
+        }
+
+        public void ReloadSerialisedContent()
+        {
+            Player.LoadContent(ref PlayerResources);
+
+            foreach (List<GameEnemy> el in Enemies)
+                foreach (GameEnemy e in el)
+                {
+                    if (e.type == typeof(GameGoblin))
+                    {
+                        e.LoadContent(ref GoblinResources);
+                    }
+                    else if (e.type == typeof(GameFlyer))
+                    {
+                        e.LoadContent(ref FlyerResources);
+                    }
+                    else if (e.type == typeof(GameSlime))
+                    {
+                        e.LoadContent(ref SlimeResources);
+                    }
+                    else
+                    {
+                        e.LoadContent(ref BossResources);
+                    }
+                }
+            foreach (GameProjectile e in EnemyProjectiles)
+                e.LoadContent(ref ProjectileResources);
+            foreach (GameProjectile e in PlayerProjectiles)
+                e.LoadContent(ref ProjectileResources);
+            foreach (GameItem e in WorldItems)
+                e.LoadContent(ref LootResources);
+            foreach (GameInteractable e in WorldInteractables)
+            {
+                if (e.type == typeof(ExitInteractable))
+                    e.LoadContent(ref EnvironmentResources);
+                else e.LoadContent(ref LootResources);
+            }
+
+
         }
     }
 }

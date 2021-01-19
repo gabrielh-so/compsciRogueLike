@@ -53,5 +53,11 @@ namespace MajorProject
             target = null;
         }
 
+        public override void TakeDamage(int damage)
+        {
+            damage = (int)(damage * PlayerPreferences.enemyDamageScalars[PlayerPreferences.Instance.difficulty]);
+            base.TakeDamage(damage);
+        }
+
     }
 }

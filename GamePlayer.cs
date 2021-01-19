@@ -40,6 +40,9 @@ namespace MajorProject
         double maxBoostDelay;
         double currentBoostDelay;
 
+
+        public double SecondsPlayed = 0;
+
         public GamePlayer()
         {
             inventory = new GameInventory();
@@ -62,6 +65,12 @@ namespace MajorProject
                 TakeDamage(p.damage);
         }
 
+        public override void TakeDamage(int damage)
+        {
+            damage = (int)(damage * PlayerPreferences.playerDamageScalars[PlayerPreferences.Instance.difficulty]);
+            base.TakeDamage(damage);
+        }
+
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
@@ -78,8 +87,9 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
-
             base.Update(gameTime);
+
+            SecondsPlayed += gameTime.ElapsedGameTime.TotalSeconds;
 
             if (boostCooldown)
             {
@@ -113,6 +123,13 @@ namespace MajorProject
                 }
             }
 
+            
+            inventory.Update(gameTime);
+
+            if (InputManager.Instance.MousePressed())
+            {
+                inventory.UseItem(this);
+            }
 
             velocity = Vector2.Zero;
 
@@ -207,12 +224,6 @@ namespace MajorProject
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            inventory.Update(gameTime);
-
-            if (InputManager.Instance.MousePressed())
-            {
-                inventory.UseItem(this);
-            }
 
         }
 
