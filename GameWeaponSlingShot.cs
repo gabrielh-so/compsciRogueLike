@@ -12,12 +12,16 @@ namespace MajorProject
 {
     public class GameWeaponSlingShot : GameWeapon
     {
-        int Damage = 50;
         public GameWeaponSlingShot()
         {
             attackCooldown = 1;
             type = this.GetType();
             itemType = "Slingshot";
+            WriteDescription();
+        }
+
+        public override void WriteDescription()
+        {
             Description = "Slingshot.\nWeapon. Fires low-damage projectiles at a\nfast rate.\nDamage: " + Damage + "\nCooldown: " + attackCooldown + "s";
         }
 

@@ -51,15 +51,39 @@ namespace MajorProject
                     ((GameScreen)ScreenManager.Instance.currentScreen).AddItem(c);
                 }
 
-                GameWeaponSword s = new GameWeaponSword();
 
-                s.OnGround = true;
-                s.SetPosition(position.X, position.Y);
+
+                ///////////////////////
+                GameWeapon w;
+
+                double weaponRoll = rand.NextDouble();
+                if (weaponRoll < 0.25)
+                {
+                    w = new GameWeaponSword();
+                    w.SetWeaponDamage(PlayerPreferences.Instance.weaponDamages[LevelIndex]["Sword"]);
+                }
+                else if (weaponRoll < 0.5)
+                {
+                    w = new GameWeaponSpear();
+                    w.SetWeaponDamage(PlayerPreferences.Instance.weaponDamages[LevelIndex]["Spear"]);
+                }
+                else if (weaponRoll < 0.75)
+                {
+                    w = new GameWeaponSlingShot();
+                    w.SetWeaponDamage(PlayerPreferences.Instance.weaponDamages[LevelIndex]["Slingshot"]);
+                }
+                else
+                {
+                    w = new GameWeaponRifle();
+                    w.SetWeaponDamage(PlayerPreferences.Instance.weaponDamages[LevelIndex]["Rifle"]);
+                }
 
                 movementAngle = rand.NextDouble() * Math.PI * 2;
-                s.velocity = new Vector2((float)Math.Sin(movementAngle), (float)Math.Cos(movementAngle)) * 1.5f;
+                w.velocity = new Vector2((float)Math.Sin(movementAngle), (float)Math.Cos(movementAngle)) * 1.5f;
+                w.OnGround = true;
+                w.SetPosition(position.X, position.Y);
+                ((GameScreen)ScreenManager.Instance.currentScreen).AddItem(w);
 
-                ((GameScreen)ScreenManager.Instance.currentScreen).AddItem(s);
             }
         }
 
@@ -119,7 +143,7 @@ namespace MajorProject
 
             if (IsHovering)
             {
-                spriteBatch.DrawString(Resources.FontPack["coders_crux"], "Press 'E' to interact.", position, color: Color.Blue);
+                spriteBatch.DrawString(Resources.FontPack["coders_crux" + "_" + PlayerPreferences.Instance.fontSize.ToString()], "Press 'E' to interact.", position, color: Color.Blue);
             }
         }
     }

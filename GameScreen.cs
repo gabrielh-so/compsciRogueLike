@@ -48,8 +48,6 @@ namespace MajorProject
 
         readonly int[] shopPrices = { 1000, 2000, 3000, 4000, 5000 };
 
-        Dictionary<int, Dictionary<string, int>> weaponDamages;
-
         string[] LevelNames =
         {
             "TestArea",
@@ -124,20 +122,7 @@ namespace MajorProject
 
             cameraTransformationMatrix = Matrix.Identity;
 
-            weaponDamages = new Dictionary<int, Dictionary<string, int>>();
-
-
-            for (int i = 0; i < LevelNames.Length; i++)
-            {
-                Dictionary<string, int> weaponDamage = new Dictionary<string, int>();
-
-                weaponDamage.Add("Sword", 75 * (i + 1));
-                weaponDamage.Add("Spear", 75 * (i + 1));
-                weaponDamage.Add("Rifle", 75 * (i + 1));
-                weaponDamage.Add("Slingshot", 75 * (i + 1));
-
-                weaponDamages.Add(i, weaponDamage);
-            }
+            
         }
 
         public void ConstructWorld()
@@ -187,6 +172,8 @@ namespace MajorProject
             PlaceLoot();
 
             LoadRoomContents();
+
+            AudioManager.Instance.PlayMusic(EnvironmentResources.AudioPack["Music"].Name);
         }
 
         public void SetPlayerToEntrance()
@@ -264,14 +251,17 @@ namespace MajorProject
                                 case 0:
                                     e = new GameGoblin();
                                     e.LoadContent(ref GoblinResources);
+                                    e.SetHealth(PlayerPreferences.Instance.enemyHealth[LevelIndex]["Goblin"]);
                                     break;
                                 case 1:
                                     e = new GameSlime();
                                     e.LoadContent(ref SlimeResources);
+                                    e.SetHealth(PlayerPreferences.Instance.enemyHealth[LevelIndex]["Slime"]);
                                     break;
                                 case 2:
                                     e = new GameFlyer();
                                     e.LoadContent(ref FlyerResources);
+                                    e.SetHealth(PlayerPreferences.Instance.enemyHealth[LevelIndex]["Flyer"]);
                                     break;
                             }
 
@@ -318,6 +308,8 @@ namespace MajorProject
 
                         b.position = RoomCentre * World.tilePixelWidth;
                         b.LoadContent(ref BossResources);
+
+                        b.SetHealth(PlayerPreferences.Instance.enemyHealth[LevelIndex]["Boss"]);
 
                         Enemies[i].Add(b);
 
@@ -412,18 +404,22 @@ namespace MajorProject
                             if (weaponRoll < 0.25)
                             {
                                 w = new GameWeaponSword();
+                                w.SetWeaponDamage(PlayerPreferences.Instance.weaponDamages[LevelIndex]["Sword"]);
                             }
                             else if (weaponRoll < 0.5)
                             {
                                 w = new GameWeaponSpear();
+                                w.SetWeaponDamage(PlayerPreferences.Instance.weaponDamages[LevelIndex]["Spear"]);
                             }
                             else if (weaponRoll < 0.75)
                             {
                                 w = new GameWeaponSlingShot();
+                                w.SetWeaponDamage(PlayerPreferences.Instance.weaponDamages[LevelIndex]["Slingshot"]);
                             }
                             else
                             {
                                 w = new GameWeaponRifle();
+                                w.SetWeaponDamage(PlayerPreferences.Instance.weaponDamages[LevelIndex]["Rifle"]);
                             }
                             w.OnGround = true;
                             w.SetPosition(itemPosition.X + World.tilePixelWidth / 2, itemPosition.Y + World.tilePixelWidth / 2);
@@ -543,6 +539,12 @@ namespace MajorProject
             BossResources.UnloadContent();
             EnvironmentResources.UnloadContent();
         }
+        void ChangeToStartingLevel()
+        {
+            LevelIndex = -1;
+            ChangeToNextLevel();
+
+        }
 
         void ChangeToNextLevel()
         {
@@ -552,10 +554,6 @@ namespace MajorProject
             if (LevelIndex == LevelNames.Length)
             {
                 // show score splashscreen
-
-
-
-
                 ScreenManager.Instance.ChangeScreens("GameWonScreen", true);
 
             }
@@ -570,7 +568,10 @@ namespace MajorProject
         public override void Update(GameTime gameTime)
         {
             // reset save flag (because main update has been run and game state has changed)
-            hasSaved = false;
+            if (hasSaved)
+            {
+                hasSaved = false;
+            }
 
             if (InputManager.Instance.KeyPressed(Keys.R))
             {
@@ -584,293 +585,279 @@ namespace MajorProject
                 {
                     ScreenManager.Instance.ChangeScreens("GameMenuScreen", true);
                 }
-            }
-            else
-            {
-                //player has died. player should select two items in inventory to carry over to next run
-
-            }
-            
+                foreach (GameInteractable i in WorldInteractables)
+                {
+                    i.Update(gameTime);
+                }
 
 
-            // update each entity
-
-
-            foreach (GameInteractable i in WorldInteractables)
-            {
-                i.Update(gameTime);
-            }
-
-            if (Player.alive)
                 Player.Update(gameTime);
 
-            for (int i = 0; i < GameWorld.room_count; i++)
-            {
-                for (int j = 0; j < Enemies[i].Count; j++)
+                for (int i = 0; i < GameWorld.room_count; i++)
                 {
-                    Enemies[i][j].Update(gameTime);
+                    for (int j = 0; j < Enemies[i].Count; j++)
+                    {
+                        Enemies[i][j].Update(gameTime);
+                    }
                 }
-            }
 
-            for (int i = 0; i < WorldItems.Count; i++)
-            {
-                WorldItems[i].Update(gameTime);
-            }
+                for (int i = 0; i < WorldItems.Count; i++)
+                {
+                    WorldItems[i].Update(gameTime);
+                }
 
-            foreach (GameProjectile p in EnemyProjectiles)
-            {
-                p.Update(gameTime);
-            }
-            foreach (GameProjectile p in PlayerProjectiles)
-            {
-                p.Update(gameTime);
-            }
+                foreach (GameProjectile p in EnemyProjectiles)
+                {
+                    p.Update(gameTime);
+                }
+                foreach (GameProjectile p in PlayerProjectiles)
+                {
+                    p.Update(gameTime);
+                }
 
 
-            // compare the player only to enemies it currently shares a room with
+                // compare the player only to enemies it currently shares a room with
 
-            // find out which room is the player in, if any
-            int playerRoomIndex = -1;
-            int tileWidth = World.tilePixelWidth;
-            for (int i = 0; i < GameWorld.room_count; i++)
-            {
-                // check x and y coordinates
-                if (Player.position.X < GameWorld.generation_RoomIndexPositions[i].X * tileWidth || Player.position.X > (GameWorld.generation_RoomIndexPositions[i].X + GameWorld.generation_RoomIndexDimensions[i].X) * tileWidth) continue;
-                if (Player.position.Y < GameWorld.generation_RoomIndexPositions[i].Y * tileWidth || Player.position.Y > (GameWorld.generation_RoomIndexPositions[i].Y + GameWorld.generation_RoomIndexDimensions[i].Y) * tileWidth) continue;
+                // find out which room is the player in, if any
+                int playerRoomIndex = -1;
+                int tileWidth = World.tilePixelWidth;
+                for (int i = 0; i < GameWorld.room_count; i++)
+                {
+                    // check x and y coordinates
+                    if (Player.position.X < GameWorld.generation_RoomIndexPositions[i].X * tileWidth || Player.position.X > (GameWorld.generation_RoomIndexPositions[i].X + GameWorld.generation_RoomIndexDimensions[i].X) * tileWidth) continue;
+                    if (Player.position.Y < GameWorld.generation_RoomIndexPositions[i].Y * tileWidth || Player.position.Y > (GameWorld.generation_RoomIndexPositions[i].Y + GameWorld.generation_RoomIndexDimensions[i].Y) * tileWidth) continue;
 
-                playerRoomIndex = i;
+                    playerRoomIndex = i;
 
-            }
-            
-            // checks that player has not moved to/from rooms
-            if (Player.currentRoom != playerRoomIndex)
-            {
+                }
+
+                // checks that player has not moved to/from rooms
+                if (Player.currentRoom != playerRoomIndex)
+                {
+                    if (Player.currentRoom > -1)
+                    {
+                        // player has left a room - remove the player target from all enemies in the room
+                        foreach (GameEnemy e in Enemies[Player.currentRoom])
+                        {
+                            e.RemoveTarget();
+                        }
+
+                    }
+                    if (playerRoomIndex > -1)
+                    {
+                        // player has entered a(nother) room - set the player as the target for all enemies in the room
+
+                        foreach (GameEnemy e in Enemies[playerRoomIndex])
+                        {
+                            e.SetTarget(Player);
+                        }
+                    }
+
+
+                    Player.currentRoom = playerRoomIndex;
+                }
+
+
+
                 if (Player.currentRoom > -1)
                 {
-                    // player has left a room - remove the player target from all enemies in the room
-                    foreach (GameEnemy e in Enemies[Player.currentRoom])
+                    // player is in a room, compare collision with all enemies
+
+                    for (int i = 0; i < Enemies[playerRoomIndex].Count; i++)
                     {
-                        e.RemoveTarget();
-                    }
-
-                }
-                if (playerRoomIndex > -1)
-                {
-                    // player has entered a(nother) room - set the player as the target for all enemies in the room
-
-                    foreach (GameEnemy e in Enemies[playerRoomIndex])
-                    {
-                        e.SetTarget(Player);
-                    }
-                }
-
-
-                Player.currentRoom = playerRoomIndex;
-            }
-
-
-
-            if (Player.currentRoom > -1)
-            {
-                // player is in a room, compare collision with all enemies
-
-                for (int i = 0; i < Enemies[playerRoomIndex].Count; i++)
-                {
-                    if (Enemies[playerRoomIndex][i].alive)
-                        if (Enemies[playerRoomIndex][i].BoundingBox.Contains(Player.BoundingBox))
-                        {
-                            // uh oh!
-                            // player has walked within the graps of an enemy
-                            // may need to do some damage
-
-                            Player.onCollision(Enemies[playerRoomIndex][i]);
-                            Enemies[playerRoomIndex][i].onCollision(Player);
-
-
-                        }
-                }
-
-                for (int i = 0; i < WorldInteractables.Count; i++)
-                {
-                    if (WorldInteractables[i].BoundingBox.Contains(Player.BoundingBox))
-                    {
-                        if (InputManager.Instance.KeyPressed(Keys.E))
-                        {
-                            WorldInteractables[i].Use(LevelIndex, Player);
-                        }
-                        WorldInteractables[i].Hovering();
-                    }
-                }
-
-            }
-
-            // regardless, compare with all non-enemy entities
-
-            // go backwards through projectile array
-            for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
-            {
-                // temporary variables to set edges for testing
-                float testX = EnemyProjectiles[i].position.X;
-                float testY = EnemyProjectiles[i].position.Y;
-
-                // which edge is closest?
-                if (EnemyProjectiles[i].position.X < Player.BoundingBox.X) testX = Player.BoundingBox.X;      // test left edge
-                else if (EnemyProjectiles[i].position.X > Player.BoundingBox.X + Player.BoundingBox.Width) testX = Player.BoundingBox.X + Player.BoundingBox.Width;   // right edge
-                if (EnemyProjectiles[i].position.Y < Player.BoundingBox.Y) testY = Player.BoundingBox.Y;      // top edge
-                else if (EnemyProjectiles[i].position.Y > Player.BoundingBox.Y + Player.BoundingBox.Height) testY = Player.BoundingBox.Y + Player.BoundingBox.Height;   // bottom edge
-
-                // get distance from closest edges
-                double distX = EnemyProjectiles[i].position.X - testX;
-                double distY = EnemyProjectiles[i].position.Y - testY;
-                double distance = Math.Sqrt((distX * distX) + (distY * distY));
-
-                // collision if the distance is less than the radius
-                if (distance <= EnemyProjectiles[i].radius)
-                {
-                    // give projectile to player for damage
-                    if (!Player.hitCooldown)
-                        Player.ProjectileCollision(EnemyProjectiles[i]);
-
-                    //destroy the projectile
-                    EnemyProjectiles[i].removeable = true;
-                }
-            }
-
-            for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
-            {
-                if (EnemyProjectiles[i].removeable)
-                {
-                    EnemyProjectiles.RemoveAt(i);
-                }
-            }
-
-
-            if (Player.currentRoom > -1)
-                foreach (List<GameEnemy> el in Enemies)
-                {
-                    foreach (GameEnemy e in el)
-                    {
-                        if (e.alive)
-                        {
-                            // go backwards through projectile array
-                            for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
+                        if (Enemies[playerRoomIndex][i].alive)
+                            if (Enemies[playerRoomIndex][i].BoundingBox.Contains(Player.BoundingBox))
                             {
-                                if (!PlayerProjectiles[i].hit)
+                                // uh oh!
+                                // player has walked within the graps of an enemy
+                                // may need to do some damage
+
+                                Player.onCollision(Enemies[playerRoomIndex][i]);
+                                Enemies[playerRoomIndex][i].onCollision(Player);
+
+
+                            }
+                    }
+
+                    for (int i = 0; i < WorldInteractables.Count; i++)
+                    {
+                        if (WorldInteractables[i].BoundingBox.Contains(Player.BoundingBox))
+                        {
+                            if (InputManager.Instance.ActionKeyDown(ActionType.use_potion))
+                            {
+                                WorldInteractables[i].Use(LevelIndex, Player);
+                            }
+                            WorldInteractables[i].Hovering();
+                        }
+                    }
+
+                }
+
+                // regardless, compare with all non-enemy entities
+
+                // go backwards through projectile array
+                for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
+                {
+                    // temporary variables to set edges for testing
+                    float testX = EnemyProjectiles[i].position.X;
+                    float testY = EnemyProjectiles[i].position.Y;
+
+                    // which edge is closest?
+                    if (EnemyProjectiles[i].position.X < Player.BoundingBox.X) testX = Player.BoundingBox.X;      // test left edge
+                    else if (EnemyProjectiles[i].position.X > Player.BoundingBox.X + Player.BoundingBox.Width) testX = Player.BoundingBox.X + Player.BoundingBox.Width;   // right edge
+                    if (EnemyProjectiles[i].position.Y < Player.BoundingBox.Y) testY = Player.BoundingBox.Y;      // top edge
+                    else if (EnemyProjectiles[i].position.Y > Player.BoundingBox.Y + Player.BoundingBox.Height) testY = Player.BoundingBox.Y + Player.BoundingBox.Height;   // bottom edge
+
+                    // get distance from closest edges
+                    double distX = EnemyProjectiles[i].position.X - testX;
+                    double distY = EnemyProjectiles[i].position.Y - testY;
+                    double distance = Math.Sqrt((distX * distX) + (distY * distY));
+
+                    // collision if the distance is less than the radius
+                    if (distance <= EnemyProjectiles[i].radius)
+                    {
+                        // give projectile to player for damage
+                        if (!Player.hitCooldown)
+                            Player.ProjectileCollision(EnemyProjectiles[i]);
+
+                        //destroy the projectile
+                        EnemyProjectiles[i].removeable = true;
+                    }
+                }
+
+                for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
+                {
+                    if (EnemyProjectiles[i].removeable)
+                    {
+                        EnemyProjectiles.RemoveAt(i);
+                    }
+                }
+
+
+                if (Player.currentRoom > -1)
+                    foreach (List<GameEnemy> el in Enemies)
+                    {
+                        foreach (GameEnemy e in el)
+                        {
+                            if (e.alive)
+                            {
+                                // go backwards through projectile array
+                                for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
                                 {
-                                    // temporary variables to set edges for testing
-                                    float testX = PlayerProjectiles[i].position.X;
-                                    float testY = PlayerProjectiles[i].position.Y;
-
-                                    // which edge is closest?
-                                    if (PlayerProjectiles[i].position.X < e.BoundingBox.X) testX = e.BoundingBox.X;      // test left edge
-                                    else if (PlayerProjectiles[i].position.X > e.BoundingBox.X + e.BoundingBox.Width) testX = e.BoundingBox.X + e.BoundingBox.Width;   // right edge
-                                    if (PlayerProjectiles[i].position.Y < e.BoundingBox.Y) testY = e.BoundingBox.Y;      // top edge
-                                    else if (PlayerProjectiles[i].position.Y > e.BoundingBox.Y + e.BoundingBox.Height) testY = e.BoundingBox.Y + e.BoundingBox.Height;   // bottom edge
-
-                                    // get distance from closest edges
-                                    double distX = PlayerProjectiles[i].position.X - testX;
-                                    double distY = PlayerProjectiles[i].position.Y - testY;
-                                    double distance = Math.Sqrt((distX * distX) + (distY * distY));
-
-                                    // collision if the distance is less than the radius
-                                    if (distance <= PlayerProjectiles[i].radius)
+                                    if (!PlayerProjectiles[i].hit)
                                     {
-                                        // give projectile to player for damage
-                                        e.ProjectileCollision(PlayerProjectiles[i]);
+                                        // temporary variables to set edges for testing
+                                        float testX = PlayerProjectiles[i].position.X;
+                                        float testY = PlayerProjectiles[i].position.Y;
 
-                                        //destroy the projectile
-                                        PlayerProjectiles[i].hit = true;
+                                        // which edge is closest?
+                                        if (PlayerProjectiles[i].position.X < e.BoundingBox.X) testX = e.BoundingBox.X;      // test left edge
+                                        else if (PlayerProjectiles[i].position.X > e.BoundingBox.X + e.BoundingBox.Width) testX = e.BoundingBox.X + e.BoundingBox.Width;   // right edge
+                                        if (PlayerProjectiles[i].position.Y < e.BoundingBox.Y) testY = e.BoundingBox.Y;      // top edge
+                                        else if (PlayerProjectiles[i].position.Y > e.BoundingBox.Y + e.BoundingBox.Height) testY = e.BoundingBox.Y + e.BoundingBox.Height;   // bottom edge
+
+                                        // get distance from closest edges
+                                        double distX = PlayerProjectiles[i].position.X - testX;
+                                        double distY = PlayerProjectiles[i].position.Y - testY;
+                                        double distance = Math.Sqrt((distX * distX) + (distY * distY));
+
+                                        // collision if the distance is less than the radius
+                                        if (distance <= PlayerProjectiles[i].radius)
+                                        {
+                                            // give projectile to player for damage
+                                            e.ProjectileCollision(PlayerProjectiles[i]);
+
+                                            //destroy the projectile
+                                            PlayerProjectiles[i].hit = true;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
 
-            for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
-            {
-                if (PlayerProjectiles[i].removeable)
+                for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
                 {
-                    PlayerProjectiles.RemoveAt(i);
-                }
-            }
-
-            bool playerIntersects = false;
-
-            // go backwards through WorldItems array
-            for (int i = WorldItems.Count - 1; i > -1; i--)
-            {
-                // temporary variables to set edges for testing
-                float testX = WorldItems[i].position.X;
-                float testY = WorldItems[i].position.Y;
-
-                // which edge is closest?
-                if (WorldItems[i].position.X < Player.BoundingBox.X) testX = Player.BoundingBox.X;      // test left edge
-                else if (WorldItems[i].position.X > Player.BoundingBox.X + Player.BoundingBox.Width) testX = Player.BoundingBox.X + Player.BoundingBox.Width;   // right edge
-                if (WorldItems[i].position.Y < Player.BoundingBox.Y) testY = Player.BoundingBox.Y;      // top edge
-                else if (WorldItems[i].position.Y > Player.BoundingBox.Y + Player.BoundingBox.Height) testY = Player.BoundingBox.Y + Player.BoundingBox.Height;   // bottom edge
-
-                // get distance from closest edges
-                double distX = WorldItems[i].position.X - testX;
-                double distY = WorldItems[i].position.Y - testY;
-                double distance = Math.Sqrt((distX * distX) + (distY * distY));
-
-                // collision if the distance is less than the radius
-                if (distance <= WorldItems[i].radius)
-                {
-
-                    // is item pickupable, and if so has the player signaled to pick up?
-                    if (WorldItems[i].type != typeof(GameCoin))
+                    if (PlayerProjectiles[i].removeable)
                     {
-                        if (!playerIntersects)
+                        PlayerProjectiles.RemoveAt(i);
+                    }
+                }
+
+                bool playerIntersects = false;
+
+                // go backwards through WorldItems array
+                for (int i = WorldItems.Count - 1; i > -1; i--)
+                {
+                    // temporary variables to set edges for testing
+                    float testX = WorldItems[i].position.X;
+                    float testY = WorldItems[i].position.Y;
+
+                    // which edge is closest?
+                    if (WorldItems[i].position.X < Player.BoundingBox.X) testX = Player.BoundingBox.X;      // test left edge
+                    else if (WorldItems[i].position.X > Player.BoundingBox.X + Player.BoundingBox.Width) testX = Player.BoundingBox.X + Player.BoundingBox.Width;   // right edge
+                    if (WorldItems[i].position.Y < Player.BoundingBox.Y) testY = Player.BoundingBox.Y;      // top edge
+                    else if (WorldItems[i].position.Y > Player.BoundingBox.Y + Player.BoundingBox.Height) testY = Player.BoundingBox.Y + Player.BoundingBox.Height;   // bottom edge
+
+                    // get distance from closest edges
+                    double distX = WorldItems[i].position.X - testX;
+                    double distY = WorldItems[i].position.Y - testY;
+                    double distance = Math.Sqrt((distX * distX) + (distY * distY));
+
+                    // collision if the distance is less than the radius
+                    if (distance <= WorldItems[i].radius)
+                    {
+
+                        // is item pickupable, and if so has the player signaled to pick up?
+                        if (WorldItems[i].type != typeof(GameCoin))
                         {
-                            // player has not already intersected something - now they have
-                            playerIntersects = true;
-
-                            // send to the hud to display details of item
-
-                            headsUpDisplay.ShowDetailsOfItem(WorldItems[i]);
-
-                            if (InputManager.Instance.ActionKeyPressed(ActionType.pick_up))
+                            if (!playerIntersects)
                             {
-                                Player.AddItem(WorldItems[i]);
-                                WorldItems[i].OnGround = false;
-                                WorldItems[i].removeable = true;
+                                // player has not already intersected something - now they have
+                                playerIntersects = true;
+
+                                // send to the hud to display details of item
+
+                                headsUpDisplay.ShowDetailsOfItem(WorldItems[i]);
+
+                                if (InputManager.Instance.ActionKeyPressed(ActionType.pick_up))
+                                {
+                                    Player.AddItem(WorldItems[i]);
+                                    WorldItems[i].OnGround = false;
+                                    WorldItems[i].removeable = true;
+                                }
                             }
+
                         }
-                        
-                    }
-                    else
-                    {
-                        // item is a coin, add money to player balance then unload
-                        WorldItems[i].Use(Player);
-                        WorldItems[i].UnloadContent();
-                        WorldItems[i].removeable = true;
-                    }
+                        else
+                        {
+                            // item is a coin, add money to player balance then unload
+                            WorldItems[i].Use(Player);
+                            WorldItems[i].UnloadContent();
+                            WorldItems[i].removeable = true;
+                        }
 
 
+                    }
                 }
-            }
 
-            for (int i = WorldItems.Count - 1; i > -1; i--)
-            {
-                if (WorldItems[i].removeable)
+                for (int i = WorldItems.Count - 1; i > -1; i--)
                 {
-                    WorldItems.RemoveAt(i);
+                    if (WorldItems[i].removeable)
+                    {
+                        WorldItems.RemoveAt(i);
+                    }
+                }
+
+                headsUpDisplay.Update(gameTime);
+            }
+            else
+            {
+                if (headsUpDisplay.UpdateSacrificeSelection())
+                {
+                    ChangeToStartingLevel();
                 }
             }
-
-
-
-
-            headsUpDisplay.Update(gameTime);
-
-
-
-
-
-
-
 
             // update player viewmatrix using player location
             cameraTransformationMatrix.Translation = new Vector3((-Player.position.X) + ScreenSize.X / 2, (-Player.position.Y) + ScreenSize.Y / 2, 0);
@@ -895,39 +882,42 @@ namespace MajorProject
 
             // ... draw sprites here ...
 
-            GameWorld.Draw(spriteBatch);
-
-            foreach (GameInteractable i in WorldInteractables)
+            if (Player.alive)
             {
-                i.Draw(spriteBatch);
-            }
+                GameWorld.Draw(spriteBatch);
 
-            foreach (List<GameEnemy> el in Enemies)
-            {
-                foreach (GameEnemy e in el)
+                foreach (GameInteractable i in WorldInteractables)
                 {
-                    e.Draw(spriteBatch);
+                    i.Draw(spriteBatch);
                 }
-            }
+
+                foreach (List<GameEnemy> el in Enemies)
+                {
+                    foreach (GameEnemy e in el)
+                    {
+                        e.Draw(spriteBatch);
+                    }
+                }
+
+                foreach (GameItem i in WorldItems)
+                {
+                    i.Draw(spriteBatch);
+                }
 
 
-            foreach (GameProjectile p in PlayerProjectiles)
-            {
-                p.Draw(spriteBatch);
-            }
+                foreach (GameProjectile p in PlayerProjectiles)
+                {
+                    p.Draw(spriteBatch);
+                }
 
-
-            foreach (GameItem i in WorldItems)
-            {
-                i.Draw(spriteBatch);
+                foreach (GameProjectile p in EnemyProjectiles)
+                {
+                    p.Draw(spriteBatch);
+                }
             }
 
             Player.Draw(spriteBatch);
 
-            foreach (GameProjectile p in EnemyProjectiles)
-            {
-                p.Draw(spriteBatch);
-            }
 
 
             spriteBatch.End();
@@ -1041,6 +1031,7 @@ namespace MajorProject
 
         public void ReloadSerialisedContent()
         {
+
             Player.LoadContent(ref PlayerResources);
 
             foreach (List<GameEnemy> el in Enemies)

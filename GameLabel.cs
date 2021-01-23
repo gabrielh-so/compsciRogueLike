@@ -46,7 +46,7 @@ namespace MajorProject
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(Resources.FontPack[FontName], Text, Position, FontColor);
+            spriteBatch.DrawString(Resources.FontPack[FontName + "_" + PlayerPreferences.Instance.fontSize.ToString()], Text, Position, FontColor);
         }
 
     }

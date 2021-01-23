@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace MajorProject
 {
@@ -35,6 +36,8 @@ namespace MajorProject
         GameLabel heldItemLabel;
         GameLabel hoverItemLabel;
 
+        GameLabel deathLabel;
+
         GameImage bossHealthBar;
         GameImage bossHealthBarBackground;
         GameLabel bossHealthBarText;
@@ -51,6 +54,8 @@ namespace MajorProject
 
 
         int maxHealthBarSize = 300;
+
+        int DeathSelection = 0;
 
 
         public HUD()
@@ -181,65 +186,111 @@ namespace MajorProject
 
                 }
             }
+        }
 
+        public bool UpdateSacrificeSelection()
+        {
+            bool containsItem = false;
+            foreach (GameItem i in player.inventory.itemList)
+            {
+                if (i != null)
+                    containsItem = true;
+            }
+            if (!containsItem) return true;
 
+            if (InputManager.Instance.ActionKeyPressed(InputManager.ActionType.walk_left)) DeathSelection--;
+            if (InputManager.Instance.ActionKeyPressed(InputManager.ActionType.walk_right)) DeathSelection++;
+            DeathSelection %= player.inventory.itemList.Length;
 
-
-
+            if (InputManager.Instance.KeyPressed(Keys.Enter))
+            {
+                if (player.inventory.itemList[DeathSelection] != null)
+                {
+                    player.inventory.RemoveItem(player, DeathSelection);
+                    player.SetHealth(player.maxHealth);
+                    player.alive = true;
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             mainBar.Draw(spriteBatch);
-            healthBar.Draw(spriteBatch);
 
-            int selectedSlot = player.inventory.SelectedItemSlot;
-            int offset = 0;
-            foreach (GameItem i in player.inventory.itemList)
+
+            if (player.alive)
             {
-                if (i != null)
+                healthBar.Draw(spriteBatch);
+
+                int selectedSlot = player.inventory.SelectedItemSlot;
+                int offset = 0;
+                foreach (GameItem i in player.inventory.itemList)
                 {
-                    spriteBatch.Draw(i.Resources.TexturePack[i.itemType], destinationRectangle: new Rectangle(new Point(450 + 100 * offset, 575), new Point(50, 50)));
+                    if (i != null)
+                    {
+                        spriteBatch.Draw(i.Resources.TexturePack[i.itemType], destinationRectangle: new Rectangle(new Point(450 + 100 * offset, 575), new Point(50, 50)));
+                        if (offset == selectedSlot)
+                        {
+                            spriteBatch.Draw(HUDResources.TexturePack["5"], destinationRectangle: new Rectangle(new Point(750, 575), new Point(250, 75)), color: Color.White * 1);
+                            heldItemLabel.Text = i.Description;
+                            heldItemLabel.Draw(spriteBatch);
+                        }
+                    }
+
                     if (offset == selectedSlot)
                     {
-                        spriteBatch.Draw(HUDResources.TexturePack["5"], destinationRectangle: new Rectangle(new Point(750, 575), new Point(250, 75)), color: Color.White * 1);
-                        heldItemLabel.Text = i.Description;
-                        heldItemLabel.Draw(spriteBatch);
+                        spriteBatch.Draw(HUDResources.TexturePack["5"], destinationRectangle: new Rectangle(new Point(450 + 100 * offset, 575), new Point(50, 50)), color: Color.White * 0.25f);
                     }
+
+
+                    offset++;
                 }
-                if (offset == selectedSlot)
+
+                if (CanShowDetails)
+                    ShowDetails(spriteBatch);
+
+                if (player.attackCooldown)
                 {
-                    spriteBatch.Draw(HUDResources.TexturePack["5"], destinationRectangle: new Rectangle(new Point(450 + 100 * offset, 575), new Point(50, 50)), color: Color.White * 0.25f);
+                    playerAttackCooldownLabel.Draw(spriteBatch);
                 }
-                    
 
-                offset++;
-            }
+                MoneyLabel.Draw(spriteBatch);
 
-            if (CanShowDetails)
-                ShowDetails(spriteBatch);
-
-            if (player.attackCooldown)
+                miniMap.Draw(spriteBatch);
+            } else
             {
-                playerAttackCooldownLabel.Draw(spriteBatch);
-            }
+                int offset = 0;
+                foreach (GameItem i in player.inventory.itemList)
+                {
 
-            MoneyLabel.Draw(spriteBatch);
+                    if (i != null)
+                    {
+                        spriteBatch.Draw(i.Resources.TexturePack[i.itemType], destinationRectangle: new Rectangle(new Point(450 + 100 * offset, 575), new Point(50, 50)));
+                        if (offset == DeathSelection)
+                        {
+                            spriteBatch.Draw(HUDResources.TexturePack["5"], destinationRectangle: new Rectangle(new Point(750, 575), new Point(250, 75)), color: Color.White * 1);
+                            heldItemLabel.Text = i.Description;
+                            heldItemLabel.Draw(spriteBatch);
+                        }
+                    }
 
-            if (CanShowDetails)
-            {
-                // show the details of the item
+                    if (offset == DeathSelection)
+                    {
+                        spriteBatch.Draw(HUDResources.TexturePack["5"], destinationRectangle: new Rectangle(new Point(450 + 100 * offset, 575), new Point(50, 50)), color: Color.White * 0.25f);
+                    }
 
-                // draw the background
 
-                //
+                    offset++;
+
+                }
             }
 
             damageOverlay.Draw(spriteBatch);
 
             lowHealthOverlay.Draw(spriteBatch);
 
-            miniMap.Draw(spriteBatch);
         }
 
         public void UnloadContent()

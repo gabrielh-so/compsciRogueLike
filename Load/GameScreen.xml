@@ -50,8 +50,14 @@
 
     <FontNameAndPath>
 
-      <string>coders_crux</string>
-      <string>coders_crux</string>
+      <string>coders_crux_small</string>
+      <string>coders_crux_small</string>
+      
+      <string>coders_crux_medium</string>
+      <string>coders_crux_medium</string>
+      
+      <string>coders_crux_large</string>
+      <string>coders_crux_large</string>
 
     </FontNameAndPath>
   
@@ -201,8 +207,14 @@
 
     <FontNameAndPath>
 
-      <string>coders_crux</string>
-      <string>coders_crux</string>
+      <string>coders_crux_small</string>
+      <string>coders_crux_small</string>
+      
+      <string>coders_crux_medium</string>
+      <string>coders_crux_medium</string>
+      
+      <string>coders_crux_large</string>
+      <string>coders_crux_large</string>
 
     </FontNameAndPath>
 
@@ -395,8 +407,14 @@
 
     <FontNameAndPath>
 
-      <string>coders_crux</string>
-      <string>coders_crux</string>
+      <string>coders_crux_small</string>
+      <string>coders_crux_small</string>
+      
+      <string>coders_crux_medium</string>
+      <string>coders_crux_medium</string>
+      
+      <string>coders_crux_large</string>
+      <string>coders_crux_large</string>
 
     </FontNameAndPath>
 

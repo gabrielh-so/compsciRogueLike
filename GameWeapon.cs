@@ -11,6 +11,7 @@ namespace MajorProject
 {
     public class GameWeapon : GameItem
     {
+        public int Damage;
 
         public double attackCooldown;
 
@@ -84,6 +85,19 @@ namespace MajorProject
             if (OnGround)
                 image.Draw(spriteBatch);
         }
+
+        public virtual void SetWeaponDamage(int newDamage)
+        {
+            Damage = newDamage;
+            WriteDescription();
+        }
+
+        public virtual void SetWeaponCooldown(int newCooldown)
+        {
+            attackCooldown = newCooldown;
+            WriteDescription();
+        }
+        
 
     }
 }

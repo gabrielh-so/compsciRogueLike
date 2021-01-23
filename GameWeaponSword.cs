@@ -12,16 +12,19 @@ namespace MajorProject
     public class GameWeaponSword : GameWeapon
     {
         int range = 50;
-        int Damage = 75;
 
         public GameWeaponSword()
         {
             attackCooldown = 1;
             type = this.GetType();
             itemType = "Sword";
+            WriteDescription();
 
+        }
+
+        public override void WriteDescription()
+        {
             Description = "Sword.\nWeapon. Medium damage with small area of\neffect at a fast rate.\nDamage: " + Damage + "\nCooldown: " + attackCooldown + "s";
-
         }
 
         public override void Use(GamePlayer user)

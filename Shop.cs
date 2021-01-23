@@ -122,6 +122,7 @@ namespace MajorProject
                 {
                     item = new GameWeaponRifle();
                 }
+                item.OnGround = true;
             }
 
             item.position = position;

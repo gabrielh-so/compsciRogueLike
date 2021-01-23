@@ -131,7 +131,7 @@ namespace MajorProject
 
         public bool PlayMusic(string FileName)
         {
-            if (MusicFileName == FileName) return true;
+            if (MusicFileName == FileName && MusicSet) return true;
             if (MusicInstance != null)
             {
                 content.Unload();

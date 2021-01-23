@@ -121,5 +121,10 @@ namespace MajorProject
 
         }
 
+        public virtual void SetHealth(int newHealth)
+        {
+            health = newHealth;
+            maxHealth = newHealth;
+        }
     }
 }

@@ -323,12 +323,36 @@ namespace MajorProject
                 if (gameScreen.WorldInteractables[i].type == typeof(Shop))
                 {
                     Shop s = (Shop)gameScreen.WorldInteractables[i];
-                    shopTypes.Add(s.item.type);
-                    shopItems.Add(JsonConvert.SerializeObject(s.item, s.item.type, null));
-                    s.item = null;
+                    if (s.item != null)
+                    {
+                        shopTypes.Add(s.item.type);
+                        shopItems.Add(JsonConvert.SerializeObject(s.item, s.item.type, null));
+                        s.item = null;
+                    } else
+                    {
+                        shopTypes.Add(typeof(void));
+                    }
                 }
 
                 serializedInteractables.Add(JsonConvert.SerializeObject(gameScreen.WorldInteractables[i], gameScreen.WorldInteractables[i].type, null));
+            }
+
+            int shopCount = 0;
+            int itemCount = 0;
+            for (int i = 0; i < gameScreen.WorldInteractables.Count; i++)
+            {
+
+                if (gameScreen.WorldInteractables[i].type == typeof(Shop))
+                {
+                    Shop s = (Shop)gameScreen.WorldInteractables[i];
+                    if (shopTypes[shopCount] != typeof(void))
+                    {
+                        s.item = (GameItem)JsonConvert.DeserializeObject(shopItems[itemCount], shopTypes[shopCount]);
+                        itemCount++;
+                    }
+                    shopCount++;
+                }
+
             }
 
             for (int i = 0; i < gameScreen.Player.inventory.itemList.Length; i++)
@@ -342,6 +366,12 @@ namespace MajorProject
             }
 
             serializedPlayer = JsonConvert.SerializeObject(gameScreen.Player);
+
+
+            for (int i = 0; i < serialisedPlayerInventoryItems.Count; i++)
+            {
+                gameScreen.Player.inventory.itemList[i] = (GameItem)JsonConvert.DeserializeObject(serialisedPlayerInventoryItems[i], PlayerInventoryTypes[i]);
+            }
 
             serializedGameWorld = JsonConvert.SerializeObject(gameScreen.GameWorld);
 
@@ -444,18 +474,19 @@ namespace MajorProject
             }
 
             int shopCount = 0;
-
+            int itemCount = 0;
             gameScreen.WorldInteractables = new List<GameInteractable>();
             for (int i = 0; i < interactableTypes.Count; i++)
             {
                 if (interactableTypes[i] == typeof(Shop))
                 {
                     Shop s = (Shop)JsonConvert.DeserializeObject(serializedInteractables[i], typeof(Shop));
-
-                    s.item = (GameItem)JsonConvert.DeserializeObject(shopItems[shopCount], shopTypes[shopCount]);
-
+                    if (shopTypes[shopCount] != typeof(void))
+                    {
+                        s.item = (GameItem)JsonConvert.DeserializeObject(shopItems[itemCount], shopTypes[shopCount]);
+                        itemCount++;
+                    }
                     gameScreen.WorldInteractables.Add(s);
-
                     shopCount++;
                 }
                 else

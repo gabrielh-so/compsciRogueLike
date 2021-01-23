@@ -123,6 +123,19 @@ namespace MajorProject
 
         public void LoadContent()
         {
+            bool inMenu = false;
+            if (ScreenManager.Instance.currentScreen.GetType() == typeof(GameMenuScreen))
+                inMenu = true;
+
+            if (inMenu)
+            {
+                foreach (GameItem i in itemList)
+                {
+                    if (i != null)
+                        i.LoadContent(ref ((GameScreen)ScreenManager.Instance.oldScreen).LootResources);
+                }
+                return;
+            }
             foreach (GameItem i in itemList)
             {
                 if (i != null)

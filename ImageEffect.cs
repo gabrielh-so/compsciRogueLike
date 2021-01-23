@@ -25,6 +25,7 @@ namespace MajorProject
 
         public virtual void UnloadContent()
         {
+            this.image = null;
         }
 
         public virtual void Update(GameTime gameTime)

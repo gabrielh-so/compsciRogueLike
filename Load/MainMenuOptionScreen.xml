@@ -542,6 +542,35 @@
 
   </MasterVolumeSlider>
 
+  <FontButton>
+
+    <Container>
+      <X>800</X>
+      <Y>400</Y>
+    </Container>
+
+    <Description>Changes the fontsize in menus and gameplay</Description>
+
+    <StandardImage>
+      <Path>ButtonScreen/Blue_Button_Standard</Path>
+      <IsActive>true</IsActive>
+      <Text>Font Size</Text>
+    </StandardImage>
+
+    <PressedImage>
+      <Path>ButtonScreen/Blue_Button_Pressed</Path>
+      <IsActive>true</IsActive>
+      <Text>Font Size</Text>
+    </PressedImage>
+
+    <HoverImage>
+      <Path>ButtonScreen/Blue_Button_Hover</Path>
+      <IsActive>true</IsActive>
+      <Text>Font Size</Text>
+    </HoverImage>
+
+  </FontButton>
+
 
 
 

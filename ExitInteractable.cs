@@ -83,7 +83,7 @@ namespace MajorProject
 
             if (IsHovering && !((GameScreen)ScreenManager.Instance.currentScreen).Enemies[0][0].alive)
             {
-                spriteBatch.DrawString(Resources.FontPack["coders_crux"], "Press 'E' to interact.", position, color: Color.Blue);
+                spriteBatch.DrawString(Resources.FontPack["coders_crux" + "_" + PlayerPreferences.Instance.fontSize.ToString()], "Press 'E' to interact.", position, color: Color.Blue);
             }
         }
 

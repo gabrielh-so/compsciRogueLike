@@ -11,7 +11,6 @@ namespace MajorProject
 {
     public class GameWeaponRifle : GameWeapon
     {
-        int Damage;
 
         public GameWeaponRifle()
         {
@@ -19,6 +18,11 @@ namespace MajorProject
             type = this.GetType();
             itemType = "Rifle";
             Damage = 100;
+            WriteDescription();
+        }
+
+        public override void WriteDescription()
+        {
             Description = "Rifle.\nWeapon. Fires high-damage bullet projectiles\nat a slow rate.\nDamage: " + Damage + "\nCooldown: " + attackCooldown + "s";
         }
 

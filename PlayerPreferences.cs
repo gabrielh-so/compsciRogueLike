@@ -37,6 +37,13 @@ namespace MajorProject
             insane
         }
 
+        public enum fontSizeLevel
+        {
+            small,
+            medium,
+            large
+        }
+
 
 
         public static Dictionary<difficultyLevel, float> enemyDamageScalars = new Dictionary<difficultyLevel, float>()
@@ -55,9 +62,14 @@ namespace MajorProject
         };
 
 
+        public Dictionary<int, Dictionary<string, int>> weaponDamages;
+
+        public Dictionary<int, Dictionary<string, int>> enemyHealth;
+
 
 
         public difficultyLevel difficulty;
+        public fontSizeLevel fontSize;
 
         public float SoundVolume;
         public float MusicVolume;
@@ -89,6 +101,8 @@ namespace MajorProject
 
         PlayerPreferences()
         {
+            // load in values for enemy health, weapon cooldown speed and damage
+
             
         }
 
@@ -113,6 +127,34 @@ namespace MajorProject
                 instance = new PlayerPreferences();
                 instance.SetDefaultKeys();
                 instance.SetDefaultVolume();
+            }
+
+            instance.enemyHealth = new Dictionary<int, Dictionary<string, int>>();
+            instance.weaponDamages = new Dictionary<int, Dictionary<string, int>>();
+
+
+            for (int i = 0; i < 5; i++)
+            {
+                Dictionary<string, int> weaponDamage = new Dictionary<string, int>();
+
+                weaponDamage.Add("Sword", 75 * (i + 1));
+                weaponDamage.Add("Spear", 150 * (i + 1));
+                weaponDamage.Add("Rifle", 100 * (i + 1));
+                weaponDamage.Add("Slingshot", 50 * (i + 1));
+
+                instance.weaponDamages.Add(i, weaponDamage);
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                Dictionary<string, int> enemyHealths = new Dictionary<string, int>();
+
+                enemyHealths.Add("Goblin", 75 * (i + 1));
+                enemyHealths.Add("Flyer", 50 * (i + 1));
+                enemyHealths.Add("Slime", 150 * (i + 1));
+                enemyHealths.Add("Boss", 1000 * (i + 1));
+
+                instance.enemyHealth.Add(i, enemyHealths);
             }
         }
 

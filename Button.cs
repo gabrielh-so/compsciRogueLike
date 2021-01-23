@@ -107,7 +107,8 @@ namespace MajorProject
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (ActiveImage != null) ActiveImage.Draw(spriteBatch);
+            if (ActiveImage != null)
+                ActiveImage.Draw(spriteBatch);
         }
     }
 }

@@ -9,7 +9,7 @@
       <Y>0</Y>
     </Position>
     <IsActive>true</IsActive>
-    <Effects></Effects>
+    <Effects>FadeEffect</Effects>
     <ScrollEffect>
       <TargetPosition>
         <X>100</X>

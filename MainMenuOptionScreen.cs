@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
 
+using static MajorProject.PlayerPreferences; // no longhand reference to difficulty enum needed
+
 namespace MajorProject
 {
     public class MainMenuOptionScreen : Screen
@@ -47,6 +49,9 @@ namespace MajorProject
 
         public Label optionDescriptor;
 
+        public Button FontButton;
+        public Label FontSizeLabel;
+
         SoundEffect ButtonHover;
 
         /*
@@ -58,6 +63,8 @@ namespace MajorProject
         public Label open_inventoryLabel;
         public Label use_potionLabel;
         */
+
+        fontSizeLevel fontSize;
 
         const string defaultDescriptionText = "Hover over an option for a description";
         const string AlertText = "Press any available key to reassign value. Press ESC to cancel.";
@@ -73,6 +80,9 @@ namespace MajorProject
 
             ResetButton.LoadContent();
             ResetButton.OnActivate = new UiElement.onActivate(ResetKeysToDefault);
+
+            FontButton.LoadContent();
+            FontButton.OnActivate = new UiElement.onActivate(ChangeFontSize);
 
             SoundVolumeLabel.LoadContent();
             MusicVolumeLabel.LoadContent();
@@ -92,6 +102,12 @@ namespace MajorProject
 
             optionDescriptor.Text = defaultDescriptionText;
             optionDescriptor.LoadContent();
+
+            fontSize = Instance.fontSize;
+            FontSizeLabel = new Label();
+            FontSizeLabel.Text = fontSize.ToString();
+            FontSizeLabel.Position = new Vector2(FontButton.Position.X, FontButton.Position.Y + 25);
+            FontSizeLabel.LoadContent();
 
             KeyInputAlert.LoadContent();
             KeyInputAlert.Scale = new Vector2(ScreenManager.Instance.GraphicsDevice.Viewport.Width/KeyInputAlert.Texture.Width,1);
@@ -139,6 +155,9 @@ namespace MajorProject
                 l.UnloadContent();
             }
 
+            FontButton.UnloadContent();
+            FontSizeLabel.UnloadContent();
+
             BackButton.UnloadContent();
             ResetButton.UnloadContent();
 
@@ -150,6 +169,8 @@ namespace MajorProject
             SoundVolumeSlider.Update(gameTime);
             MusicVolumeSlider.Update(gameTime);
             MasterVolumeSlider.Update(gameTime);
+
+            FontButton.Update(gameTime);
 
             bool bListening = false;
             foreach (KeyToggleButton b in ToggleButtonList)
@@ -184,6 +205,9 @@ namespace MajorProject
             SoundVolumeSlider.Draw(spriteBatch);
             MusicVolumeSlider.Draw(spriteBatch);
             MasterVolumeSlider.Draw(spriteBatch);
+
+            FontButton.Draw(spriteBatch);
+            FontSizeLabel.Draw(spriteBatch);
 
             optionDescriptor.Draw(spriteBatch);
 
@@ -266,6 +290,17 @@ namespace MajorProject
         void BackToMenu(UiElement triggeredObject)
         {
             ScreenManager.Instance.ChangeScreens("MainMenuScreen");
+        }
+
+        void ChangeFontSize(UiElement triggeredElement)
+        {
+            fontSize = (fontSizeLevel)((((int)fontSize) + 1) % 3);
+            FontSizeLabel.Text = fontSize.ToString();
+
+            Instance.fontSize = fontSize;
+
+            UnloadContent();
+            LoadContent();
         }
     }
 }

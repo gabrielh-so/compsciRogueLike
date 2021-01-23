@@ -166,10 +166,10 @@ namespace MajorProject
 
         public void Update(GameTime gameTime)
         {
-            currentScreen.Update(gameTime);
-
             if (IsTransitioning)
                 Transition(gameTime);
+
+            currentScreen.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)

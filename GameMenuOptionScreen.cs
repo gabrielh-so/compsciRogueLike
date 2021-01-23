@@ -266,5 +266,17 @@ namespace MajorProject
         {
             ScreenManager.Instance.ChangeScreens("GameMenuScreen");
         }
+
+        /*
+        void ChangeFontSize(UiElement triggeredElement)
+        {
+            fontSize = (fontSizeLevel)((((int)fontSize) + 1) % 3);
+            FontSizeLabel.Text = fontSize.ToString();
+
+            Instance.fontSize = fontSize;
+
+            LoadContent();
+        }
+        */
     }
 }

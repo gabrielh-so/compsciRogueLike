@@ -28,6 +28,11 @@ namespace MajorProject
 
         }
 
+        public virtual void WriteDescription()
+        {
+            return;
+        }
+
         public override void Update(GameTime gameTime)
         {
             // account for friction - allows launched coins to stop at some point

@@ -13,7 +13,7 @@ namespace MajorProject
     public class Label : UiElement
     {
         ContentManager content;
-        SpriteFont font;
+        SpriteFont[] fonts;
         public string FontName;
         public string Text;
 
@@ -28,7 +28,11 @@ namespace MajorProject
 
             FontName = "Fonts/coders_crux";
 
-            font = content.Load<SpriteFont>(FontName);
+            fonts = new SpriteFont[3]{
+                content.Load<SpriteFont>(FontName + "_small"),
+                content.Load<SpriteFont>(FontName + "_medium"),
+                content.Load<SpriteFont>(FontName + "_large")
+            };
 
             base.LoadContent();
         }
@@ -43,7 +47,7 @@ namespace MajorProject
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            ScreenManager.Instance.SpriteBatch.DrawString(font, Text, Position, Color.White);
+            ScreenManager.Instance.SpriteBatch.DrawString(fonts[(int)PlayerPreferences.Instance.fontSize], Text, Position, Color.White);
             base.Draw(spriteBatch);
         }
     }

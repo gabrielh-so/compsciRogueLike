@@ -45,12 +45,9 @@ namespace MajorProject
 
         public void ActivateEffect(string effect)
         {
-            if (effectList.ContainsKey(effect))
-            {
-                effectList[effect].IsActive = true;
-                var obj = this;
-                effectList[effect].LoadContent(ref obj);
-            }
+            SetEffect<FadeEffect>(ref FadeEffect);
+            effectList["FadeEffect"].IsActive = true;
+            //effectList.Add(effect, FadeEffect);
         }
 
         public void DeactivateEffect(string effect)
@@ -75,6 +72,7 @@ namespace MajorProject
 
         public void LoadContent()
         {
+
             content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
 
             if (Path != String.Empty)
@@ -82,14 +80,9 @@ namespace MajorProject
                 Texture = content.Load<Texture2D>(Path);
             }
 
-            font = content.Load<SpriteFont>(FontName);
-
-            
+            font = content.Load<SpriteFont>(FontName + "_" + PlayerPreferences.Instance.fontSize.ToString());
 
             RenderTexture();
-            
-
-            SetEffect<FadeEffect>(ref FadeEffect);
 
             if (Effects != String.Empty)
             {
@@ -97,6 +90,7 @@ namespace MajorProject
                 foreach (string item in split)
                     ActivateEffect(item);
             }
+
         }
 
         public void RenderTexture()
