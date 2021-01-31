@@ -14,7 +14,7 @@ namespace MajorProject
         // this is a character
         // (yeah thanks gab)
 
-        Random rand;
+        static protected Random rand = new Random();
 
 
 
@@ -26,8 +26,9 @@ namespace MajorProject
             projectileDamage = 5;
             rand = new Random();
             projectiles = new List<GameProjectile>();
-            maxHealth = 100;
+            maxHealth = 1;
             alive = true;
+            wasAlive = true;
             health = maxHealth;
             lastHealth = maxHealth;
         }
@@ -43,6 +44,7 @@ namespace MajorProject
         public int radius; // radius of a circle hitbox! can be used with circles or
 
         public bool alive;
+        public bool wasAlive;
 
         [XmlIgnore]
         public int[,] Map;
@@ -66,6 +68,7 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
+            /*
             for (int i = projectiles.Count - 1; i > -1; i--)
             {
                 projectiles[i].Update(gameTime);
@@ -75,6 +78,7 @@ namespace MajorProject
                     projectiles.RemoveAt(i);
                 }
             }
+            */
 
             if (health < lastHealth)
             {
@@ -103,10 +107,18 @@ namespace MajorProject
                 alive = false;
             }
 
+            if (!alive && wasAlive)
+            {
+                OnDeath();
+            }
+
             BoundingBox.X = (int)position.X - BoundingBox.Size.X / 2;
             BoundingBox.Y = (int)position.Y - BoundingBox.Size.Y / 2;
 
             lastHealth = health;
+
+            wasAlive = alive;
+
 
         }
 
@@ -116,7 +128,7 @@ namespace MajorProject
 
         }
 
-        void OnDeath()
+        public virtual void OnDeath()
         {
 
         }

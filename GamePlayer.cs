@@ -52,6 +52,9 @@ namespace MajorProject
             speed = BaseSpeed;
             maxHitDelay = 1;
             currentHitDelay = 0;
+            maxHealth = 100;
+            health = 100;
+            lastHealth = 100;
         }
 
         string[] walkAnimation =
@@ -69,13 +72,15 @@ namespace MajorProject
         {
             damage = (int)(damage * PlayerPreferences.playerDamageScalars[PlayerPreferences.Instance.difficulty]);
             base.TakeDamage(damage);
+
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Player_Damage"].CreateInstance(), "PlayerDamage");
         }
 
         public override void LoadContent(ref ResourcePack resources)
         {
             base.LoadContent(ref resources);
 
-            inventory.LoadContent();
+            inventory.LoadContent(Resources);
 
             playerImage.LoadContent(ref Resources, walkAnimation);
             playerImage.animated = false;
@@ -88,6 +93,8 @@ namespace MajorProject
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            
 
             SecondsPlayed += gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -286,6 +293,12 @@ namespace MajorProject
             base.UnloadContent();
 
             inventory.UnLoadContent();
+        }
+
+        public override void OnDeath()
+        {
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Player_Death"].CreateInstance(), "PlayerDeath");
+
         }
 
     }

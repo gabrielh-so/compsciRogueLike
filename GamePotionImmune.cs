@@ -32,6 +32,15 @@ namespace MajorProject
             full = true;
             itemType = "Immune";
         }
+        public override void SetValue(float newValue)
+        {
+            ImmuneTime = newValue;
+        }
+
+        public override void MultiplyValue(float newScalar)
+        {
+            ImmuneTime *= newScalar;
+        }
 
         public override void Use(GamePlayer user)
         {
@@ -43,6 +52,7 @@ namespace MajorProject
 
                 full = false;
                 itemType = "Empty";
+                base.Use(user);
             }
         }
     }

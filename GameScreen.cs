@@ -421,6 +421,9 @@ namespace MajorProject
                                 w = new GameWeaponRifle();
                                 w.SetWeaponDamage(PlayerPreferences.Instance.weaponDamages[LevelIndex]["Rifle"]);
                             }
+
+                            w.SetWeaponDamage( (int) (w.Damage * (1 + (rand.NextDouble() - 0.5)/5)) );
+
                             w.OnGround = true;
                             w.SetPosition(itemPosition.X + World.tilePixelWidth / 2, itemPosition.Y + World.tilePixelWidth / 2);
                             w.LoadContent(ref LootResources);
@@ -450,6 +453,7 @@ namespace MajorProject
                                 p = new GamePotionRecharge();
                             }
                             */
+
                             p.OnGround = true;
                             p.SetPosition(itemPosition.X + World.tilePixelWidth / 2, itemPosition.Y + World.tilePixelWidth / 2);
                             p.LoadContent(ref LootResources);
@@ -683,7 +687,7 @@ namespace MajorProject
                     {
                         if (WorldInteractables[i].BoundingBox.Contains(Player.BoundingBox))
                         {
-                            if (InputManager.Instance.ActionKeyDown(ActionType.use_potion))
+                            if (InputManager.Instance.ActionKeyDown(ActionType.interact))
                             {
                                 WorldInteractables[i].Use(LevelIndex, Player);
                             }
@@ -718,7 +722,10 @@ namespace MajorProject
                     {
                         // give projectile to player for damage
                         if (!Player.hitCooldown)
+                        {
                             Player.ProjectileCollision(EnemyProjectiles[i]);
+                            EnemyProjectiles[i].OnCollision();
+                        }
 
                         //destroy the projectile
                         EnemyProjectiles[i].removeable = true;
@@ -769,6 +776,8 @@ namespace MajorProject
 
                                             //destroy the projectile
                                             PlayerProjectiles[i].hit = true;
+
+                                            PlayerProjectiles[i].OnCollision();
                                         }
                                     }
                                 }
@@ -1033,6 +1042,8 @@ namespace MajorProject
         {
 
             Player.LoadContent(ref PlayerResources);
+
+            Player.currentRoom = -1;
 
             foreach (List<GameEnemy> el in Enemies)
                 foreach (GameEnemy e in el)

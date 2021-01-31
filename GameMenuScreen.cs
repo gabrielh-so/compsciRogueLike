@@ -6,6 +6,8 @@ using System.Threading;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 
 using static MajorProject.PlayerPreferences; // no longhand reference to difficulty enum needed
 
@@ -23,9 +25,12 @@ namespace MajorProject
         public Label DifficultyLabel;
         public Button BackToGameButton;
 
+        SoundEffect ButtonHover;
+
         difficultyLevel difficulty;
 
         bool returnToGame;
+
 
         public GameMenuScreen()
         {
@@ -34,11 +39,25 @@ namespace MajorProject
 
         public override void LoadContent()
         {
+
+            content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
+
+            ButtonHover = content.Load<SoundEffect>("Audio/Sound/UI/Button/FocusSound");
+
             ReturnToMenuButton.OnActivate = new UiElement.onActivate(ReturnToMenu);
+            ReturnToMenuButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
+
             SaveGameButton.OnActivate = new UiElement.onActivate(SaveGame);
+            SaveGameButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
+
             OptionsButton.OnActivate = new UiElement.onActivate(OpenOptions);
+            OptionsButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
+
             DifficultyButton.OnActivate = new UiElement.onActivate(ChangeDifficulty);
+            DifficultyButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
+
             BackToGameButton.OnActivate = new UiElement.onActivate(BackToGame);
+            BackToGameButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
 
             TitleLabel.LoadContent();
 
@@ -128,6 +147,11 @@ namespace MajorProject
             DifficultyLabel.Text = difficulty.ToString();
 
             Instance.difficulty = difficulty;
+        }
+
+        void TriggerButtonHoverSound(UiElement triggeredObject)
+        {
+            AudioManager.Instance.PlaySoundInstance(ButtonHover.CreateInstance(), triggeredObject.Name);
         }
 
         void BackToGame(UiElement triggerElement)

@@ -121,6 +121,10 @@ namespace MajorProject
             slimeImage.UnloadContent();
             slimeDeadImage.UnloadContent();
         }
+        public override void OnDeath()
+        {
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Slime_Death"].CreateInstance(), "Slime_Death" + rand.NextDouble().ToString());
+        }
 
     }
 }

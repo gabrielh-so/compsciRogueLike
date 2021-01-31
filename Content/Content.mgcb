@@ -13,35 +13,125 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Audio/Sound/Game/Environment/Dungeon/Music.ogg
-/importer:OggImporter
+#begin Audio/Sound/Game/Character/Boss/Boss_Death.wav
+/importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/Sound/Game/Environment/Dungeon/Music.ogg
+/build:Audio/Sound/Game/Character/Boss/Boss_Death.wav
 
-#begin Audio/Sound/Game/Environment/Jungle/Music.ogg
-/importer:OggImporter
+#begin Audio/Sound/Game/Character/Flyer/Flyer_Death.wav
+/importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/Sound/Game/Environment/Jungle/Music.ogg
+/build:Audio/Sound/Game/Character/Flyer/Flyer_Death.wav
 
-#begin Audio/Sound/Game/Environment/Temple/Music.ogg
-/importer:OggImporter
+#begin Audio/Sound/Game/Character/Goblin/Goblin_Death.wav
+/importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/Sound/Game/Environment/Temple/Music.ogg
+/build:Audio/Sound/Game/Character/Goblin/Goblin_Death.wav
 
-#begin Audio/Sound/Game/Environment/TestArea/Music.ogg
-/importer:OggImporter
+#begin Audio/Sound/Game/Character/Player/Item_Pickup.wav
+/importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/Sound/Game/Environment/TestArea/Music.ogg
+/build:Audio/Sound/Game/Character/Player/Item_Pickup.wav
 
-#begin Audio/Sound/Game/Environment/Volcano/Music.ogg
-/importer:OggImporter
+#begin Audio/Sound/Game/Character/Player/Player_Damage.wav
+/importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/Sound/Game/Environment/Volcano/Music.ogg
+/build:Audio/Sound/Game/Character/Player/Player_Damage.wav
+
+#begin Audio/Sound/Game/Character/Player/Player_Death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Character/Player/Player_Death.wav
+
+#begin Audio/Sound/Game/Character/Slime/Slime_Death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Character/Slime/Slime_Death.wav
+
+#begin Audio/Sound/Game/Environment/Dungeon/Music.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Environment/Dungeon/Music.mp3
+
+#begin Audio/Sound/Game/Environment/Jungle/Music.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Environment/Jungle/Music.mp3
+
+#begin Audio/Sound/Game/Environment/Temple/Music.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Environment/Temple/Music.mp3
+
+#begin Audio/Sound/Game/Environment/TestArea/Music.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Environment/TestArea/Music.mp3
+
+#begin Audio/Sound/Game/Environment/Volcano/Music.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Environment/Volcano/Music.mp3
+
+#begin Audio/Sound/Game/Loot/Coin/Coin_Pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Loot/Coin/Coin_Pickup.wav
+
+#begin Audio/Sound/Game/Loot/Potion/Potion_Drink.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Loot/Potion/Potion_Drink.wav
+
+#begin Audio/Sound/Game/Loot/Rifle/Rifle_Attack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Loot/Rifle/Rifle_Attack.wav
+
+#begin Audio/Sound/Game/Loot/Slingshot/Slingshot_Attack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Loot/Slingshot/Slingshot_Attack.wav
+
+#begin Audio/Sound/Game/Loot/Spear/Spear_Attack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Loot/Spear/Spear_Attack.wav
+
+#begin Audio/Sound/Game/Loot/Sword/Sword_Attack.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Loot/Sword/Sword_Attack.wav
+
+#begin Audio/Sound/Game/Projectile/Character_Impact.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Projectile/Character_Impact.wav
+
+#begin Audio/Sound/Game/Projectile/Wall_Impact.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/Game/Projectile/Wall_Impact.wav
 
 #begin Audio/Sound/UI/Button/FocusSound.ogg
 /importer:OggImporter

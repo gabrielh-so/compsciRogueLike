@@ -34,6 +34,15 @@ namespace MajorProject
             itemType = "Health";
         }
 
+        public override void SetValue(float newValue)
+        {
+            healFraction = newValue;
+        }
+        public override void MultiplyValue(float newScalar)
+        {
+            healFraction *= newScalar;
+        }
+
         public override void Use(GamePlayer user)
         {
             if (full)
@@ -41,6 +50,7 @@ namespace MajorProject
                 user.health = (int)Math.Min(user.health + (user.maxHealth * healFraction), user.maxHealth);
                 full = false;
                 itemType = "Empty";
+                base.Use(user);
             }
         }
     }

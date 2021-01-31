@@ -15,6 +15,8 @@
 
   <ReturnToMenuButton>
 
+    <Name>ReturnToMenuButton</Name>
+
     <Container>
       <X>505</X>
       <Y>100</Y>
@@ -41,6 +43,8 @@
   </ReturnToMenuButton>
 
   <SaveGameButton>
+
+    <Name>SaveGameButton</Name>
 
     <Container>
       <X>505</X>
@@ -69,6 +73,8 @@
 
   <OptionsButton>
 
+    <Name>OptionsButton</Name>
+    
     <Container>
       <X>505</X>
       <Y>300</Y>
@@ -96,6 +102,8 @@
 
   <DifficultyButton>
 
+    <Name>DifficultyButton</Name>
+
     <Container>
       <X>505</X>
       <Y>400</Y>
@@ -122,6 +130,8 @@
   </DifficultyButton>
 
   <BackToGameButton>
+
+    <Name>BackToGameButton</Name>
 
     <Container>
       <X>505</X>

@@ -29,6 +29,8 @@ namespace MajorProject
         public override void Use(GamePlayer user)
         {
             user.AddAttackCooldown(attackCooldown);
+
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack[itemType + "_Attack"].CreateInstance(), "PlayerAttack");
         }
 
         public override void Update(GameTime gameTime)

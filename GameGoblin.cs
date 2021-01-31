@@ -15,7 +15,7 @@ namespace MajorProject
         GameImage goblinDeadImage;
 
 
-        int targetDistance = 50;
+        int targetDistance = 25;
 
         double maxFireInterval = 2;
         double currentFireInterval = 0;
@@ -204,6 +204,11 @@ namespace MajorProject
 
             goblinImage.UnloadContent();
             goblinDeadImage.UnloadContent();
+        }
+
+        public override void OnDeath()
+        {
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Goblin_Death"].CreateInstance(), "GoblinDeath" + rand.NextDouble().ToString());
         }
     }
 }

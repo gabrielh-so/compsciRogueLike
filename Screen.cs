@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MajorProject
 {
-    public class Screen
+    public abstract class Screen
     {
         protected ContentManager content;
         [XmlIgnore]

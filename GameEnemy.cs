@@ -23,7 +23,7 @@ namespace MajorProject
 
         public GameEnemy()
         {
-
+            alive = true;
             WasAlive = true;
         }
 
@@ -44,6 +44,8 @@ namespace MajorProject
             }
 
             WasAlive = alive;
+
+            BoundingBox.Location = position.ToPoint();
         }
 
         public override void UnloadContent()
@@ -51,6 +53,11 @@ namespace MajorProject
             base.UnloadContent();
 
             target = null;
+        }
+
+        public override void OnDeath()
+        {
+
         }
 
         public override void TakeDamage(int damage)

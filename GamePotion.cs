@@ -61,6 +61,17 @@ namespace MajorProject
 
         public override void Use(GamePlayer user)
         {
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Potion_Drink"].CreateInstance(), "PotionDrink");
+        }
+
+        public virtual void SetValue(float newValue)
+        {
+
+        }
+
+
+        public virtual void MultiplyValue(float newScalar)
+        {
 
         }
 

@@ -49,6 +49,7 @@ namespace MajorProject
 
                 full = false;
                 itemType = "Empty";
+                base.Use(user);
             }
         }
 

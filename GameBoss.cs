@@ -17,9 +17,6 @@ namespace MajorProject
         GameImage bossChargeImage;
         GameImage bossDeadImage;
 
-
-        int targetDistance = 25;
-
         double maxFireInterval = 1;
         double currentFireInterval = 0;
 
@@ -64,8 +61,6 @@ namespace MajorProject
             rand = new Random();
 
             speed = 50;
-
-            targetDistance = 250;
 
             BoundingBox.Size = new Point(150, 150);
             bossImage.position = position.ToPoint();
@@ -190,13 +185,7 @@ namespace MajorProject
 
             }
 
-
-
-
-
-
-
-
+            BoundingBox.Location = (position - BoundingBox.Size.ToVector2() / 2).ToPoint();
             bossImage.position = position.ToPoint();
             if (alive)
                 bossImage.Update(gameTime);
@@ -224,6 +213,11 @@ namespace MajorProject
             bossImage.UnloadContent();
             bossChargeImage.UnloadContent();
             bossDeadImage.UnloadContent();
+        }
+
+        public override void OnDeath()
+        {
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Boss_Death"].CreateInstance(), "Boss_Death" + rand.NextDouble().ToString());
         }
 
     }

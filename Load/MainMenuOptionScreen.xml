@@ -3,7 +3,7 @@
 
   <optionDescriptor>
     <Position>
-      <X>750</X>
+      <X>650</X>
       <Y>650</Y>
     </Position>
     <Text>Hover over an option for a description</Text>
@@ -59,7 +59,7 @@
         <X>100</X>
         <Y>400</Y>
       </Position>
-      <Text>UsePotion</Text>
+      <Text>Interact</Text>
     </Label>
   
   </LabelList>
@@ -86,6 +86,10 @@
       <Y>650</Y>
     </Container>
 
+    <Name>BackButton</Name>
+
+    <Description></Description>
+
     <StandardImage>
       <Path>ButtonScreen/Blue_Button_Standard</Path>
       <IsActive>true</IsActive>
@@ -111,6 +115,10 @@
       <X>300</X>
       <Y>650</Y>
     </Container>
+
+    <Name>ResetButton</Name>
+
+    <Description>Resets the key bindings to original settings.</Description>
 
     <StandardImage>
       <Path>ButtonScreen/Blue_Button_Standard</Path>
@@ -327,7 +335,7 @@
       <toggleAction>pick_up</toggleAction>
       <Name>PickUpToggle</Name>
 
-      <Description>Sets key that makes the character picj up items</Description>
+      <Description>Sets key that makes the character pick up items</Description>
 
       <StandardImage>
         <Path>ButtonScreen/Blue_Button_Standard</Path>
@@ -375,7 +383,7 @@
       <toggleAction>open_inventory</toggleAction>
       <Name>OpenInventoryToggle</Name>
 
-      <Description>Sets key that makes the character open thier inventory</Description>
+      <Description>Sets key that makes the character open their inventory</Description>
 
       <StandardImage>
         <Path>ButtonScreen/Blue_Button_Standard</Path>
@@ -421,10 +429,10 @@
         <Y>400</Y>
       </Container>
 
-      <toggleAction>use_potion</toggleAction>
-      <Name>UsePotionToggle</Name>
+      <toggleAction>interact</toggleAction>
+      <Name>InteractToggle</Name>
 
-      <Description>Sets key that makes the character use the selected potion</Description>
+      <Description>Sets key that makes the character interact with the world</Description>
 
       <StandardImage>
         <Path>ButtonScreen/Blue_Button_Standard</Path>
@@ -548,6 +556,8 @@
       <X>800</X>
       <Y>400</Y>
     </Container>
+
+    <Name>FontToggle</Name>
 
     <Description>Changes the fontsize in menus and gameplay</Description>
 

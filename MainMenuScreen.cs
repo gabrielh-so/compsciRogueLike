@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 
 using static MajorProject.PlayerPreferences; // no longhand reference to difficulty enum needed
 
@@ -26,6 +28,8 @@ namespace MajorProject
 
         difficultyLevel difficulty;
 
+        SoundEffect ButtonHover;
+
         public MainMenuScreen()
         {
 
@@ -35,11 +39,24 @@ namespace MajorProject
         {
             AudioManager.Instance.PlayMusic("Audio/Sound/UI/Music/Music");
 
+            content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
+
+            ButtonHover = content.Load<SoundEffect>("Audio/Sound/UI/Button/FocusSound");
+
             NewGameButton.OnActivate = new UiElement.onActivate(NewGame);
+            NewGameButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
+
             ContinueGameButton.OnActivate = new UiElement.onActivate(ContinueGame);
+            ContinueGameButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
+
             OptionsButton.OnActivate = new UiElement.onActivate(OpenOptions);
+            OptionsButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
+
             DifficultyButton.OnActivate = new UiElement.onActivate(ChangeDifficulty);
+            DifficultyButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
+
             QuitButton.OnActivate = new UiElement.onActivate(Quit);
+            QuitButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
 
             TitleLabel.LoadContent();
 
@@ -114,6 +131,10 @@ namespace MajorProject
             DifficultyLabel.Text = difficulty.ToString();
 
             Instance.difficulty = difficulty;
+        }
+        void TriggerButtonHoverSound(UiElement triggeredObject)
+        {
+            AudioManager.Instance.PlaySoundInstance(ButtonHover.CreateInstance(), triggeredObject.Name);
         }
 
         void Quit(UiElement triggerElement)

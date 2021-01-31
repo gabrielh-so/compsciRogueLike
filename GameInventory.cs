@@ -14,6 +14,8 @@ namespace MajorProject
         int abilitySpace = 2;
         int itemSpace = 3;
 
+        static Random rand = new Random();
+
         public GameItem[] itemList;
 
         public GameAbility[] abilityList;
@@ -24,6 +26,8 @@ namespace MajorProject
 
 
         public bool ContainsWeapon;
+
+        public ResourcePack Resources;
 
 
         public void Update(GameTime gameTime)
@@ -96,6 +100,8 @@ namespace MajorProject
 
         public bool AddItem(GamePlayer user, GameItem i)
         {
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Item_Pickup"].CreateInstance(), "ItemPickUp" + rand.NextDouble().ToString());
+
             if (itemList[SelectedItemSlot] != null)
                 RemoveItem(user, SelectedItemSlot);
             itemList[SelectedItemSlot] = i;
@@ -121,8 +127,9 @@ namespace MajorProject
             }
         }
 
-        public void LoadContent()
+        public void LoadContent(ResourcePack resources)
         {
+            Resources = resources;
             bool inMenu = false;
             if (ScreenManager.Instance.currentScreen.GetType() == typeof(GameMenuScreen))
                 inMenu = true;
@@ -145,6 +152,7 @@ namespace MajorProject
 
         public void UnLoadContent()
         {
+            Resources = null;
             foreach (GameItem i in itemList)
             {
                 if (i != null)

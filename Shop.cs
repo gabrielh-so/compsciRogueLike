@@ -17,13 +17,12 @@ namespace MajorProject
 
         public GameItem item;
 
-        Random rand;
+        static Random rand = new Random();
 
         string[] OpenAnimation;
 
         public Shop()
         {
-            rand = new Random();
             type = this.GetType();
 
         }
@@ -54,7 +53,7 @@ namespace MajorProject
         {
             Resources = resources;
 
-            BoundingBox.Size = new Vector2(25, 25).ToPoint();
+            BoundingBox.Size = new Vector2(50, 50).ToPoint();
             BoundingBox.Location = (position - BoundingBox.Size.ToVector2() / 2).ToPoint();
 
             removeable = false;
@@ -123,6 +122,8 @@ namespace MajorProject
                     item = new GameWeaponRifle();
                 }
                 item.OnGround = true;
+                ((GameWeapon)item).SetWeaponDamage((int)(PlayerPreferences.Instance.weaponDamages[0][item.itemType] * (1 + (rand.NextDouble()) / 5)));
+                
             }
 
             item.position = position;
@@ -136,7 +137,7 @@ namespace MajorProject
 
             if (IsHovering && !IsPurchased)
             {
-                spriteBatch.DrawString(Resources.FontPack["coders_crux"], "Press 'E' to purchase for " + ItemPrice + "G.", position, color: Color.Blue);
+                spriteBatch.DrawString(Resources.FontPack["coders_crux" + "_" + PlayerPreferences.Instance.fontSize.ToString()], "Press 'E' to purchase for " + ItemPrice + "G.", position, color: Color.Blue); ;
             }
         }
     }

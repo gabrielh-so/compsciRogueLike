@@ -77,12 +77,15 @@ namespace MajorProject
 
             BackButton.LoadContent();
             BackButton.OnActivate = new UiElement.onActivate(BackToMenu);
+            BackButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
 
             ResetButton.LoadContent();
             ResetButton.OnActivate = new UiElement.onActivate(ResetKeysToDefault);
+            ResetButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
 
             FontButton.LoadContent();
             FontButton.OnActivate = new UiElement.onActivate(ChangeFontSize);
+            FontButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
 
             SoundVolumeLabel.LoadContent();
             MusicVolumeLabel.LoadContent();

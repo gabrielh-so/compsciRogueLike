@@ -26,7 +26,7 @@ namespace MajorProject
             shoot,
             pick_up,
             open_inventory,
-            use_potion
+            interact
             // aiming using mouse and selecting weapons using the number keys is unchangable
         }
 

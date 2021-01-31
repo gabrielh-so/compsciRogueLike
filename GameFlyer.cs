@@ -94,6 +94,7 @@ namespace MajorProject
             }
             else
             {
+
                 flyerDeadImage.position = position.ToPoint();
                 flyerDeadImage.Update(gameTime);
             }
@@ -114,6 +115,11 @@ namespace MajorProject
 
             flyerImage.UnloadContent();
             flyerDeadImage.UnloadContent();
+        }
+
+        public override void OnDeath()
+        {
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Flyer_Death"].CreateInstance(), "Flyer_Death" + rand.NextDouble().ToString());
         }
 
     }

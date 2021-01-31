@@ -15,6 +15,8 @@ namespace MajorProject
 
         public int value;
 
+        static Random rand = new Random();
+
         string[] CoinAnimation = new string[5]
         {
             "Coin1",
@@ -82,6 +84,8 @@ namespace MajorProject
         {
 
             user.money += value;
+
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Coin_Pickup"].CreateInstance(), "CoimPickup" + rand.NextDouble().ToString());
         }
 
 

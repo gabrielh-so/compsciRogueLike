@@ -25,6 +25,8 @@ namespace MajorProject
 
         GameImage image;
 
+        static Random rand = new Random();
+
 
         string[] textureNames = new string[3];
 
@@ -89,6 +91,7 @@ namespace MajorProject
                 if (Map[(int)position.Y / World.tilePixelWidth, (int)position.X / World.tilePixelWidth] != (int)World.cellType.floor)
                 {
                     removeable = true;
+                    AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Wall_Impact"].CreateInstance(), "WallImpact" + rand.NextDouble().ToString());
                 }
 
 
@@ -125,6 +128,11 @@ namespace MajorProject
         {
             image.position = position.ToPoint();
             image.Draw(spriteBatch);
+        }
+
+        public void OnCollision()
+        {
+            AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Character_Impact"].CreateInstance(), "CharacterImpact" + rand.NextDouble().ToString());
         }
 
 

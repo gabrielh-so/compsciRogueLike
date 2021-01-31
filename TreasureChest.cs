@@ -78,6 +78,8 @@ namespace MajorProject
                     w.SetWeaponDamage(PlayerPreferences.Instance.weaponDamages[LevelIndex]["Rifle"]);
                 }
 
+                w.SetWeaponDamage((int)(w.Damage * (1 + (rand.NextDouble()  ) / 5)));
+
                 movementAngle = rand.NextDouble() * Math.PI * 2;
                 w.velocity = new Vector2((float)Math.Sin(movementAngle), (float)Math.Cos(movementAngle)) * 1.5f;
                 w.OnGround = true;

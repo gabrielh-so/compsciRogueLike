@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
+using static MajorProject.PlayerPreferences; // no longhand reference to difficulty enum needed
+
 namespace MajorProject
 {
     public class GameMenuOptionScreen : Screen
@@ -30,6 +32,9 @@ namespace MajorProject
         public Button BackButton;
         public Button ResetButton;
 
+        public Button FontButton;
+        public Label FontSizeLabel;
+
         /*
         public KeyToggleButton walk_upToggle;
         public KeyToggleButton walk_rightToggle;
@@ -48,6 +53,8 @@ namespace MajorProject
 
         SoundEffect ButtonHover;
 
+        fontSizeLevel fontSize;
+
         /*
         public Label walk_upLabel;
         public Label walk_rightLabel;
@@ -55,7 +62,7 @@ namespace MajorProject
         public Label walk_leftLabel;
         public Label pick_upLabel;
         public Label open_inventoryLabel;
-        public Label use_potionLabel;
+        public Label interactLabel;
         */
 
         const string defaultDescriptionText = "Hover over an option for a description";
@@ -69,9 +76,15 @@ namespace MajorProject
 
             BackButton.LoadContent();
             BackButton.OnActivate = new UiElement.onActivate(BackToMenu);
+            BackButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
 
             ResetButton.LoadContent();
             ResetButton.OnActivate = new UiElement.onActivate(ResetKeysToDefault);
+            ResetButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
+
+            FontButton.LoadContent();
+            FontButton.OnActivate = new UiElement.onActivate(ChangeFontSize);
+            FontButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
 
             SoundVolumeLabel.LoadContent();
             MusicVolumeLabel.LoadContent();
@@ -91,6 +104,12 @@ namespace MajorProject
 
             optionDescriptor.Text = defaultDescriptionText;
             optionDescriptor.LoadContent();
+
+            fontSize = Instance.fontSize;
+            FontSizeLabel = new Label();
+            FontSizeLabel.Text = fontSize.ToString();
+            FontSizeLabel.Position = new Vector2(FontButton.Position.X, FontButton.Position.Y + 25);
+            FontSizeLabel.LoadContent();
 
             KeyInputAlert.LoadContent();
             KeyInputAlert.Scale = new Vector2(ScreenManager.Instance.GraphicsDevice.Viewport.Width / KeyInputAlert.Texture.Width, 1);
@@ -150,6 +169,8 @@ namespace MajorProject
             MusicVolumeSlider.Update(gameTime);
             MasterVolumeSlider.Update(gameTime);
 
+            FontButton.Update(gameTime);
+
             bool bListening = false;
             foreach (KeyToggleButton b in ToggleButtonList)
             {
@@ -183,6 +204,9 @@ namespace MajorProject
             SoundVolumeSlider.Draw(spriteBatch);
             MusicVolumeSlider.Draw(spriteBatch);
             MasterVolumeSlider.Draw(spriteBatch);
+
+            FontButton.Draw(spriteBatch);
+            FontSizeLabel.Draw(spriteBatch);
 
             optionDescriptor.Draw(spriteBatch);
 
@@ -255,6 +279,16 @@ namespace MajorProject
                 b.UpdateLabelText();
             }
 
+        }
+        void ChangeFontSize(UiElement triggeredElement)
+        {
+            fontSize = (fontSizeLevel)((((int)fontSize) + 1) % 3);
+            FontSizeLabel.Text = fontSize.ToString();
+
+            Instance.fontSize = fontSize;
+
+            UnloadContent();
+            LoadContent();
         }
 
         void ResetVolumeToDefault(UiElement triggeredObject)

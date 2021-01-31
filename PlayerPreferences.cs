@@ -26,7 +26,7 @@ namespace MajorProject
             { InputManager.ActionType.walk_left, Keys.A },
             { InputManager.ActionType.pick_up, Keys.F },
             { InputManager.ActionType.open_inventory, Keys.Q },
-            { InputManager.ActionType.use_potion, Keys.E }
+            { InputManager.ActionType.interact, Keys.E }
         };
 
         public enum difficultyLevel

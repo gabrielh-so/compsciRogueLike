@@ -13,6 +13,19 @@
       
     </TextureNameAndPath>
 
+    <AudioNameAndPath>
+
+      <string>Player_Damage</string>
+      <string>Player_Damage</string>
+
+      <string>Player_Death</string>
+      <string>Player_Death</string>
+      
+      <string>Item_Pickup</string>
+      <string>Item_Pickup</string>
+
+    </AudioNameAndPath>
+
   </PlayerResources>
 
   <EnvironmentResources>
@@ -84,6 +97,13 @@
     
     </TextureNameAndPath>
 
+    <AudioNameAndPath>
+
+      <string>Goblin_Death</string>
+      <string>Goblin_Death</string>
+
+    </AudioNameAndPath>
+
   </GoblinResources>
 
   <SlimeResources>
@@ -106,6 +126,13 @@
     <string>Dead</string>
       
     </TextureNameAndPath>
+    
+    <AudioNameAndPath>
+
+      <string>Slime_Death</string>
+      <string>Slime_Death</string>
+
+    </AudioNameAndPath>
 
   </SlimeResources>
 
@@ -130,6 +157,13 @@
       
     </TextureNameAndPath>
 
+    <AudioNameAndPath>
+
+      <string>Flyer_Death</string>
+      <string>Flyer_Death</string>
+
+    </AudioNameAndPath>
+
   </FlyerResources>
 
   <BossResources>
@@ -150,6 +184,13 @@
 
 
     </TextureNameAndPath>
+
+    <AudioNameAndPath>
+      
+      <string>Boss_Death</string>
+      <string>Boss_Death</string>
+      
+    </AudioNameAndPath>
 
   </BossResources>
 
@@ -308,12 +349,12 @@
 
     <AudioNameAndPath>
 
-      <!--
-      
-      <string></string>
-      <string></string>
-      
-      -->
+
+      <string>Character_Impact</string>
+      <string>Character_Impact</string>
+
+      <string>Wall_Impact</string>
+      <string>Wall_Impact</string>
 
     </AudioNameAndPath>
 
@@ -395,12 +436,23 @@
 
     <AudioNameAndPath>
 
-      <!--
-      
-      <string></string>
-      <string></string>
-      
-      -->
+      <string>Coin_Pickup</string>
+      <string>Coin/Coin_Pickup</string>
+
+      <string>Rifle_Attack</string>
+      <string>Rifle/Rifle_Attack</string>
+
+      <string>Sword_Attack</string>
+      <string>Sword/Sword_Attack</string>
+
+      <string>Spear_Attack</string>
+      <string>Spear/Spear_Attack</string>
+
+      <string>Slingshot_Attack</string>
+      <string>Slingshot/Slingshot_Attack</string>
+
+      <string>Potion_Drink</string>
+      <string>Potion/Potion_Drink</string>
 
     </AudioNameAndPath>
 

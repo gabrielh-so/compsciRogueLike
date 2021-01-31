@@ -23,6 +23,15 @@ namespace MajorProject
             Description = "Speed potion.\nRefillable consumable. A potion that gives\nthe player a speed boost on use.\nSpeed Boost: " + Speed;
 
         }
+        public override void SetValue(float newValue)
+        {
+            Speed = (int)newValue;
+        }
+
+        public override void MultiplyValue(float newScalar)
+        {
+            Speed = (int)(Speed * newScalar);
+        }
 
         public override void Update(GameTime gameTime)
         {
@@ -42,6 +51,7 @@ namespace MajorProject
                 user.Boost(7.5, Speed);
                 full = false;
                 itemType = "Empty";
+                base.Use(user);
             }
         }
     }
