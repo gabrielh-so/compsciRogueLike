@@ -58,7 +58,7 @@ namespace MajorProject
         };
 
         // incremented each time the player passes through a door
-        int LevelIndex = 0;
+        public int LevelIndex;
 
         Matrix cameraTransformationMatrix;
 
@@ -562,6 +562,7 @@ namespace MajorProject
 
             }
             LevelIndex %= LevelNames.Length;
+            GameWorld.LevelIndex = LevelIndex;
             AudioManager.Instance.StopSoundInstance("Music", true);
             RegenerateWorld();
             SetCharacterAndProjectileMaps();

@@ -133,11 +133,17 @@
 /processorParam:Quality=Best
 /build:Audio/Sound/Game/Projectile/Wall_Impact.wav
 
-#begin Audio/Sound/UI/Button/FocusSound.ogg
-/importer:OggImporter
+#begin Audio/Sound/UI/Button/FocusSound.wav
+/importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/Sound/UI/Button/FocusSound.ogg
+/build:Audio/Sound/UI/Button/FocusSound.wav
+
+#begin Audio/Sound/UI/Button/SelectSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Sound/UI/Button/SelectSound.wav
 
 #begin Audio/Sound/UI/Music/Music.mp3
 /importer:OggImporter

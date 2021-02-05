@@ -29,6 +29,7 @@ namespace MajorProject
         difficultyLevel difficulty;
 
         SoundEffect ButtonHover;
+        SoundEffect ButtonPress;
 
         public MainMenuScreen()
         {
@@ -42,6 +43,7 @@ namespace MajorProject
             content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
 
             ButtonHover = content.Load<SoundEffect>("Audio/Sound/UI/Button/FocusSound");
+            ButtonPress = content.Load<SoundEffect>("Audio/Sound/UI/Button/SelectSound");
 
             NewGameButton.OnActivate = new UiElement.onActivate(NewGame);
             NewGameButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
@@ -110,12 +112,14 @@ namespace MajorProject
 
         void NewGame(UiElement triggerElement)
         {
+            AudioManager.Instance.PlaySoundInstance(ButtonPress.CreateInstance(), triggerElement.Name);
             PlayerPreferences.Instance.LoadSavedGame = false;
             ScreenManager.Instance.ChangeScreens("GameScreen");
         }
 
         void ContinueGame(UiElement triggerElement)
         {
+            AudioManager.Instance.PlaySoundInstance(ButtonPress.CreateInstance(), triggerElement.Name);
             PlayerPreferences.Instance.LoadSavedGame = true;
             ScreenManager.Instance.ChangeScreens("GameScreen");
         }

@@ -26,6 +26,7 @@ namespace MajorProject
         public Button BackToGameButton;
 
         SoundEffect ButtonHover;
+        SoundEffect ButtonPress;
 
         difficultyLevel difficulty;
 
@@ -43,6 +44,7 @@ namespace MajorProject
             content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
 
             ButtonHover = content.Load<SoundEffect>("Audio/Sound/UI/Button/FocusSound");
+            ButtonPress = content.Load<SoundEffect>("Audio/Sound/UI/Button/SelectSound");
 
             ReturnToMenuButton.OnActivate = new UiElement.onActivate(ReturnToMenu);
             ReturnToMenuButton.OnHover = new UiElement.onHover(TriggerButtonHoverSound);
@@ -156,6 +158,7 @@ namespace MajorProject
 
         void BackToGame(UiElement triggerElement)
         {
+            AudioManager.Instance.PlaySoundInstance(ButtonPress.CreateInstance(), triggerElement.Name);
 
             returnToGame = true;
 
