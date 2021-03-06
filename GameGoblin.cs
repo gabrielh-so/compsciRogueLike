@@ -87,6 +87,8 @@ namespace MajorProject
                     // move towards player if too far away,
                     // move closer if too near
 
+                    // goblins can move to spaces unchecked by the player (like being backed up into a wall, so checks need to be made for this entity too!)
+
                     goblinImage.animated = true;
 
                     Vector2 newPosition = position;
@@ -133,15 +135,18 @@ namespace MajorProject
                             // update boxes
                             BoundingBox.Location = position.ToPoint();
 
-
+                            // update images
                             goblinImage.position = position.ToPoint();
                             goblinDeadImage.position = position.ToPoint();
                             break;
                     }
 
+
+                    // check if it is time to fire yet
                     currentFireInterval += gameTime.ElapsedGameTime.TotalSeconds;
                     if (currentFireInterval >= maxFireInterval)
                     {
+                        // if so, fire
                         GameProjectile p = new GameProjectile();
                         p.position = new Vector2(position.X, position.Y);
                         p.target = typeof(GamePlayer);
@@ -168,19 +173,14 @@ namespace MajorProject
                 }
                 else
                 {
+                    // goblin isn't moving any more, so show standing stil image
                     goblinImage.RestartAnimation();
                     goblinImage.animated = false;
                 }
 
             }
 
-
-
-
-
-
-
-
+            // update positions and images
             goblinImage.position = position.ToPoint();
             goblinDeadImage.position = position.ToPoint();
             if (alive)
@@ -193,6 +193,8 @@ namespace MajorProject
         {
             base.Draw(spriteBatch);
 
+            // if alive, draw normal goblin
+            // else, draw dead image
             if (alive)
                 goblinImage.Draw(spriteBatch);
             else goblinDeadImage.Draw(spriteBatch);
@@ -202,12 +204,14 @@ namespace MajorProject
         {
             base.UnloadContent();
 
+            // unload image data
             goblinImage.UnloadContent();
             goblinDeadImage.UnloadContent();
         }
 
         public override void OnDeath()
         {
+            // play death sound from resource pack
             AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Goblin_Death"].CreateInstance(), "GoblinDeath" + rand.NextDouble().ToString());
         }
     }

@@ -16,6 +16,11 @@ namespace MajorProject
 
         static string saveFileName = "SaveFile.bin";
 
+        /// <summary>
+        /// ABSOLUTELY HORRIFIC FIRST DRAFT CODE THAT BROUGHT ME TO TEARS AS I WROTE IT. LUCKILY FOUND A BETTER SOLUTION
+        /// </summary>
+        /// <param name="gameScreen"></param>
+
         /*
         public static void SerializeGame(GameScreen gameScreen)
         {
@@ -375,6 +380,7 @@ namespace MajorProject
 
             serializedGameWorld = JsonConvert.SerializeObject(gameScreen.GameWorld);
 
+            // add all the save data to the array to be serialised
 
             savefiledata.Add(JsonConvert.SerializeObject(enemyTypes));
             savefiledata.Add(JsonConvert.SerializeObject(serializedEnemies));
@@ -409,6 +415,7 @@ namespace MajorProject
         public static void DeSerializeGame(GameScreen gameScreen)
         {
 
+            // goes through the save file data and assigns
 
             string[] savefiledata;
 

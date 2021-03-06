@@ -16,6 +16,8 @@ namespace MajorProject
     public class GameMenuScreen : Screen
     {
 
+        // all the components that make up this UI screen
+
         public Image TitleImage;
         public Label TitleLabel;
         public Button ReturnToMenuButton;
@@ -40,6 +42,9 @@ namespace MajorProject
 
         public override void LoadContent()
         {
+
+            // load the content of each element
+            // assign the function delegates for when the items are used
 
             content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
 
@@ -69,6 +74,7 @@ namespace MajorProject
             DifficultyButton.LoadContent();
             BackToGameButton.LoadContent();
 
+            // gets the difficulty from the user preferences class and initialises the difficulty toggle
             difficulty = Instance.difficulty;
             DifficultyLabel = new Label();
             DifficultyLabel.Text = difficulty.ToString();
@@ -78,6 +84,8 @@ namespace MajorProject
 
         public override void UnloadContent()
         {
+            // unload all the components
+
             TitleLabel.UnloadContent();
 
             ReturnToMenuButton.UnloadContent();
@@ -91,12 +99,14 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
+            // updates all the buttons
             ReturnToMenuButton.Update(gameTime);
             SaveGameButton.Update(gameTime);
             OptionsButton.Update(gameTime);
             DifficultyButton.Update(gameTime);
             BackToGameButton.Update(gameTime);
 
+            // detects when it is save to return to menu - prevents multiple threads applying operations on the same object
             if (returnToGame)
             {
                 if (!ScreenManager.Instance.IsTransitioning) {
@@ -114,6 +124,7 @@ namespace MajorProject
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // draw all the components
 
             ReturnToMenuButton.Draw(spriteBatch);
             SaveGameButton.Draw(spriteBatch);
@@ -127,7 +138,9 @@ namespace MajorProject
 
         void ReturnToMenu(UiElement triggerElement)
         {
+            // not going to return to the currently paused game, so don't need the screen backup anymore
             ScreenManager.Instance.UnloadPreservedScreen();
+            // load the new menu screen
             ScreenManager.Instance.ChangeScreens("MainMenuScreen");
         }
 
@@ -143,6 +156,7 @@ namespace MajorProject
             ScreenManager.Instance.ChangeScreens("GameMenuOptionScreen");
         }
 
+        // increases the difficulty enum (loops back if too big)
         void ChangeDifficulty(UiElement triggerElement)
         {
             difficulty = (difficultyLevel)((((int)difficulty) + 1) % 4);
@@ -151,6 +165,7 @@ namespace MajorProject
             Instance.difficulty = difficulty;
         }
 
+        // pretty self explainatory
         void TriggerButtonHoverSound(UiElement triggeredObject)
         {
             AudioManager.Instance.PlaySoundInstance(ButtonHover.CreateInstance(), triggeredObject.Name);
@@ -160,6 +175,7 @@ namespace MajorProject
         {
             AudioManager.Instance.PlaySoundInstance(ButtonPress.CreateInstance(), triggerElement.Name);
 
+            // signals the update function should return to the game (does all the threadsafe checking there)
             returnToGame = true;
 
         }

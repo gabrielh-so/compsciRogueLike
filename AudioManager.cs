@@ -48,6 +48,7 @@ namespace MajorProject
         float prevMusicVolume;
         float prevMasterVolume;
 
+        // reads sound preferences from PlayerPreferences and sets local variables
         public void UpdateSoundPreferences()
         {
             SoundVolume = PlayerPreferences.Instance.SoundVolume;
@@ -55,6 +56,7 @@ namespace MajorProject
             MasterVolume = PlayerPreferences.Instance.MasterVolume;
         }
 
+        // iterates over every sound effect instance and sets respective volumes
         public void UpdateVolumeValues()
         {
             SoundEffect.MasterVolume = MasterVolume;
@@ -67,6 +69,8 @@ namespace MajorProject
 
         public void Update()
         {
+            //loops through soundinstance dictionary and removes/disposes ended events
+            
             string[] str = SoundInstances.Keys.ToArray();
 
             // remove expired / stopped sound instances
@@ -82,6 +86,7 @@ namespace MajorProject
                 }
             }
 
+            // checks for changes in volume values and updates
             if (prevMasterVolume != MasterVolume)
             {
                 SoundEffect.MasterVolume = MasterVolume;
@@ -99,11 +104,13 @@ namespace MajorProject
                     SoundInstances[s].Volume = SoundVolume;
                 }
             }
-
+            
+            // sets old values for next update loop comparison
             prevSoundVolume = SoundVolume;
             prevMusicVolume = MusicVolume;
             prevMasterVolume = MasterVolume;
         }
+
 
         public AudioManager()
         {
@@ -111,6 +118,7 @@ namespace MajorProject
             SoundInstances = new Dictionary<string, SoundEffectInstance>();
             //MusicInstances = new Dictionary<string, SoundEffectInstance>();
         }
+
 
         public bool StopSoundInstance(string InstanceName, bool isMusic)
         {
@@ -122,6 +130,15 @@ namespace MajorProject
                 MusicSet = false;
 
                 return true;
+            } else
+            {
+                if (SoundInstances.ContainsKey(InstanceName))
+                {
+                    SoundInstances[InstanceName].Dispose();
+                    SoundInstances.Remove(InstanceName);
+                    return true;
+                }
+                else return false;
             }
 
             
@@ -131,18 +148,25 @@ namespace MajorProject
 
         public bool PlayMusic(string FileName)
         {
+            // checks that that music isn't already being played
             if (MusicFileName == FileName && MusicSet) return true;
+
+            // unloads any playing music
             if (MusicInstance != null)
             {
                 content.Unload();
             }
+
             if (MusicData != null) MusicData.Dispose();
+
+            // load new music directly from file - don't need to worry about efficiency because it's only one
             MusicFileName = FileName;
             MusicData = content.Load<SoundEffect>(FileName);
             MusicInstance = MusicData.CreateInstance();
             MusicInstance.IsLooped = true;
             MusicInstance.Play();
             MusicSet = true;
+
 
             UpdateVolumeValues();
 
@@ -152,9 +176,11 @@ namespace MajorProject
 
         public bool PlaySoundInstance(SoundEffectInstance soundEffectInstance, string instanceName, bool isMusic)
         {
-
+            
             if (isMusic)
             {
+                // sets the sound instance as music
+
                 /*
                 if (MusicInstances.ContainsKey(instanceName)) return false;
                 soundEffectInstance.Volume = MusicVolume;
@@ -182,6 +208,8 @@ namespace MajorProject
 
                 return true;
             }
+
+            // can't have duplicate names
             if (SoundInstances.ContainsKey(instanceName)) return false;
             soundEffectInstance.Volume = SoundVolume;
 
@@ -193,6 +221,7 @@ namespace MajorProject
             return true;
         }
 
+        // shorthand playsoundinstance override
         public void PlaySoundInstance(SoundEffectInstance soundEffectInstance, string instanceName)
         {
             PlaySoundInstance(soundEffectInstance, instanceName, false);

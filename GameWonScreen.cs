@@ -22,6 +22,7 @@ namespace MajorProject
 
         public override void LoadContent()
         {
+            // does very little - just displays a number until a button is pressed
             int totalseconds = (int)Math.Floor(  ((GameScreen)ScreenManager.Instance.oldScreen).Player.SecondsPlayed   );
             int seconds = totalseconds % 60;
             int minutes = (totalseconds - seconds) / 60;

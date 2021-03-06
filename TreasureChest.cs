@@ -32,10 +32,12 @@ namespace MajorProject
         {
             // determine powerful weapon based on level number and difficulty
 
+            // checks that chest hasn't already been opened
             if (!IsOpen)
             {
                 IsOpen = true;
 
+                // starts the opening animation
                 image.animated = true;
 
                 double movementAngle;
@@ -54,6 +56,7 @@ namespace MajorProject
 
 
                 ///////////////////////
+                ///generates a random weapon
                 GameWeapon w;
 
                 double weaponRoll = rand.NextDouble();

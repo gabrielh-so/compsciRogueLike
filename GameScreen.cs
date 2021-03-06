@@ -19,12 +19,20 @@ namespace MajorProject
 
     public class GameScreen : Screen
     {
+
+        // this class is a doosy
+
+
+        // all the values to execute save functionality
+
+        // sepeate thread for executing save function
         [XmlIgnore]
         public Thread SerialiserThread;
         static string saveFileName = "SaveFile.bin";
         public bool hasSaved;
         public Mutex saveOperationMut = new Mutex();
 
+        // a flag to show some system wants to advance the level forward
         public bool signalLevelChange;
 
         Random rand;
@@ -38,6 +46,7 @@ namespace MajorProject
             signalLevelChange = true;
         }
 
+        // all the different types of rooms that can be placed
         public enum RoomType
         {
             Loot,
@@ -46,8 +55,10 @@ namespace MajorProject
             Shop
         }
 
+        // the base shop prices for each world
         readonly int[] shopPrices = { 1000, 2000, 3000, 4000, 5000 };
 
+        // the names of all the different levels
         string[] LevelNames =
         {
             "TestArea",
@@ -69,6 +80,9 @@ namespace MajorProject
 
         public HUD headsUpDisplay;
 
+
+        // lists of all the game entities in the world
+
         [XmlIgnore]
         public List<List<GameEnemy>> Enemies;
         public List<GameProjectile> EnemyProjectiles;
@@ -77,6 +91,9 @@ namespace MajorProject
         public List<GameItem> WorldItems;
 
         public List<GameInteractable> WorldInteractables;
+
+
+        // all the character resource backs
 
         public ResourcePack PlayerResources;
         public ResourcePack SlimeResources;
@@ -92,8 +109,10 @@ namespace MajorProject
 
         public ResourcePack LootResources;
 
+
         public GameScreen()
         {
+            // initialising the values for generating worlds
             rand = new Random();
 
             ScreenSize = ScreenManager.Instance.Dimensions;
@@ -109,17 +128,24 @@ namespace MajorProject
             GameWorld.room_min_cell = new Vector2(4, 4);
             GameWorld.room_max_cell = new Vector2(6, 6);
 
+
+            // creating the player object
             Player = new GamePlayer();
 
+            // lists of the enemies in each room - some are empty
             Enemies = new List<List<GameEnemy>>();
 
+            // lists of player and enemy projectiles respectively
             PlayerProjectiles = new List<GameProjectile>();
             EnemyProjectiles = new List<GameProjectile>();
 
+            // all the world interactables
             WorldInteractables = new List<GameInteractable>();
 
+            // all the other world items
             WorldItems = new List<GameItem>();
 
+            
             cameraTransformationMatrix = Matrix.Identity;
 
             
@@ -127,16 +153,28 @@ namespace MajorProject
 
         public void ConstructWorld()
         {
+            // reloads enviroment resources based on level index
+            // reloads gameworld
+            // generates new world
+            // renders the texture of the world
+
             EnvironmentResources.LoadContent(LevelNames[LevelIndex]);
 
             GameWorld.LoadContent(ref EnvironmentResources);
             GameWorld.GenerateWorld();
             GameWorld.RenderTexture();
+
+            // resets the music
             AudioManager.Instance.PlayMusic(EnvironmentResources.AudioPack["Music"].Name);
         }
 
         public void RegenerateWorld()
         {
+
+            // unloads the gameworld content
+            // unloads environment content
+            // unloads all the different types of game entities
+            // clears all the gameentities from the lists
             GameWorld.UnloadContent();
             EnvironmentResources.UnloadContent();
 
@@ -165,26 +203,35 @@ namespace MajorProject
             WorldItems.Clear();
             WorldInteractables.Clear();
 
+
+
+            // regenerates world
+
             ConstructWorld();
 
+            // generates the minimap texture
             headsUpDisplay.GenerateMiniMap(GameWorld.Map);
 
+            // adds low-level items at the end of some corridoors
             PlaceLoot();
 
+            // adds enemies and contents to rooms
             LoadRoomContents();
 
             AudioManager.Instance.PlayMusic(EnvironmentResources.AudioPack["Music"].Name);
         }
 
+        // sets the player's position to the entrance
         public void SetPlayerToEntrance()
         {
             Player.position.X = (GameWorld.entryIndex.X + 0.5f) * World.tilePixelWidth;
             Player.position.Y = (GameWorld.entryIndex.Y + 0.5f) * World.tilePixelHeight;
         }
 
-
+        // given a projectile, determines type and adds it to either projectile array
         public void AddProjectile(GameProjectile p)
         {
+            // hands the projectile the gamemap to use
             p.Map = GameWorld.Map;
             p.LoadContent(ref ProjectileResources);
             if (p.target == typeof(GamePlayer))
@@ -195,6 +242,7 @@ namespace MajorProject
                 PlayerProjectiles.Add(p);
         }
 
+        // given an item, adds the item to the worlditem list after setting appropriate values
         public void AddItem(GameItem i)
         {
             i.removeable = false;
@@ -204,7 +252,7 @@ namespace MajorProject
         }
 
 
-
+        // initialise player values
         public void LoadPlayer()
         {
             Player.tileWidth = World.tilePixelWidth;
@@ -213,6 +261,7 @@ namespace MajorProject
             SetPlayerToEntrance();
         }
 
+        // iterates over an enemy list to check if any are alive
         public bool IsRoomDead(int room)
         {
             if (room >= GameWorld.room_count || room < 0) return true; // anything that isn't a room doesn't have enemies in it
@@ -223,16 +272,21 @@ namespace MajorProject
             return true;
         }
 
+        // iterates over each room in the gameworld, and adds content to that room based off type
         void LoadRoomContents()
         {
 
             for (int i = 0; i < GameWorld.room_count; i++)
             {
+                // protects against not enough rooms being generated - rarely happens, but enough to warrant protection
+                if (GameWorld.generation_RoomIndexPositions.Count <= i) continue;
 
+                // set relative position values
                 Vector2 RoomPosition = GameWorld.generation_RoomIndexPositions[i];
                 Vector2 RoomCentre = GameWorld.generation_RoomIndexPositions[i] + GameWorld.generation_RoomIndexDimensions[i] / 2;
                 Enemies.Add(new List<GameEnemy>());
 
+                // adds different stuff based off the room types
                 switch (GameWorld.roomTypes[i])
                 {
                     case RoomType.Combat:
@@ -240,7 +294,7 @@ namespace MajorProject
                         {
 
 
-
+                            // creates a generic enemy object, and assigns it new values
 
                             GameEnemy e = new GameEnemy();
 
@@ -284,6 +338,7 @@ namespace MajorProject
 
                     case RoomType.Loot:
 
+                        // adds a tresure chest in the centre of the room
                         TreasureChest t = new TreasureChest();
 
                         t.position = RoomCentre * World.tilePixelWidth;
@@ -304,6 +359,10 @@ namespace MajorProject
                         }
                         break;
                     case RoomType.Boss:
+
+                        // adds a boss character in the centre
+                        // also adds an exit
+
                         GameBoss b = new GameBoss();
 
                         b.position = RoomCentre * World.tilePixelWidth;
@@ -326,12 +385,14 @@ namespace MajorProject
             }
         }
 
+        // loads the resouces used by projectiles and items
         void LoadItemResources()
         {
             LootResources.LoadContent();
             ProjectileResources.LoadContent();
         }
 
+        // loads the resources used by characters
         void LoadCharacterResources()
         {
             PlayerResources.LoadContent();
@@ -341,6 +402,7 @@ namespace MajorProject
             BossResources.LoadContent();
         }
 
+        // assigns an enum value to the list of rooms
         public void AssignRooms()
         {
 
@@ -362,6 +424,7 @@ namespace MajorProject
 
 
         }
+
 
         public void PlaceLoot()
         {
@@ -470,6 +533,7 @@ namespace MajorProject
 
         }
 
+        // loads content in the heads up display, and passes values it needs to function
         public void LoadHUD()
         {
             headsUpDisplay = new HUD();
@@ -479,6 +543,8 @@ namespace MajorProject
             headsUpDisplay.SetPlayer(Player);
         }
 
+
+        // loads all the level procedually
         public override void LoadContent()
         {
             // we don't want to regenerate the world if the class contains information already that's been loaded in from a save file
@@ -511,6 +577,7 @@ namespace MajorProject
             AudioManager.Instance.PlayMusic(EnvironmentResources.AudioPack["Music"].Name);
         }
 
+        // iterates over the player and projectiles, and assigns the gameworld map
         void SetCharacterAndProjectileMaps()
         {
 
@@ -555,12 +622,15 @@ namespace MajorProject
             /// check if the completed level was the last one
             LevelIndex++;
 
+            // if the level index has moved beyond the level array, the game is beaten - display the game won screen
             if (LevelIndex == LevelNames.Length)
             {
                 // show score splashscreen
                 ScreenManager.Instance.ChangeScreens("GameWonScreen", true);
 
             }
+           
+            // regenerate world and loop back around if the end of all the levels
             LevelIndex %= LevelNames.Length;
             GameWorld.LevelIndex = LevelIndex;
             AudioManager.Instance.StopSoundInstance("Music", true);
@@ -595,7 +665,7 @@ namespace MajorProject
                     i.Update(gameTime);
                 }
 
-
+                // update the player
                 Player.Update(gameTime);
 
                 for (int i = 0; i < GameWorld.room_count; i++)
@@ -606,11 +676,13 @@ namespace MajorProject
                     }
                 }
 
+                // update the world items
                 for (int i = 0; i < WorldItems.Count; i++)
                 {
                     WorldItems[i].Update(gameTime);
                 }
 
+                // updates all the projectiles
                 foreach (GameProjectile p in EnemyProjectiles)
                 {
                     p.Update(gameTime);
@@ -684,6 +756,7 @@ namespace MajorProject
                             }
                     }
 
+                    // iterates over all the world interactables, and check if the user's interacting with any of them
                     for (int i = 0; i < WorldInteractables.Count; i++)
                     {
                         if (WorldInteractables[i].BoundingBox.Contains(Player.BoundingBox))
@@ -692,6 +765,7 @@ namespace MajorProject
                             {
                                 WorldInteractables[i].Use(LevelIndex, Player);
                             }
+                            // if the player is hovering over the interactable, the interactable should display some prompt
                             WorldInteractables[i].Hovering();
                         }
                     }
@@ -733,6 +807,7 @@ namespace MajorProject
                     }
                 }
 
+                // removes any enemy projectiles that have signalled completion
                 for (int i = EnemyProjectiles.Count - 1; i > -1; i--)
                 {
                     if (EnemyProjectiles[i].removeable)
@@ -741,10 +816,11 @@ namespace MajorProject
                     }
                 }
 
-
+                // if the player is in a room
                 if (Player.currentRoom > -1)
                     foreach (List<GameEnemy> el in Enemies)
                     {
+                        // iterate over every enemy in the room, and compare position with player projectiles
                         foreach (GameEnemy e in el)
                         {
                             if (e.alive)
@@ -786,6 +862,7 @@ namespace MajorProject
                         }
                     }
 
+                // remove any expired player projectiles
                 for (int i = PlayerProjectiles.Count - 1; i > -1; i--)
                 {
                     if (PlayerProjectiles[i].removeable)
@@ -851,6 +928,7 @@ namespace MajorProject
                     }
                 }
 
+                // removes any worlditems that have been flagged for removal
                 for (int i = WorldItems.Count - 1; i > -1; i--)
                 {
                     if (WorldItems[i].removeable)
@@ -859,10 +937,12 @@ namespace MajorProject
                     }
                 }
 
+                // update the heads up display
                 headsUpDisplay.Update(gameTime);
             }
             else
             {
+                // player is dead, so take input to sacrifice an item in the inventory
                 if (headsUpDisplay.UpdateSacrificeSelection())
                 {
                     ChangeToStartingLevel();
@@ -892,6 +972,8 @@ namespace MajorProject
 
             // ... draw sprites here ...
 
+            // goes through every game entity and draws it to the screen
+            // only draws everything else if the player is alive
             if (Player.alive)
             {
                 GameWorld.Draw(spriteBatch);
@@ -926,6 +1008,7 @@ namespace MajorProject
                 }
             }
 
+            // draws the player
             Player.Draw(spriteBatch);
 
 
@@ -949,6 +1032,8 @@ namespace MajorProject
             {
                 hasSaved = true;
 
+                // unloads all non-savable content before saving
+
                 Player.UnloadContent();
 
                 foreach (List<GameEnemy> el in Enemies)
@@ -963,6 +1048,7 @@ namespace MajorProject
                 foreach (GameInteractable e in WorldInteractables)
                     e.UnloadContent();
 
+                // creates a thread to save the game
                 SerialiserThread = new Thread(() => GameSerializer.SerializeGame(this));
                 SerialiserThread.Start();
 
@@ -974,7 +1060,7 @@ namespace MajorProject
         public bool LoadGame()
         {
 
-
+            // checks there's a savefile
             if (File.Exists(saveFileName))
             {
                 GameSerializer.DeSerializeGame(this);
@@ -1041,7 +1127,7 @@ namespace MajorProject
 
         public void ReloadSerialisedContent()
         {
-
+            
             Player.LoadContent(ref PlayerResources);
 
             Player.currentRoom = -1;

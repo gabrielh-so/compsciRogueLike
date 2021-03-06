@@ -68,6 +68,8 @@ namespace MajorProject
             playerAttackCooldownLabel = new GameLabel();
             MoneyLabel = new GameLabel();
 
+            deathLabel = new GameLabel();
+
             heldItemLabel = new GameLabel();
             hoverItemLabel = new GameLabel();
 
@@ -196,9 +198,15 @@ namespace MajorProject
                 if (i != null)
                     containsItem = true;
             }
-            if (!containsItem) return true;
 
-            if (InputManager.Instance.ActionKeyPressed(InputManager.ActionType.walk_left)) DeathSelection--;
+            if (!containsItem)
+            {
+                player.SetHealth(player.maxHealth);
+                player.alive = true;
+                return true;
+            }
+
+                if (InputManager.Instance.ActionKeyPressed(InputManager.ActionType.walk_left)) DeathSelection--;
             if (InputManager.Instance.ActionKeyPressed(InputManager.ActionType.walk_right)) DeathSelection++;
             DeathSelection %= player.inventory.itemList.Length;
 
@@ -261,6 +269,8 @@ namespace MajorProject
                 miniMap.Draw(spriteBatch);
             } else
             {
+                deathLabel.Draw(spriteBatch);
+
                 int offset = 0;
                 foreach (GameItem i in player.inventory.itemList)
                 {
@@ -309,6 +319,8 @@ namespace MajorProject
 
             MoneyLabel.UnloadContent();
 
+            deathLabel.UnloadContent();
+
             heldItemLabel.UnloadContent();
             hoverItemLabel.UnloadContent();
 
@@ -341,6 +353,11 @@ namespace MajorProject
             MoneyLabel.FontName = "coders_crux";
             MoneyLabel.FontColor = Color.Yellow;
 
+            deathLabel.SetPosition(450, 330);
+            deathLabel.FontName = "coders_crux";
+            deathLabel.FontColor = Color.Red;
+            deathLabel.Text = "You died! Pick an item to sacrifice...";
+
             heldItemLabel.SetPosition(750, 575);
             heldItemLabel.FontName = "coders_crux";
             heldItemLabel.FontColor = Color.White;
@@ -357,6 +374,7 @@ namespace MajorProject
             lowHealthOverlay.LoadContent(ref HUDResources, new string[1] { "DamageTexture" });
             playerAttackCooldownLabel.LoadContent(ref HUDResources);
             MoneyLabel.LoadContent(ref HUDResources);
+            deathLabel.LoadContent(ref HUDResources);
             heldItemLabel.LoadContent(ref HUDResources);
             hoverItemLabel.LoadContent(ref HUDResources);
 

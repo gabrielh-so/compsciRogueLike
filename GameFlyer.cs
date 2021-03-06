@@ -87,6 +87,7 @@ namespace MajorProject
                 position += velocity;
             }
 
+            // u[dates the image position if alive
             if (alive)
             {
                 flyerImage.position = position.ToPoint();
@@ -94,7 +95,7 @@ namespace MajorProject
             }
             else
             {
-
+                // otherwise updates the dead image position
                 flyerDeadImage.position = position.ToPoint();
                 flyerDeadImage.Update(gameTime);
             }

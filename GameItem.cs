@@ -9,6 +9,8 @@ namespace MajorProject
 {
     public abstract class GameItem : GameEntity
     {
+
+        // all the values used for a basic object type
         public string itemType;
 
         public string Description;
@@ -17,6 +19,7 @@ namespace MajorProject
 
         public bool OnGround;
 
+        // item use function should be overridden, otherwise it can't be used
         public virtual void Use(GamePlayer user)
         {
 
@@ -28,6 +31,7 @@ namespace MajorProject
 
         }
 
+        // generic items don't have descriptions to write
         public virtual void WriteDescription()
         {
             return;

@@ -12,6 +12,7 @@ namespace MajorProject
 {
     public class GameProjectile : GameEntity
     {
+        // all the values the game projectile needs to use
         public bool hit;
 
         public double speed;
@@ -30,6 +31,7 @@ namespace MajorProject
 
         string[] textureNames = new string[3];
 
+        // enum of all the different projectile types - some cause damage
         public enum DamageType
         {
             Kinetic,
@@ -41,6 +43,8 @@ namespace MajorProject
             Blood
         }
 
+
+
         public DamageType damageType;
         public Type target;
         public int radius;
@@ -48,12 +52,14 @@ namespace MajorProject
 
         public GameProjectile()
         {
+            // initialise the values - some are set in the function the projectile is created in
             image = new GameImage();
             type = this.GetType();
             currentLifeSpan = 0;
             totalLifeSpan = 2;
         }
 
+        // sets the velocity of the projectile - normalises if not 0
         public void SetVelocity(Vector2 p)
         {
             velocity = p;
@@ -65,16 +71,21 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
+            // update the image
             image.Update(gameTime);
 
+            // add to total life span
             currentLifeSpan += gameTime.ElapsedGameTime.TotalSeconds;
 
+            
             if (damageType != DamageType.Blood)
             {
+                // apply unchanged velocity to the blood
                 position.X += (float)(velocity.X * speed * gameTime.ElapsedGameTime.TotalSeconds);
                 position.Y += (float)(velocity.Y * speed * gameTime.ElapsedGameTime.TotalSeconds);
             } else
             {
+                // blood isn't propelled. only apply friction
                 velocity *= 0.96f;
                 position.X += (float)(velocity.X * speed * gameTime.ElapsedGameTime.TotalSeconds);
                 position.Y += (float)(velocity.Y * speed * gameTime.ElapsedGameTime.TotalSeconds);
@@ -97,8 +108,11 @@ namespace MajorProject
 
         }
 
+
         public override void LoadContent(ref ResourcePack resources)
         {
+            // initialise all the position values
+
             base.LoadContent(ref resources);
 
             SpriteSize = new Point(25, 25);
@@ -108,6 +122,7 @@ namespace MajorProject
 
             image.SpriteSize = SpriteSize;
 
+            // put all the frame information in the array
             for (int i = 1; i < 4; i++)
             {
                 textureNames[i-1] = damageType.ToString() + i.ToString();
@@ -119,6 +134,8 @@ namespace MajorProject
 
         public override void UnloadContent()
         {
+            // unload the images
+
             image.UnloadContent();
 
             base.UnloadContent();
@@ -126,6 +143,7 @@ namespace MajorProject
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // draw the image
             image.position = position.ToPoint();
             image.Draw(spriteBatch);
         }

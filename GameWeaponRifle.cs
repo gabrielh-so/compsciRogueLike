@@ -21,6 +21,7 @@ namespace MajorProject
             WriteDescription();
         }
 
+        // generates the weapon description
         public override void WriteDescription()
         {
             Description = "Rifle.\nWeapon. Fires high-damage bullet projectiles\nat a slow rate.\nDamage: " + Damage + "\nCooldown: " + attackCooldown + "s";

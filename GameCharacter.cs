@@ -22,6 +22,8 @@ namespace MajorProject
 
         public GameCharacter()
         {
+            // initialise character with default values.
+            //these will definetly get overwritten, so it doesn't really matter
             meleeDamage = 10;
             projectileDamage = 5;
             rand = new Random();
@@ -62,6 +64,7 @@ namespace MajorProject
 
         public virtual void ProjectileCollision(GameProjectile p)
         {
+            // sometimes characters might want to have different resistances to projectiles / types of projectiles etc.
             TakeDamage(p.damage);
         }
 
@@ -80,6 +83,7 @@ namespace MajorProject
             }
             */
 
+            // character has taken damage! produce blood projectile
             if (health < lastHealth)
             {
                 GameProjectile p = new GameProjectile();
@@ -102,21 +106,24 @@ namespace MajorProject
                 ((GameScreen)ScreenManager.Instance.currentScreen).AddProjectile(p);
             }
 
+            // if health is 0, die
             if (health <= 0)
             {
                 alive = false;
             }
 
+            // if character has died this update loop, do whatever it would do on death
             if (!alive && wasAlive)
             {
                 OnDeath();
             }
 
+            // uipdate bounding box information based on position
             BoundingBox.X = (int)position.X - BoundingBox.Size.X / 2;
             BoundingBox.Y = (int)position.Y - BoundingBox.Size.Y / 2;
 
+            // update old values for comparisons next update
             lastHealth = health;
-
             wasAlive = alive;
 
 
@@ -125,14 +132,15 @@ namespace MajorProject
 
         public virtual void onCollision(GameCharacter e)
         {
-
+            // empty for default characters, may be overridden
         }
 
         public virtual void OnDeath()
         {
-
+            // empty for default characters, may be overridden
         }
 
+        // different characters may treat health gains differently, allow it to be overwritten
         public virtual void SetHealth(int newHealth)
         {
             health = newHealth;

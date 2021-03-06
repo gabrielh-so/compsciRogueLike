@@ -64,6 +64,8 @@ namespace MajorProject
 
         public virtual void LoadContent(ref ResourcePack resources, string[] texturenames)
         {
+            // sets resources and texture names
+
             Resources = resources;
             textureNames = texturenames;
             if (texturenames.Length > 1)
@@ -76,6 +78,7 @@ namespace MajorProject
         }
         public virtual void LoadContent(ref ResourcePack resources, int framelength, string[] texturenames)
         {
+            // alternate arguments for determining the length of each frame, not actually used, but nice to have
             frameLength = framelength;
             LoadContent(ref resources, texturenames);
         }
@@ -87,50 +90,66 @@ namespace MajorProject
 
         public virtual void Update(GameTime gameTime)
         {
+            // if a moving image
             if (!staticImage && animated && !completed)
             {
+                // add time to the time to next frame
                 frameTime += gameTime.ElapsedGameTime.TotalSeconds;
                 if (frameTime > frameLength)
                 {
+                    // ifenough time has passed for next frame
                     textureIndex++;
                     if (textureIndex == textureNames.Length)
                     {
+                        // frames have been looped through
                         if (NoLoop)
                         {
+                            // the animation has completed. go back to final frame
                             completed = true;
 
                             textureIndex--;
                         }
                         else
                         {
+                            // reset texture index
                             textureIndex = 0;
                         }
                     }
+
                     frameTime -= frameLength;
                 }
             }
         }
+
         public virtual void Draw(SpriteBatch spriteBatch)
         {
+            // check that image is not transparent - don't bother drawing it otherwise!
             if (alpha > 0)
             {
                 if (staticImage) textureIndex = 0;
                 Point origin = new Point();
+
+                // determine where image is drawn from bsaed on if it's centered or not
                 if (centered)
                 {
+                    // origin is centre of image
                     origin.X = position.X - SpriteSize.X / 2;
                     origin.Y = position.Y - SpriteSize.Y / 2;
                 }
                 else
                 {
+                    // origin is top-left corner of image
                     origin = position;
                 }
 
+                // draw the image
                 spriteBatch.Draw(Resources.TexturePack[textureNames[textureIndex]], destinationRectangle: new Rectangle(origin, SpriteSize), color: Color.White * alpha);
 
             }
 
         }
+
+        // same as other Draw, just draw a specific frame
         public virtual void Draw(SpriteBatch spriteBatch, int textureIndex)
         {
             if (alpha > 0)

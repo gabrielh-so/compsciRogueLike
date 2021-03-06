@@ -22,6 +22,7 @@ namespace MajorProject
 
         public GamePotion()
         {
+            // initialises all the values for the object
             full = true;
 
             itemType = "Empty";
@@ -34,6 +35,9 @@ namespace MajorProject
         }
         public override void LoadContent(ref ResourcePack resources)
         {
+            // load image content
+            // sets bounding box values
+
             base.LoadContent(ref resources);
 
             radius = 25;
@@ -58,12 +62,13 @@ namespace MajorProject
         }
 
 
-
+        // function called when player uses item
         public override void Use(GamePlayer user)
         {
             AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Potion_Drink"].CreateInstance(), "PotionDrink");
         }
 
+        // operations that allow the strength of the potion to be changed
         public virtual void SetValue(float newValue)
         {
 
@@ -77,8 +82,10 @@ namespace MajorProject
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // update the image position
             image.position = position.ToPoint();
 
+            // draws the image based on whether the potion has been consumed yet
             if (full)
             {
                 image.Draw(spriteBatch, 0);

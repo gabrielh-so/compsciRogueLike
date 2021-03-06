@@ -21,6 +21,7 @@ namespace MajorProject
 
         public GameWeapon()
         {
+            
             radius = 25;
 
             image = new GameImage();

@@ -13,7 +13,7 @@ namespace MajorProject
 {
     public class EnvironmentResourcePack : ResourcePack
     {
-
+        // same as resource pack, but inserts the name of the level in the path
         public void LoadContent(string EnvironmentName)
         {
 

@@ -27,20 +27,25 @@ namespace MajorProject
 
         }
 
+        // returns true if mouse is hovering over any of the slider
         public bool mouseIsHovering()
         {
             return MainContainer.Contains(InputManager.Instance.GetMousePosition());
         }
+
+        // returns true if mouse is hovering over the slider part of the slider
         public bool mouseIsHoveringSlider()
         {
             return SliderContainer.Contains(InputManager.Instance.GetMousePosition());
         }
 
+        // same as before, but just from some generic point
         public bool PointIntersects(Point p)
         {
             return MainContainer.Contains(p);
         }
 
+        // same as above
         public bool PointIntersectsSlider(Point p)
         {
             return SliderContainer.Contains(p);
@@ -48,6 +53,7 @@ namespace MajorProject
 
         public override void LoadContent()
         {
+            // starts the positions
             sliderImage.LoadContent();
             baseImage.LoadContent();
             baseImage.Position = Position;
@@ -67,6 +73,7 @@ namespace MajorProject
             baseImage.Update(gameTime);
             sliderImage.Update(gameTime);
 
+            // determines if the slider has been selected
             if (mouseIsHoveringSlider())
             {
                 if (InputManager.Instance.MousePressed())
@@ -82,6 +89,8 @@ namespace MajorProject
             {
                 wasClicked = false;
             }
+
+            // moves with the mouse (x axis) if clicked and the mouse has been moved
             if (wasClicked && InputManager.Instance.MouseMoved())
             {
                 Point mousePos = InputManager.Instance.GetMousePosition();
@@ -102,6 +111,7 @@ namespace MajorProject
 
         public void SetSliderPosition(float amount, bool setup)
         {
+            // updates the position of the slider to whatever amount it is
             if (setup) sliderPosition -= 1.5f;
             amount = Math.Max(0, Math.Min(1, amount));
             if (amount == sliderPosition) return;
@@ -115,6 +125,7 @@ namespace MajorProject
                 OnActivateF(this, amount);
         }
 
+        // generic slider function, sets the setup bool to false
         public void SetSliderPosition(float amount)
         {
             SetSliderPosition(amount, false);
@@ -125,6 +136,9 @@ namespace MajorProject
             baseImage.Draw(spriteBatch);
             sliderImage.Draw(spriteBatch);
         }
+
+        // classical map function - learnt it in physics
+
         private static float map(float value, float fromLow, float fromHigh, float toLow, float toHigh)
         {
             return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;

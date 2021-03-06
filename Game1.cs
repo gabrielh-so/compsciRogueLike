@@ -16,9 +16,12 @@ namespace MajorProject
         {
             graphics = new GraphicsDeviceManager(this);
 
+            // set lower resolution because I'm worried about my computer
 
             graphics.PreferredBackBufferWidth = 1200;
             graphics.PreferredBackBufferHeight = 720;
+
+
             /*
             graphics.PreferredBackBufferWidth = 1200;
             graphics.PreferredBackBufferHeight = 720;
@@ -37,8 +40,10 @@ namespace MajorProject
         {
             // TODO: Add your initialization logic here
 
+            // need to see where the pointer is
             this.IsMouseVisible = true;
 
+            // get the screen dimensions and add it to the screenmanager
             ScreenManager.Instance.Dimensions = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
 
 
@@ -52,6 +57,8 @@ namespace MajorProject
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
+
+            // initialise sprite batch and pass screenmanager all the graphics devices/helpers
             spriteBatch = new SpriteBatch(GraphicsDevice);
             ScreenManager.Instance.GraphicsDevice = GraphicsDevice;
             ScreenManager.Instance.SpriteBatch = spriteBatch;
@@ -81,14 +88,24 @@ namespace MajorProject
 
             // TODO: Add your update logic here
 
+            // update the input first so updating game elements can compare
             InputManager.Instance.Update();
+
+            // self-explainatory
+            // if a quit is signalled by the input manager, exit
             if (InputManager.Instance.QuitSignaled)
             {
+
+                // save user settings when exiting too
                 PlayerPreferences.SavePreferences();
 
                 Exit();
             }
+
+            // update audio manager
             AudioManager.Instance.Update();
+
+            // call the main update loop
             ScreenManager.Instance.Update(gameTime);
 
             base.Update(gameTime);
@@ -100,10 +117,13 @@ namespace MajorProject
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            // clear with black background first
             GraphicsDevice.Clear(Color.Black);
 
+            // begin spritebatch with no initial transformations
             spriteBatch.Begin();
 
+            // call main draw loop
             ScreenManager.Instance.Draw(spriteBatch);
 
             //spriteBatch.Draw(image, destinationRectangle: new Rectangle(graphics.GraphicsDevice.Viewport.Width/2, graphics.GraphicsDevice.Viewport.Height/2, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), null, Color.White, 3.141596f, new Vector2(image.Width/2, image.Height/2), SpriteEffects.None, 1.0f);

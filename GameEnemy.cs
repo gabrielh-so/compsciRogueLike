@@ -31,6 +31,8 @@ namespace MajorProject
         {
             base.Update(gameTime);
 
+            // enemies should drop coins on death
+            // if enemy has died this frame (and only this frame), drop a coin
             if (WasAlive && !alive)
             {
                 Random rand = new Random();
@@ -43,13 +45,16 @@ namespace MajorProject
                 ((GameScreen)ScreenManager.Instance.currentScreen).AddItem(c);
             }
 
+            // update the wasalive-otron
             WasAlive = alive;
 
+            // update bounding box location
             BoundingBox.Location = position.ToPoint();
         }
 
         public override void UnloadContent()
         {
+            // sets the target to null, removing any possible player references
             base.UnloadContent();
 
             target = null;
@@ -62,6 +67,7 @@ namespace MajorProject
 
         public override void TakeDamage(int damage)
         {
+            // takes damage and multiplies it based on difficulty value (scalar multiple can be edited in options)
             damage = (int)(damage * PlayerPreferences.enemyDamageScalars[PlayerPreferences.Instance.difficulty]);
             base.TakeDamage(damage);
         }

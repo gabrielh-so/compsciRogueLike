@@ -32,6 +32,7 @@ namespace MajorProject
             // determine powerful weapon based on level number and difficulty
             if (user.money < ItemPrice) return;
 
+            // checks that it hasn't been purchased already
             if (!IsPurchased)
             {
 
@@ -85,6 +86,7 @@ namespace MajorProject
         {
             ItemPrice = price;
 
+            // more likely to sell potions than weapons
             if (rand.NextDouble() < 0.75)
             {
                 double potionRoll = rand.NextDouble();

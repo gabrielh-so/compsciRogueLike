@@ -17,6 +17,8 @@ namespace MajorProject
 
         public ExitInteractable()
         {
+            // initialises the image, position and bounding information
+
             type = this.GetType();
 
             image = new GameImage();
@@ -37,27 +39,33 @@ namespace MajorProject
         {
             // determine powerful weapon based on level number and difficulty
 
-            // check that the boss is dead and not already transitioningsd
+            // checks not already transitioning
             if (!ScreenManager.Instance.IsTransitioning)
+                // checks boss is dead (will always be in first room)
                 if (!((GameScreen)ScreenManager.Instance.currentScreen).Enemies[0][0].alive)
+                    // flag that the level should be changed
                     ((GameScreen)ScreenManager.Instance.currentScreen).SignalLevelChange();
         }
 
         public override void LoadContent(ref ResourcePack resources)
         {
+            // assigns the reference to the resources object
             Resources = resources;
 
+            // get the animation string - only one so a static image
             OpenAnimation = new string[1]
             {
                 "Exit_Texture"
             };
 
+            // load image with frame name
             image.LoadContent(ref Resources, OpenAnimation);
             image.animated = false;
         }
 
         public override void UnloadContent()
         {
+            // unloads base, the image and unhooks resources
             base.UnloadContent();
             image.UnloadContent();
             Resources = null;
@@ -65,6 +73,7 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
+
             IsHovering = false;
             BoundingBox.Location = (position - BoundingBox.Size.ToVector2() / 2).ToPoint();
             image.Update(gameTime);
@@ -78,9 +87,11 @@ namespace MajorProject
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // update image positions
             image.position = position.ToPoint();
             image.Draw(spriteBatch);
 
+            // if the boss enemy is dead, display the instruction text
             if (IsHovering && !((GameScreen)ScreenManager.Instance.currentScreen).Enemies[0][0].alive)
             {
                 spriteBatch.DrawString(Resources.FontPack["coders_crux" + "_" + PlayerPreferences.Instance.fontSize.ToString()], "Press 'E' to interact.", position, color: Color.Blue);

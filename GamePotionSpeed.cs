@@ -14,6 +14,7 @@ namespace MajorProject
 
         public GamePotionSpeed()
         {
+            // initialises the deafault values for the speed potion
             full = true;
             type = this.GetType();
             itemType = "Speed";
@@ -23,6 +24,9 @@ namespace MajorProject
             Description = "Speed potion.\nRefillable consumable. A potion that gives\nthe player a speed boost on use.\nSpeed Boost: " + Speed;
 
         }
+
+        // overrides of base functions
+
         public override void SetValue(float newValue)
         {
             Speed = (int)newValue;
@@ -40,6 +44,7 @@ namespace MajorProject
 
         public override void Refill()
         {
+            // change the name of the potion and toggle the empty
             full = true;
             itemType = "Speed";
         }

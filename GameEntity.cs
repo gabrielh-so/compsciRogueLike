@@ -13,6 +13,7 @@ namespace MajorProject
     {
         public Type type;
 
+        // signals the main game loop if this entity should be removed and disposed from the world
         public bool removeable;
 
         public Vector2 position;
@@ -27,6 +28,7 @@ namespace MajorProject
 
         public GameEntity()
         {
+            // intialise position and velocity vectors
             position = new Vector2();
             velocity = new Vector2();
 
@@ -35,6 +37,7 @@ namespace MajorProject
 
         public void SetPosition(float x, float y)
         {
+            // update position
             position.X = x;
             position.Y = y;
         }
@@ -42,6 +45,7 @@ namespace MajorProject
         // content within the pack is already loaded, so just assign
         public virtual void LoadContent(ref ResourcePack resources)
         {
+            // assign the resources reference (catch-all in case I forget to add in any of the upper levels)
             Resources = resources;
         }
 

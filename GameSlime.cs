@@ -12,10 +12,11 @@ namespace MajorProject
     public class GameSlime : GameEnemy
     {
 
+        
         GameImage slimeImage;
         GameImage slimeDeadImage;
 
-
+        // the name of each frame of animation
         string[] walkAnimation =
         {
             "Slime1",
@@ -41,6 +42,7 @@ namespace MajorProject
 
         public override void LoadContent(ref ResourcePack resources)
         {
+            // loads all the image content
             base.LoadContent(ref resources);
 
             speed = 25;
@@ -51,6 +53,7 @@ namespace MajorProject
             maxHealth = 150;
             health = maxHealth;
 
+            
             slimeImage.LoadContent(ref Resources, walkAnimation);
             slimeImage.animated = true;
             slimeImage.centered = true;

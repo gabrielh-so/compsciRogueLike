@@ -29,9 +29,13 @@ namespace MajorProject
 
         public override void Refill()
         {
+            // change the name of the potion and toggle the fullness bool
             full = true;
             itemType = "Immune";
         }
+
+        // overrides of base functions
+
         public override void SetValue(float newValue)
         {
             ImmuneTime = newValue;

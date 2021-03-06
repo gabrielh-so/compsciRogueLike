@@ -11,18 +11,24 @@ namespace MajorProject
 {
     public class GameBoss : GameEnemy
     {
-        Random rand;
+        //Random rand;
+
+        // all the different images that are
 
         GameImage bossImage;
         GameImage bossChargeImage;
         GameImage bossDeadImage;
 
+
+        // values that determine when to fire
         double maxFireInterval = 1;
         double currentFireInterval = 0;
 
+        // how many projctiles are fired each charge
         int ProjectilesPerCharge;
 
 
+        // string arrays for each image
 
         string[] bossAnimation =
         {
@@ -44,7 +50,7 @@ namespace MajorProject
 
         public GameBoss()
         {
-
+            // initialise all the image objects
             bossImage = new GameImage();
             bossChargeImage = new GameImage();
             bossDeadImage = new GameImage();
@@ -53,26 +59,33 @@ namespace MajorProject
 
         public override void LoadContent(ref ResourcePack resources)
         {
+
+
             base.LoadContent(ref resources);
 
+            // prevents already dead enemies from becoming alive on reload
             if (!alive)
                 WasAlive = false;
 
             rand = new Random();
 
+            // not actually used - this enemy doesn't move
             speed = 50;
 
+            // sets bounding/position information
             BoundingBox.Size = new Point(150, 150);
             bossImage.position = position.ToPoint();
             BoundingBox.Location = (position - BoundingBox.Size.ToVector2() / 2).ToPoint();
 
             bossDeadImage.position = position.ToPoint();
 
+            // set health values (overrwitten by GameWorld.LoadRoomContents)
             maxHealth = 1500;
             health = maxHealth;
 
             ProjectilesPerCharge = 15;
 
+            // loads and sets values for all images
             bossImage.LoadContent(ref Resources, bossAnimation);
 
             bossImage.animated = false;
@@ -99,6 +112,7 @@ namespace MajorProject
         {
             base.Update(gameTime);
 
+            // only need to update if alive
             if (alive)
             {
 
@@ -107,6 +121,8 @@ namespace MajorProject
 
                 if (target != null)
                 {
+
+                    // character doesn't move, so don't need movement code
 
                     /*
                     Vector2 newPosition = position;
@@ -149,14 +165,23 @@ namespace MajorProject
                     }
                     */
 
+                    // updates
 
                     currentFireInterval += gameTime.ElapsedGameTime.TotalSeconds;
                     if (currentFireInterval >= maxFireInterval)
                     {
+
+                        // generate projectiles, assign velocity based on angle of rotation
+
+                        // finds the change in angle per projectile for even spread
                         double interpolation = (Math.PI * 2) / ProjectilesPerCharge;
+
+                        // randomsies the original offset for angles, so player can't hide in one place indefinetly
                         double offset = rand.NextDouble() * Math.PI;
                         for (double i = Math.PI * 2; i >= 0; i -= interpolation)
                         {
+
+                            // creates orojectile object and assigns values
                             GameProjectile p = new GameProjectile();
                             p.position = new Vector2(position.X, position.Y);
                             p.target = typeof(GamePlayer);
@@ -174,6 +199,7 @@ namespace MajorProject
                             ((GameScreen)ScreenManager.Instance.currentScreen).AddProjectile(p);
                         }
 
+                        // resets count until next firing
 
                         currentFireInterval = 0;
 
@@ -185,8 +211,11 @@ namespace MajorProject
 
             }
 
+            // updates bounding box/image position
             BoundingBox.Location = (position - BoundingBox.Size.ToVector2() / 2).ToPoint();
             bossImage.position = position.ToPoint();
+
+            // if alive, update the image
             if (alive)
                 bossImage.Update(gameTime);
         }
@@ -195,6 +224,8 @@ namespace MajorProject
         {
             base.Draw(spriteBatch);
 
+            // if alive, draw the character based on their status
+            // otherwise, draw their grave
             if (alive)
             {
                 if (maxFireInterval - currentFireInterval < 0.5)
@@ -210,6 +241,8 @@ namespace MajorProject
         {
             base.UnloadContent();
 
+            // unload image content
+
             bossImage.UnloadContent();
             bossChargeImage.UnloadContent();
             bossDeadImage.UnloadContent();
@@ -217,6 +250,7 @@ namespace MajorProject
 
         public override void OnDeath()
         {
+            // creates a soundinstance, and generates random ID to prevent collisions in dictionary
             AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Boss_Death"].CreateInstance(), "Boss_Death" + rand.NextDouble().ToString());
         }
 

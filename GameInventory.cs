@@ -11,7 +11,6 @@ namespace MajorProject
 {
     public class GameInventory
     {
-        int abilitySpace = 2;
         int itemSpace = 3;
 
         static Random rand = new Random();
@@ -58,6 +57,7 @@ namespace MajorProject
 
         public GameInventory()
         {
+            // maps the number keys to actual indexes
             numberKeyMap = new Dictionary<Keys, int>() {
                 { Keys.D1, 1 },
                 { Keys.D2, 2 },
@@ -71,8 +71,8 @@ namespace MajorProject
                 { Keys.D0, 0 }
             };
 
+            //generate item list
             itemList = new GameItem[itemSpace];
-            abilityList = new GameAbility[abilitySpace];
         }
 
         public bool RemoveItem(GamePlayer user, int index)
@@ -89,10 +89,12 @@ namespace MajorProject
             double movementAngle = rand.NextDouble() * Math.PI * 2;
             itemList[index].velocity = new Vector2((float)Math.Sin(movementAngle), (float)Math.Cos(movementAngle)) * 1.5f;
 
+            // hand the item to the gameworld
             ((GameScreen)ScreenManager.Instance.currentScreen).AddItem(itemList[index]);
 
             itemList[index] = null;
 
+            // update flag for weapons present in the inventory
             UpdateWeaponStatus();
 
             return true;
@@ -100,17 +102,24 @@ namespace MajorProject
 
         public bool AddItem(GamePlayer user, GameItem i)
         {
+            // give pickup sound instance to sound manager
             AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Item_Pickup"].CreateInstance(), "ItemPickUp" + rand.NextDouble().ToString());
 
+            // if an item's already in the selected, boot it
             if (itemList[SelectedItemSlot] != null)
                 RemoveItem(user, SelectedItemSlot);
+
+            // actually assign the item to the slot
             itemList[SelectedItemSlot] = i;
 
+
+            // update flag for weapons present in the inventory
             UpdateWeaponStatus();
 
             return true;
         }
 
+        /*
         public bool AddAbility(GameAbility a)
         {
             abilityList[SelectedItemSlot] = a;
@@ -118,24 +127,33 @@ namespace MajorProject
 
             return true;
         }
+        */
 
         public void UseItem(GamePlayer user)
         {
+            // checks that there is a usable item in the selected slot
             if (itemList[SelectedItemSlot] != null)
             {
+                // use the item
                 itemList[SelectedItemSlot].Use(user);
             }
         }
 
         public void LoadContent(ResourcePack resources)
         {
+            // hook up resources object refernce
             Resources = resources;
+
+            // init variables
             bool inMenu = false;
+
+            // for when a save gae is loaded, the inventory will be initialised in the game menu
             if (ScreenManager.Instance.currentScreen.GetType() == typeof(GameMenuScreen))
                 inMenu = true;
 
             if (inMenu)
             {
+                // if the user is currently in a menu, load from the correct screen, not the current screen
                 foreach (GameItem i in itemList)
                 {
                     if (i != null)
@@ -152,16 +170,12 @@ namespace MajorProject
 
         public void UnLoadContent()
         {
+            // unload all the items and unhook the resources
             Resources = null;
             foreach (GameItem i in itemList)
             {
                 if (i != null)
                     i.UnloadContent();
-            }
-            foreach (GameAbility a in abilityList)
-            {
-                if (a != null)
-                    a.UnloadContent();
             }
         }
 

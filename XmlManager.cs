@@ -17,18 +17,21 @@ namespace MajorProject
             type = typeof(T);
         }
 
+        // woah, generic types!
         public T Load(string path)
         {
             //var path1 = Directory.GetCurrentDirectory();
             T instance;
             using (TextReader reader = new StreamReader(path))
             {
+                // reads from file, deserialises and returns
                 XmlSerializer xml = new XmlSerializer(type);
                 instance = (T)xml.Deserialize(reader);
             }
             return instance;
         }
 
+        // not actually used, just thought it'd be nice to have
         public void Save(string path, object obj)
         {
             using (TextWriter writer = new StreamWriter(path))

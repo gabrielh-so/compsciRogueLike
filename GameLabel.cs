@@ -14,6 +14,8 @@ namespace MajorProject
     class GameLabel
     {
 
+        // the information that the label needs in order to be drawn
+        // this class is as light as possible
         ResourcePack Resources;
         public string Text;
         public string FontName;
@@ -33,12 +35,14 @@ namespace MajorProject
             Resources = resources;
         }
 
+        // takes in coordinate values and updates the position vector
         public void SetPosition(int x, int y)
         {
             Position.X = x;
             Position.Y = y;
         }
 
+        // unhooks the resource reference
         public void UnloadContent()
         {
             Resources = null;
@@ -46,6 +50,7 @@ namespace MajorProject
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            // actually calls the function to draw the label text
             spriteBatch.DrawString(Resources.FontPack[FontName + "_" + PlayerPreferences.Instance.fontSize.ToString()], Text, Position, FontColor);
         }
 

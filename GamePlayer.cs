@@ -25,8 +25,10 @@ namespace MajorProject
 
         GameImage playerImage;
 
+        // money counter
         public int money;
 
+        // timing cooldown values
         public bool hitCooldown;
         public double maxHitDelay;
         public double currentHitDelay;
@@ -40,11 +42,14 @@ namespace MajorProject
         double maxBoostDelay;
         double currentBoostDelay;
 
-
+        // stores the amount of time played - only increased when player update is called
         public double SecondsPlayed = 0;
 
         public GamePlayer()
         {
+
+            // initialises the player object with default values
+
             inventory = new GameInventory();
             playerImage = new GameImage();
             money = 0;
@@ -57,17 +62,20 @@ namespace MajorProject
             lastHealth = 100;
         }
 
+        // all the frames in the walk animation
         string[] walkAnimation =
         {
             "Player_Forward"
         };
 
+        // takes damage from projectile if not currently in hit cooldown
         public override void ProjectileCollision(GameProjectile p)
         {
             if (!hitCooldown)
                 TakeDamage(p.damage);
         }
 
+        // applies damage passed to the function (also plays takedamage sound)
         public override void TakeDamage(int damage)
         {
             damage = (int)(damage * PlayerPreferences.playerDamageScalars[PlayerPreferences.Instance.difficulty]);
@@ -78,6 +86,7 @@ namespace MajorProject
 
         public override void LoadContent(ref ResourcePack resources)
         {
+            // loads and inits all images and extra player objects (like inventory)
             base.LoadContent(ref resources);
 
             inventory.LoadContent(Resources);
@@ -95,9 +104,10 @@ namespace MajorProject
             base.Update(gameTime);
 
             
-
+            // adds time elapsed to seconds played
             SecondsPlayed += gameTime.ElapsedGameTime.TotalSeconds;
 
+            // updates the speed boost checker (checks if it's time to stop boosting speed)
             if (boostCooldown)
             {
                 currentBoostDelay += gameTime.ElapsedGameTime.TotalSeconds;
@@ -110,6 +120,7 @@ namespace MajorProject
                 }
             }
 
+            // updates hit cooldown (if time has elapsed, hit cooldown no longer applies and the player can take damage)
             if (hitCooldown)
             {
                 currentHitDelay += gameTime.ElapsedGameTime.TotalSeconds;
@@ -120,6 +131,7 @@ namespace MajorProject
                 }
             }
 
+            // updates the attack cooldown (if timer has expired player can attack again)
             if (attackCooldown)
             {
                 currentAttackDelay += gameTime.ElapsedGameTime.TotalSeconds;
@@ -130,13 +142,16 @@ namespace MajorProject
                 }
             }
 
-            
+            // updates the player's inventory
             inventory.Update(gameTime);
 
+            // checks if the use button has been clicked
             if (InputManager.Instance.MousePressed())
             {
                 inventory.UseItem(this);
             }
+
+            // calculates player movement
 
             velocity = Vector2.Zero;
 
@@ -182,6 +197,7 @@ namespace MajorProject
             bool recalculatePosition = false;
             if (Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] == (int)World.cellType.wall)
             {
+                // if current velocity ends up in a wall, remove that velocity and check again - prevents getting caught on wall
                 recalculatePosition = true;
             }
             if ( !((GameScreen)ScreenManager.Instance.currentScreen).IsRoomDead(currentRoom) && Map[(int)newPosition.Y / tileWidth, (int)newPosition.X / tileWidth] == (int)World.cellType.door)
@@ -234,12 +250,17 @@ namespace MajorProject
 
         }
 
+        // draws the player image
         public override void Draw(SpriteBatch spriteBatch)
         {
             playerImage.Draw(spriteBatch);
         }
 
+        /// <summary>
+        /// log code I don't need because it's not really in a development phase
+        /// </summary>
 
+        /*
         void recordValues(string value1) // throwaway methods for testing without second screen
         {
             using (StreamWriter sw = new StreamWriter("output.txt"))
@@ -254,7 +275,10 @@ namespace MajorProject
                 sw.WriteLine("value 1: " + value1 + " | value 2 :" + value2);
             }
         }
+        */
 
+        // function called when player collides with another character
+        // includes taking damage
         public override void onCollision(GameCharacter e)
         {
             if (!hitCooldown)
@@ -264,15 +288,19 @@ namespace MajorProject
             }
         }
 
+        // adds an item to the player's inventory
         public bool AddItem(GameItem i)
         {
             return inventory.AddItem(this, i);
         }
 
+        /*
         public bool AddAbility(GameAbility a)
         {
             return inventory.AddAbility(a);
         }
+        */
+
 
         public void AddAttackCooldown(double cooldownLength)
         {
@@ -290,11 +318,15 @@ namespace MajorProject
 
         public override void UnloadContent()
         {
+
+            // unhook resources and unload image
+
             base.UnloadContent();
 
             inventory.UnLoadContent();
         }
 
+        // function called on the player's death
         public override void OnDeath()
         {
             AudioManager.Instance.PlaySoundInstance(Resources.AudioPack["Player_Death"].CreateInstance(), "PlayerDeath");

@@ -137,6 +137,7 @@ namespace MajorProject
             rand = new Random();
         }
 
+        // converts a cell position to the position on the grid
         public int ToCellIndex(int cell)
         {
             return cell * 2 + 1;
@@ -157,6 +158,7 @@ namespace MajorProject
 
             CorridorEndings = new List<Vector2>();
 
+            // start the recursive function
             AdvanceMaze(entry);
 
             /*
@@ -176,11 +178,11 @@ namespace MajorProject
         {
 
             generation_VisitedLayer[(int)cellPosition.Y, (int)cellPosition.X] = 2; // visited by corridor
-            int x = 0, y = 0;
 
             bool isEnd = true;
             while (true)
             {
+                // loops through directions
                 int possibleDirectionCount = 0;
                 List<Vector2> possibleDirections = new List<Vector2>();
                 if (cellPosition.X > 0) if (generation_VisitedLayer[(int)cellPosition.Y, (int)cellPosition.X - 1] == 0)
@@ -211,14 +213,10 @@ namespace MajorProject
 
                 isEnd = false;
 
-                //DisplayWorld();
-                //DisplayVisited();
                 int index = (int)(rand.NextDouble() * possibleDirectionCount);
                 Map[ToCellIndex((int)cellPosition.Y) + (int)possibleDirections[index].Y, ToCellIndex((int)cellPosition.X) + (int)possibleDirections[index].X] = 1;
 
-                //DisplayWorld();
-                //Console.ReadLine();
-
+                // continue recursion
                 AdvanceMaze(new Vector2(cellPosition.X + possibleDirections[index].X, cellPosition.Y + possibleDirections[index].Y));
                 possibleDirections.RemoveAt(index);
             }
@@ -228,6 +226,8 @@ namespace MajorProject
 
         void GenerateRooms()
         {
+            // places rooms of random sizes at random positions
+
             generation_RoomPositions = new List<Vector2>();
             generation_RoomDimensions = new List<Vector2>();
             generation_RoomIndexPositions = new List<Vector2>();
@@ -247,6 +247,7 @@ namespace MajorProject
                     position = new Vector2(rand.Next(0, level_cell_width - (int)dimensions.X), rand.Next(0, level_cell_height - (int)dimensions.Y));
                     bool intersectsRoom = false;
 
+                    // checks for intersection for each space (yes I know this is inefficient, just humour me)
                     for (int j = 0; j < dimensions.Y; j++)
                     {
                         for (int k = 0; k < dimensions.X; k++)
@@ -418,6 +419,7 @@ namespace MajorProject
 
         public void GenerateWorld(int seed)
         {
+            // sets the random seed
             rand = new Random(seed);
             DirectionVector2Map = new Dictionary<directions, Vector2>();
             DirectionVector2Map.Add(directions.up, new Vector2(0, -1));
@@ -427,6 +429,11 @@ namespace MajorProject
             GenerateWorld();
         }
 
+        /// <summary>
+        /// debug functiona
+        /// </summary>
+        
+        /*
         public void DisplayWorld()
         {
             for (int i = 0; i < height; i++)
@@ -439,6 +446,7 @@ namespace MajorProject
             }
             Console.WriteLine();
         }
+
         public void DisplayVisited()
         {
             for (int i = 0; i < level_cell_height; i++)
@@ -451,6 +459,7 @@ namespace MajorProject
             }
             Console.WriteLine();
         }
+        */
 
         public void LoadContent(ref ResourcePack resources)
         {
@@ -468,17 +477,20 @@ namespace MajorProject
             width = level_cell_width * 2 + 1;
             height = level_cell_width * 2 + 1;
 
-
+            // finds the dimensions of the image from the dimensions of the map
             dimensions.X = tilePixelWidth * width;
 
             dimensions.Y = tilePixelHeight * height;
 
+
+            // creates new render target to draw to
             RenderTarget2D renderTarget = new RenderTarget2D(ScreenManager.Instance.GraphicsDevice,
                 (int)dimensions.X, (int)dimensions.Y);
             ScreenManager.Instance.GraphicsDevice.SetRenderTarget(renderTarget);
             ScreenManager.Instance.GraphicsDevice.Clear(Color.Transparent);
             ScreenManager.Instance.SpriteBatch.Begin();
 
+            // for every tile in the map, draw the respective image
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -511,11 +523,13 @@ namespace MajorProject
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            // draws the world to the rendertarget
             spriteBatch.Draw(WorldImageTexture, destinationRectangle: new Rectangle(0, 0, tilePixelWidth * width, tilePixelHeight * height));
         }
 
         public void UnloadContent()
         {
+            // unloads the world texture
             WorldImageTexture.Dispose();
 
             Resources = null;

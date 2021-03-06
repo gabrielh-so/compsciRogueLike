@@ -14,6 +14,8 @@ namespace MajorProject
 
         public GamePotionHealth()
         {
+            // initialises the deafault values for the health potion
+
             full = true;
             type = this.GetType();
             itemType = "Health";
@@ -25,15 +27,18 @@ namespace MajorProject
 
         public override void Update(GameTime gameTime)
         {
+            // update the base potion class
             base.Update(gameTime);
         }
 
         public override void Refill()
         {
+            // change the name of the potion and toggle the empty
             full = true;
             itemType = "Health";
         }
 
+        // overrides of base functions
         public override void SetValue(float newValue)
         {
             healFraction = newValue;

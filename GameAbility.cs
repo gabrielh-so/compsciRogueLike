@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MajorProject
 {
-    public class GameAbility : GameItem
+    public abstract class GameAbility : GameItem
     {
 
         public GameAbility()
@@ -14,6 +14,7 @@ namespace MajorProject
 
         }
 
+        // generic use ability // not implemented/needed in the final game
         public override void Use(GamePlayer user)
         {
             throw new NotImplementedException();

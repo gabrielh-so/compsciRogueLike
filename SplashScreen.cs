@@ -20,6 +20,7 @@ namespace MajorProject
 
         public override void LoadContent()
         {
+            // load the image and initialise the values
             base.LoadContent();
             totalUpTime = 0;
 
@@ -41,6 +42,7 @@ namespace MajorProject
 
             totalUpTime += gameTime.ElapsedGameTime.TotalMilliseconds;
 
+            // if timer has finished or keyboard is pressed and the screenmanager isn't already transitioning, change screens
             if ((totalUpTime > timeToShow || InputManager.Instance.KeyDown(Keys.Enter)) && !ScreenManager.Instance.IsTransitioning)
             {
                 ScreenManager.Instance.ChangeScreens("MainMenuScreen");
@@ -49,6 +51,7 @@ namespace MajorProject
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // just draws the image onto the screen
             Image.Draw(spriteBatch);
         }
     }

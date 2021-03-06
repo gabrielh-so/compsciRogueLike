@@ -14,6 +14,7 @@ namespace MajorProject
 {
     public abstract class UiElement
     {
+        // Elements would usually override all these virtual functions
 
         public Vector2 Position;
         public string Description;
